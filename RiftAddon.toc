@@ -1,0 +1,47 @@
+Identifier = "nkCartographer"
+Name = "Naifu's Cartographer"
+NameShort ="nkCartographer"
+Description = "Replacement of the standard main and minimap with added functionality\n\nType the follownig to switch between minimap and main map zoom: /nkCG toggle\n\nGetting support:\n\nPlease send bug reports and support inquiries to naifukishi@gmail.com\n\nSpecial thanks to:\n\ngordi@zaviel who's a great help getting my addons bug free\n\nIvnedar@Laethys for LibTransform2 and advise"
+
+Author = "Naifu"
+Email = "naifukishi@gmail.com"
+
+Version = "2.3.1"
+Environment = "4.0"
+
+RunOnStartup = {
+  "main.lua",
+  "locales/localizationDE.lua",
+  "locales/localizationEN.lua",
+  "locales/localizationRU.lua",
+  "map.lua",
+  "event.lua",
+  "api.lua",
+  "config.lua",
+  "data.lua",
+  "quest.lua"
+}
+
+Embed = {	
+  ["Libs/nkQuestBase"] = true,
+  ["Libs/EnKai"] = true,
+}
+
+Dependencies = {
+  nkQuestBase = {"required", "before"},
+  EnKai = {"required", "before"},
+  RareTracker = {"optional", "before"},
+  RareDar = {"optional", "before"},
+  nkAdvisor_Loot = {"optional", "before"},
+  nkDebug = {"optional", "before"}
+}
+
+
+SavedVariables = {
+   nkCartSetup 	   = "character",
+   nkCartGathering = "account"
+}
+-- X-Curse-Packaged-Version: V2.3.1
+-- X-Curse-Project-Name: nkCartographer
+-- X-Curse-Project-ID: nkcartographer
+-- X-Curse-Repository-ID: rift/nkcartographer/mainline

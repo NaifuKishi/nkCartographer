@@ -1,0 +1,34 @@
+Identifier = "nkQuestBase"
+Name = "nkQuestBase"
+Description = "Quest library"
+
+Author = "Naifu"
+Email = "naifukishi@gmail.com"
+
+Version = "2.0.1"
+Environment = "4.0"
+
+RunOnStartup = {
+	"main.lua",
+	"db/items.lua",
+	"db/classic-quests.lua",
+	"db/classic-byZone.lua",
+	"db/classic-npc.lua",
+	"db/classic-questnpc.lua",
+	"db/nt-quests.lua",
+	"db/nt-byZone.lua",
+	"db/nt-npc.lua",
+	"db/nt-questnpc.lua",
+	"db/sfp-quests.lua",
+	"db/sfp-byZone.lua",
+	"db/sfp-npc.lua",
+	"db/sfp-questnpc.lua",
+}
+
+Dependencies = {
+	EnKai= {"required", "before"},
+}
+-- X-Curse-Packaged-Version: V2.0.1
+-- X-Curse-Project-Name: nkQuestBase
+-- X-Curse-Project-ID: nkquestbase
+-- X-Curse-Repository-ID: rift/nkquestbase/mainline

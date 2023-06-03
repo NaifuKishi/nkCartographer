@@ -1,0 +1,72 @@
+------------------------------------------------------------------------
+r151 | naifu | 2016-12-03 10:47:56 +0000 (Sat, 03 Dec 2016) | 1 line
+Changed paths:
+   A /tags/V2.3.1 (from /trunk:150)
+
+Tagging as V2.3.1
+------------------------------------------------------------------------
+r150 | naifu | 2016-12-03 10:01:30 +0000 (Sat, 03 Dec 2016) | 2 lines
+Changed paths:
+   M /trunk/RiftAddon.toc
+   M /trunk/main.lua
+   M /trunk/quest.lua
+
+added tracking of TRACK.ARTIFACT.OTHER
+added a check for quests <= 70
+------------------------------------------------------------------------
+r148 | naifu | 2016-12-01 20:56:04 +0000 (Thu, 01 Dec 2016) | 2 lines
+Changed paths:
+   M /trunk/RiftAddon.toc
+   M /trunk/main.lua
+   M /trunk/map.lua
+
+include sfp quest base package
+couple of map updates through EnKai update
+------------------------------------------------------------------------
+r146 | naifu | 2016-11-27 17:31:40 +0000 (Sun, 27 Nov 2016) | 2 lines
+Changed paths:
+   M /trunk/RiftAddon.toc
+   M /trunk/event.lua
+   M /trunk/map.lua
+
+reworked how gathering spots are added to map to prevent performance warning for large maps with lots of spots
+some other updates through EnKai update
+------------------------------------------------------------------------
+r144 | naifu | 2016-11-25 18:00:51 +0000 (Fri, 25 Nov 2016) | 1 line
+Changed paths:
+   M /trunk/RiftAddon.toc
+
+force EnKai update for map updates
+------------------------------------------------------------------------
+r142 | naifu | 2016-11-23 20:25:24 +0000 (Wed, 23 Nov 2016) | 1 line
+Changed paths:
+   M /trunk/RiftAddon.toc
+
+force EnKai update
+------------------------------------------------------------------------
+r140 | naifu | 2016-11-20 12:31:34 +0000 (Sun, 20 Nov 2016) | 2 lines
+Changed paths:
+   M /trunk/RiftAddon.toc
+   M /trunk/event.lua
+   M /trunk/map.lua
+   M /trunk/quest.lua
+
+waypoints are now properly updated on port
+reworked how addon checks for quest npcs to further prevent performance errors
+------------------------------------------------------------------------
+r138 | naifu | 2016-11-18 06:35:06 +0000 (Fri, 18 Nov 2016) | 1 line
+Changed paths:
+   M /trunk/RiftAddon.toc
+
+force EnKai update for SFP updates
+------------------------------------------------------------------------
+r136 | naifu | 2016-11-06 17:24:39 +0000 (Sun, 06 Nov 2016) | 2 lines
+Changed paths:
+   M /trunk/RiftAddon.toc
+   M /trunk/main.lua
+   M /trunk/map.lua
+   M /trunk/quest.lua
+
+The debug panel is now optionally displayable
+fixed a rare bug
+------------------------------------------------------------------------
