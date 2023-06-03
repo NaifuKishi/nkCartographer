@@ -5,7 +5,7 @@ Description = "What makes all of the nkAddons work. An extensive lib with tons o
 Author = "Naifu"
 Email = "naifukishi@gmail.com"
 
-Version = "3.1.1"
+Version = "3.1.2"
 Environment = "4.0"
 
 RunOnStartup = {

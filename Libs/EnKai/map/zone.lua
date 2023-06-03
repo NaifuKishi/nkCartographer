@@ -21,7 +21,7 @@ local _zoneMapping= {
   world1 = {"z3DBE218325519634", "z798505F47158EF641", "z00000013CAF21BE3", "z000000069C1F0227", "z000000142C649218", "z00000016EB9ECBA5", "z0000001804F56C61", "z0000001A4AF8CD7A", "z0000001B2BB9E10E", "z019595DB11E70F58", "z1416248E485F6684", "z585230E5F68EA919", "z6BA3E574E9564149", "z76C88A5A51A38D90","z0000000CB7B53FD7", "z487C9102D2EA79BE", "z0000001CE3FE8B2C", "z798505F47158EF64"},  
   world2 = {"z10D7E74AB6D7B293", "z2F1E4708BEC6A608", "z48530386ED2EA5AD", "z4D8820D7EF52685C", "z563CB77E4A32233F", "z698CB7B72B3D69E9", "z754553DD46F46371", "z11173F9D259DAADE", "z1C938C07F41C83CC", "z2F9C9E1FF91F9293", "z39095BA75AD7DC03", "z59124F7DD7F15825", "z00000000F92992F2"},
   world3 = {"z0000012D6EEBB377", "z0000012E087E78E1", "z0000012F14279B5A", "z196650F5AA524928"},
-  world4 = {"z6FEC49CAE466B014", "z5AA06689CCBB9285", "z7B2B0BB6E3EA1BEC", "z480CCFE1F3A277E9", "z77AC247EDB5F0186", "z2EF8C4A4103B159A"},
+  world4 = {"z6FEC49CAE466B014", "z5AA06689CCBB9285", "z7B2B0BB6E3EA1BEC", "z480CCFE1F3A277E9", "z77AC247EDB5F0186", "z2EF8C4A4103B159A", "z1E81B494CFA05AD0"},
   
   terminus		= {"z00EC7E88D7CC9977"},
   mathosia		= {"z0000000F382A777C"},
@@ -202,9 +202,11 @@ local _zoneList= {
 ,["z12B7695EABB56864"]={DE="Chronik: Gedlonianisches Ödland", EN='Chronicle: Gedlo Badlands', FR='Chronique: Maleterres de Gedlo', type='instance', map="chronicle_gedlo"}
 ,["z29C62C17C8FFBE46"]={DE="Chronik: Aschenfall", EN='Chronicle: Ashenfall', FR='Chronique: Chutecendres', type='instance', map="chronicle_ashenfall"}
 ,["z798505F47158EF64"]={DE="Wrack der Esperanza", EN='Wreck of the Endeavor', FR="L'épave du Novia", type='world', map="world1"}
+,["z1E81B494CFA05AD0"]={DE="Vostigar-Gipfel", EN='Vostigar Peaks', FR="Pics de Vostigar", type='world', map="world4"}
 }
 
 local _zoneMapPOI = {
+  z1E81B494CFA05AD0 = { },
 	z6FEC49CAE466B014 = {	["z6FEC49CAE466B014poi1"] = { coordX = 4068, coordZ = 6297, DE = "Alittu", EN = "Alittu", type = "POI.PORTAL" } },
 	z7B2B0BB6E3EA1BEC = {	["z7B2B0BB6E3EA1BECpoi1"] = { coordX = 4866, coordZ = 5795, DE = "Feilbocan", EN = "Feilbocan", type = "POI.PORTAL" },
 							["z7B2B0BB6E3EA1BECpoi2"] = { coordX = 6221, coordZ = 5618, DE = "Schwarzdornfälle", EN = "Blackthorn Fall", type = "POI.PORTAL" },
