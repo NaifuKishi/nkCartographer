@@ -117,44 +117,44 @@ local function _main(_, addon)
     table.insert(Command.Slash.Register("nkCG"), {_commandHandler, "nkCartographer", "ui"}) 
     table.insert(Command.Slash.Register("nkCartographer"), {_commandHandler, "nkCartographer", "ui"})
 
-	--RESOURCE.ARTIFACT
-	
-	for key, design in pairs(data.resourceData) do
-		local ressourceEntries = EnKai.map.GetMapElementbyType (key)
-		for key2, details in pairs (ressourceEntries) do
-			EnKai.map.replaceMapElement ("TRACK" .. string.match (key2, "RESOURCE(.+)"), design)
-		end		
-	end
-	
-	EnKai.map.replaceMapElement ("TRACK.ARTIFACT.NORMAL", data.resourceData['RESOURCE.ARTIFACT'])
-	EnKai.map.replaceMapElement ("TRACK.ARTIFACT.TWISTED", data.resourceData['RESOURCE.ARTIFACT'])
-	EnKai.map.replaceMapElement ("TRACK.ARTIFACT.UNSTABLE", data.resourceData['RESOURCE.ARTIFACT'])
-	EnKai.map.replaceMapElement ("TRACK.ARTIFACT.FAEYULE", data.resourceData['RESOURCE.ARTIFACT'])
-	EnKai.map.replaceMapElement ("TRACK.ARTIFACT.OTHER", data.resourceData['RESOURCE.ARTIFACT'])
-	EnKai.map.replaceMapElement ("TRACK.BOAT", data.resourceData['RESOURCE.ARTIFACT'])
-	EnKai.map.replaceMapElement ("TRACK.ARTIFACT.POISON", data.resourceData['RESOURCE.ARTIFACT'])
-	EnKai.map.replaceMapElement ("TRACK.ARTIFACT.BURNING", data.resourceData['RESOURCE.ARTIFACT'])
-	EnKai.map.replaceMapElement ("TRACK.ARTIFACT.NIGHTMARE", data.resourceData['RESOURCE.ARTIFACT'])
-	
-	-- add custom elements
+    --RESOURCE.ARTIFACT
     
+    for key, design in pairs(data.resourceData) do
+      local ressourceEntries = EnKai.map.GetMapElementbyType (key)
+      for key2, details in pairs (ressourceEntries) do
+        EnKai.map.replaceMapElement ("TRACK" .. string.match (key2, "RESOURCE(.+)"), design)
+      end		
+    end
+	
+    EnKai.map.replaceMapElement ("TRACK.ARTIFACT.NORMAL", data.resourceData['RESOURCE.ARTIFACT'])
+    EnKai.map.replaceMapElement ("TRACK.ARTIFACT.TWISTED", data.resourceData['RESOURCE.ARTIFACT'])
+    EnKai.map.replaceMapElement ("TRACK.ARTIFACT.UNSTABLE", data.resourceData['RESOURCE.ARTIFACT'])
+    EnKai.map.replaceMapElement ("TRACK.ARTIFACT.FAEYULE", data.resourceData['RESOURCE.ARTIFACT'])
+    EnKai.map.replaceMapElement ("TRACK.ARTIFACT.OTHER", data.resourceData['RESOURCE.ARTIFACT'])
+    EnKai.map.replaceMapElement ("TRACK.BOAT", data.resourceData['RESOURCE.ARTIFACT'])
+    EnKai.map.replaceMapElement ("TRACK.ARTIFACT.POISON", data.resourceData['RESOURCE.ARTIFACT'])
+    EnKai.map.replaceMapElement ("TRACK.ARTIFACT.BURNING", data.resourceData['RESOURCE.ARTIFACT'])
+    EnKai.map.replaceMapElement ("TRACK.ARTIFACT.NIGHTMARE", data.resourceData['RESOURCE.ARTIFACT'])
+    
+    -- add custom elements
+      
     for key, data in pairs (data.customElements) do
       EnKai.map.addMapElement (key, data)
     end
-    
-	nkQuestBase.loadPackage("classic")
+      
+    nkQuestBase.loadPackage("classic")
     nkQuestBase.loadPackage("nt")
-	nkQuestBase.loadPackage("sfp")
+    nkQuestBase.loadPackage("sfp")
     EnKai.map.init(true)
     EnKai.map.zoneInit(true)
     EnKai.inventory.init()
-	EnKai.unit.init()
+    EnKai.unit.init()
         
     for idx = 1, #data.rareMobAchievements, 1 do
       _events.achievementUpdate (_, { [data.rareMobAchievements[idx]] = true })
     end
     
-	Command.Event.Attach(Event.System.Update.Begin, _events.SystemUpdate, "nkCartographer.System.Update.Begin")	
+	  Command.Event.Attach(Event.System.Update.Begin, _events.SystemUpdate, "nkCartographer.System.Update.Begin")	
     Command.Event.Attach(EnKai.events["EnKai.map"].add, function (a, mapInfo) _internal.UpdateMap(mapInfo, "add", "EinKai.map.add") end, "nkCartographer.EnKai.map.add")
     Command.Event.Attach(EnKai.events["EnKai.map"].change, function (_, mapInfo)  _internal.UpdateMap(mapInfo, "change", "EnKai.map.change Event") end, "nkCartographer.EnKai.map.change")
     Command.Event.Attach(EnKai.events["EnKai.map"].remove, function (_, mapInfo) _internal.UpdateMap(mapInfo, "remove") end, "nkCartographer.EnKai.map.remove")
@@ -175,10 +175,10 @@ local function _main(_, addon)
       end      
     end, "nkCartographer.EnKai.InventoryManager.Update")
        
-	Command.Event.Attach(EnKai.events["EnKai.Unit"].GroupStatus, _events.GroupStatus, "nkCartographer.EnKai.Unit.GroupStatuss")
-	Command.Event.Attach(EnKai.events["EnKai.Unit"].Change, _events.UnitChange, "nkCartographer.EnKai.Unit.Change")
-	
-	Command.Event.Attach(EnKai.events["EnKai.Unit"].PlayerAvailable, _events.playerAvailable, "nkCartographer.EnKai.Unit.PlayerAvailable")
+    Command.Event.Attach(EnKai.events["EnKai.Unit"].GroupStatus, _events.GroupStatus, "nkCartographer.EnKai.Unit.GroupStatuss")
+    Command.Event.Attach(EnKai.events["EnKai.Unit"].Change, _events.UnitChange, "nkCartographer.EnKai.Unit.Change")
+    
+    Command.Event.Attach(EnKai.events["EnKai.Unit"].PlayerAvailable, _events.playerAvailable, "nkCartographer.EnKai.Unit.PlayerAvailable")
 	
     Command.Event.Attach(Event.Unit.Availability.None, _events.UnitUnavailable, "nkCartographer.Unit.Availability.None")
     
@@ -199,13 +199,13 @@ local function _main(_, addon)
       Command.Event.Attach(Event.Message.Receive, _events.messageReceive, "nkCartographer.Message.Receive")
     end
     
-	local items = {
-		{ label = privateVars.langTexts.configuration, callBack = _internal.ShowConfig},
-		{ label = privateVars.langTexts.showhide, callBack = _showHide},
-		{ label = privateVars.langTexts.toggle, callBack = function() uiElements.mapUI:ToggleMinMax() end}
-	}
-	
-	EnKai.manager.init('nkCartographer', items, nil)
+    local items = {
+      { label = privateVars.langTexts.configuration, callBack = _internal.ShowConfig},
+      { label = privateVars.langTexts.showhide, callBack = _showHide},
+      { label = privateVars.langTexts.toggle, callBack = function() uiElements.mapUI:ToggleMinMax() end}
+    }
+    
+    EnKai.manager.init('nkCartographer', items, nil)
 	
     Command.Console.Display("general", true, string.format(privateVars.langTexts.startUp, addonInfo.toc.Version), true)
     

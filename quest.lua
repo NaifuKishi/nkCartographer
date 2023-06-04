@@ -82,37 +82,55 @@ local function _fctIsCurrentWorld (details)
 
 end
 
-local function _fctProcessObjectives (key, questName, domain, objectiveList, hasAdd, addInfo)
+local function _fctProcessObjectives (key, questName, domain, objectiveList, isComplete, hasAdd, addInfo)
 
-	for idx1 = 1, #objectiveList, 1 do
-		if objectiveList[idx1] ~= nil and objectiveList[idx1].complete ~= true then
+	if nkDebug then nkDebug.logEntry (addonInfo.identifier, "_fctProcessObjectives", questName, objectiveList) end
 
-			local indicators = objectiveList[idx1].indicator
+	--if isComplete == true then
+	--	local id = "q-" .. key .. "-o1-i1"
+	--	local indicators = objectiveList[1].indicator
+	--	local thisEntry = { id = id, type = "QUEST.RETURN", descList = { objectiveList[1].description }, 
+	--						title = questName,
+	--						coordX = indicators[1].x, coordY = indicators[1].y, coordZ = indicators[1].z }
+	--	
+	--	data.currentQuestList[key][id] = true
+	--	addInfo[id] = thisEntry
+	--	hasAdd = true
+	--else
 
-			if indicators ~= nil then
-				for idx2 = 1, #indicators, 1 do
-					local id = "q-" .. key .. "-o" .. idx1 .. "-i" .. idx2
-					local thisEntry = { id = id, type = "QUEST.POINT", descList = { objectiveList[idx1].description }, 
-					title = questName,
-					coordX = indicators[idx2].x, coordY = indicators[idx2].y, coordZ = indicators[idx2].z }
+		for idx1 = 1, #objectiveList, 1 do
 
-					if indicators[idx2].radius and indicators[idx2].radius <=30 then 
-						thisEntry.type = "QUEST.POINT"
-					elseif indicators[idx2].radius and indicators[idx2].radius > 30 then 
-						thisEntry.type = "QUEST.AREA"
-						thisEntry.radius = indicators[idx2].radius
-					elseif domain == "area" then
-						thisEntry.type = "QUEST.ZONEEVENT"
-					end
+			if objectiveList[idx1] ~= nil and objectiveList[idx1].complete ~= true then
 
-					data.currentQuestList[key][id] = true
-					addInfo[id] = thisEntry
-					hasAdd = true
+				local indicators = objectiveList[idx1].indicator
 
-				end -- for idx2
-			end -- indicators?
-		end -- complete?
-	end -- idx1
+				if indicators ~= nil then
+					for idx2 = 1, #indicators, 1 do
+						local id = "q-" .. key .. "-o" .. idx1 .. "-i" .. idx2
+						local thisEntry = { id = id, type = "QUEST.POINT", descList = { objectiveList[idx1].description }, 
+											title = questName,
+											coordX = indicators[idx2].x, coordY = indicators[idx2].y, coordZ = indicators[idx2].z }
+
+						if isComplete == true then
+							thisEntry.type = "QUEST.RETURN"	
+						elseif indicators[idx2].radius and indicators[idx2].radius <=30 then 
+							thisEntry.type = "QUEST.POINT"
+						elseif indicators[idx2].radius and indicators[idx2].radius > 30 then 
+							thisEntry.type = "QUEST.AREA"
+							thisEntry.radius = indicators[idx2].radius
+						elseif domain == "area" then
+							thisEntry.type = "QUEST.ZONEEVENT"
+						end
+
+						data.currentQuestList[key][id] = true
+						addInfo[id] = thisEntry
+						hasAdd = true
+
+					end -- for idx2
+				end -- indicators?
+			end -- complete?
+		end -- idx1
+	--end
 
 	return hasAdd, addInfo
 
@@ -156,9 +174,7 @@ local function _fctProcessQuests (questList, addFlag)
         
         data.currentQuestList[key] = {}
 		
-		--dump (details)
-          
-        hasAdd, addInfo = _fctProcessObjectives (key, details.name, details.domain, objectives, hasAdd, addInfo)
+        hasAdd, addInfo = _fctProcessObjectives (key, details.name, details.domain, objectives, details.complete, hasAdd, addInfo)
           
       end -- if
     end -- for
@@ -202,18 +218,18 @@ local function _fctProcessMissingZoneQuests (questList)
 
 					if flag then
 						for key, details in pairs(detailsList) do   
-						local id = "mq-" .. key
-						local qType = "QUEST.MISSING"
-						if libDetails.type ~= nil and EnKai.tools.table.getTablePos(libDetails.type, 3) ~= -1 then qType = "QUEST.DAILY" end
+							local id = "mq-" .. key
+							local qType = "QUEST.MISSING"
+							if libDetails.type ~= nil and EnKai.tools.table.getTablePos(libDetails.type, 3) ~= -1 then qType = "QUEST.DAILY" end
 
-						local thisEntry = { id = id, type = qType, descList = { details.summary }, title = details.name, coordX = npc.x, coordY = npc.y, coordZ = npc.z }
-						data.missingQuestList[key] = {}
-						table.insert(data.missingQuestList[key], thisEntry)
+							local thisEntry = { id = id, type = qType, descList = { details.summary }, title = details.name, coordX = npc.x, coordY = npc.y, coordZ = npc.z }
+							data.missingQuestList[key] = {}
+							table.insert(data.missingQuestList[key], thisEntry)
 
-						-- only add to map if not current quest
-						-- still need it in data.missingQuestList for abandon
+							-- only add to map if not current quest
+							-- still need it in data.missingQuestList for abandon
 
-						if data.currentQuestList[key] == nil then uiElements.mapUI:AddElement(thisEntry) end
+							if data.currentQuestList[key] == nil then uiElements.mapUI:AddElement(thisEntry) end
 
 						end -- for detailsList
 					end 
