@@ -528,8 +528,7 @@ function _internal.UpdateUnit (mapInfo, action)
 				local deltaZ = details.coordZ - coordZ
 				local deltaX = details.coordX - coordX
 
-				local angle = math.deg(math.atan2(deltaZ, deltaX))
-
+				local angle = math.deg(math.atan2(deltaZ, deltaX))								
 				details.angle = -angle
 			end
 
