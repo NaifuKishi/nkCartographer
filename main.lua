@@ -170,8 +170,8 @@ local function _main(_, addon)
     
     Command.Event.Attach(EnKai.events["EnKai.InventoryManager"].Update, function (_, thisData)
       if data.collectStart and Inspect.Time.Real() - data.collectStart < 2 then        
-		_internal.CollectArtifact(thisData)
-		data.collectStart = nil
+		    _internal.CollectArtifact(thisData)
+		    data.collectStart = nil
       end      
     end, "nkCartographer.EnKai.InventoryManager.Update")
        
@@ -230,37 +230,37 @@ local function _settingsHandler(_, addon)
   
     if nkCartSetup == nil then
       nkCartSetup = {
-        x = 600, y= 0, maximizedX = 100, maximizedY = 100, scale = 2.5,
-        width = 300, height = 300, locked = false, syncTarget = false,
-        maximizedWidth = 1000, maximizedHeight = 800, maximizedScale = 1,
-        background = "default",
-        showPOI = true, showZoneTitle = true, animations = true, animationSpeed = 0.05, rareMobs = true, showQuest = true,
-        trackArtifacts = true, trackGathering = true, smoothScroll = true, showUnknown = true,
-        zones = {},
-		userPOI = {}
-      }
+                      x = 600, y= 0, maximizedX = 100, maximizedY = 100, scale = 2.5,
+                      width = 300, height = 300, locked = false, syncTarget = false,
+                      maximizedWidth = 1000, maximizedHeight = 800, maximizedScale = 1,
+                      background = "default",
+                      showPOI = true, showZoneTitle = true, animations = true, animationSpeed = 0.05, rareMobs = true, showQuest = true,
+                      trackArtifacts = true, trackGathering = true, smoothScroll = true, showUnknown = true,
+                      zones = {},
+		                  userPOI = {}
+                    }
 	  
-	  nkCartSetup.x = EnKai.uiGetBoundRight() - 300
+	    nkCartSetup.x = EnKai.uiGetBoundRight() - 300
 	  
       nkCartGathering = { gatheringData = {}, artifactsData = {}}
       
       firstSetup = true
     end
 	
-	-- changes for nkCartographer V2.1.1
+	  -- changes for nkCartographer V2.1.1
 	
-	if nkCartSetup.syncTarget == nil then nkCartSetup.syncTarget = true end
+    if nkCartSetup.syncTarget == nil then nkCartSetup.syncTarget = true end
+      
+    -- changes for nkCartographer V2.0.0
     
-	-- changes for nkCartographer V2.0.0
-	
-	if nkCartSetup.animationSpeed == nil then nkCartSetup.animationSpeed = 0.05 end
-	
-	-- chanes for nkCartographer V2.1.0
-	
-	if nkCartSetup.userPOI == nil then nkCartSetup.userPOI = {} end
-	
-    -- change from character to account wide gathering storage
+    if nkCartSetup.animationSpeed == nil then nkCartSetup.animationSpeed = 0.05 end
     
+    -- chanes for nkCartographer V2.1.0
+    
+    if nkCartSetup.userPOI == nil then nkCartSetup.userPOI = {} end
+    
+      -- change from character to account wide gathering storage
+      
     if firstSetup == false and nkCartGathering == nil then
     
       nkCartGathering = { gatheringData = {}, artifactsData = {}}
