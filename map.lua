@@ -393,6 +393,8 @@ function _internal.UpdateMap (mapInfo, action, debugSource, checkForMinimapQuest
 	
 	for key, details in pairs (mapInfo) do
 		if action == "remove" then
+			--dump (mapInfo)
+
 			if checkForMinimapQuest == true or checkForMinimapQuest == nil then
 				if _internal.IsKnownMinimapQuest (key) == false then uiElements.mapUI:RemoveElement(key) end
 			else
@@ -404,6 +406,7 @@ function _internal.UpdateMap (mapInfo, action, debugSource, checkForMinimapQuest
 					nkDebug.logEntry (addonInfo.identifier, "_internal.UpdateMap add", "details.type == nil", details)
 				end
 			elseif details.type ~= "UNKNOWN" and details.type ~= "PORTAL" then -- filter minimap portal and use poi portal instead
+				--print ("add", details.type)
 				uiElements.mapUI:AddElement(details)
 				if string.find(details.type, "RESOURCE") == 1 and nkCartSetup.trackGathering == true then _trackGathering(details) end
 			elseif details.type == "UNKNOWN" then
