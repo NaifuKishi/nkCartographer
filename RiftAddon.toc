@@ -6,7 +6,7 @@ Description = "Replacement of the standard main and minimap with added functiona
 Author = "Naifu"
 Email = "naifukishi@gmail.com"
 
-Version = "2.3.4"
+Version = "2.3.5"
 Environment = "4.0"
 
 RunOnStartup = {
