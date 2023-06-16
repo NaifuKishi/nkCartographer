@@ -524,6 +524,8 @@ function _internal.UpdateUnit (mapInfo, action)
 
 			if key == data.playerUID then
 			
+				-- get player angle to show direction on map
+
 				local coordX, coordZ = uiElements.mapUI:GetCoords()         
 				local deltaZ = details.coordZ - coordZ
 				local deltaX = details.coordX - coordX
