@@ -232,4 +232,5 @@ U12FCA49A140878F4={DE='Zahana Ushah',FR='Zahana Ushah',EN='Zahana Ushah',lvl=60,
 U58EF10224681D2F3={DE='Hochseedrifter',FR='Trimardeur des hautes mers',EN='High Seas Drifter',scene={DE='Calceron-Meer',FR='Océan de Calceron',EN='Calceron Sea'},lvl=65},
 U20BD4E5B26029B52={DE='Kamran Urad',FR='Kamran Urad',EN='Kamran Urad',lvl=60,x='5543.2398760989',y='482.38998921774',z='5476.9098775815'},
 U1F8DE393077E5BCF={DE='Anthousa',FR='Anthousa',EN='Anthousa',scene={DE='Die Blutung',FR='Le Saignement',EN='The Bleed'},lvl=68},
+U800000003F000369={DE='Sharf',FR='Sharf',EN='Sharf',lvl=65},
 }) end
