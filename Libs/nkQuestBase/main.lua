@@ -174,7 +174,7 @@ end
 function nkQuestBase.query.getTypeText (queryType)
 
 	local typeList = {"Kill", "Event Objective","Daily", "Collect", "Breadcrumb", "Usable", "World Event", "Talk", "Carnage", "Use Item", "Rift", "Boss Fight", "Deliver",
-							"Use Ability", "Discover", "Area Quest", "Zone Event", "Instance", "Destroy", "Escort", "Mayhem Zone Event", "Defend", "Subdue", "Quest", "Work Order"};
+							"Use Ability", "Discover", "Area Quest", "Zone Event", "Instance", "Destroy", "Escort", "Mayhem Zone Event", "Defend", "Subdue", "Quest", "Work Order", "Weekly"};
 
 	if type(queryType) ~= 'number' then return "UNKNOWN_TYPE" end
 

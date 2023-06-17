@@ -51,6 +51,8 @@ local function _fctIsCurrentWorld (details)
 	
 	if details.categoryName ~= nil then
 		--if details.name == 'Nichts bleibt verloren' then print (details.categoryName) end
+
+		--dump(details)
 	
 		local zoneId, zoneDetails = EnKai.map.GetZoneByName(details.categoryName)
 		
@@ -285,21 +287,32 @@ end
 local function _fctCheckUnknown(npcName, thisData)
 
 	local retFlag = false
+	local quests = {}
+
+	--print (npcName)
 
 	if _npcCache[npcName] == nil then
 		_npcCache[npcName] = nkQuestBase.query.NPCByName (npcName)
-		
+
 		if _npcCache[npcName] == nil then return retFlag end
-		
+
 		for idx = 1, #_npcCache[npcName], 1 do
-			_npcCache[npcName][idx].questList = nkQuestBase.query.NPCQuests(_npcCache[npcName][idx])
+			local npcQuestList = nkQuestBase.query.NPCQuests(_npcCache[npcName][idx])
+
+			--dump (npcQuestList)
+			
+			if npcQuestList ~= nil then
+				for _, questId in pairs (npcQuestList) do
+					table.insert(quests, questId)
+				end
+			end
 		end
 		
 	end
+
+	--for idx = 1, #_npcCache[npcName], 1 do
 	
-	for idx = 1, #_npcCache[npcName], 1 do
-	
-		local quests = _npcCache[npcName][idx].questList
+		--local quests = _npcCache[npcName][idx].questList
 
 		if quests ~= nil and oInspectSystemWatchdog() >= 0.1 then
 			local flag, questDetailList = pcall(oInspectQuestDetail, quests)
@@ -308,11 +321,16 @@ local function _fctCheckUnknown(npcName, thisData)
 
 				for _, questInfo in pairs(questDetailList) do
 
-					if questInfo.complete ~= true and _fctIsCurrentWorld(questInfo) == true then
-						if thisData.id == details.id then retFlag = true end
+					--if questInfo.complete ~= true and _fctIsCurrentWorld(questInfo) == true then
+					if questInfo.complete ~= true then
 
+						--print (questInfo.id)
+
+						--if thisData.id == details.id then retFlag = true end
 						_unknownIdentified[npcName] = questInfo.id
-						if questInfo.tag ~= nil and oSFind(questInfo.tag, "daily") ~= nil then
+						if questInfo.tag ~= nil and oSFind(questInfo.tag, "pvp daily") ~= nil then
+							thisData.type = "QUEST.PVPDAILY"
+						elseif questInfo.tag ~= nil and (oSFind(questInfo.tag, "daily") ~= nil or oSFind(questInfo.tag, "weekly") ~= nil) then
 							thisData.type = "QUEST.DAILY"
 						else
 							thisData.type = "QUEST.START"
@@ -338,7 +356,7 @@ local function _fctCheckUnknown(npcName, thisData)
 				end          
 			end
 		end
-	end
+	--end
 	
 	return retFlag
 

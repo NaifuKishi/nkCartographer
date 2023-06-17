@@ -5,7 +5,7 @@ Description = "Quest library"
 Author = "Naifu"
 Email = "naifukishi@gmail.com"
 
-Version = "2.0.1"
+Version = "2.0.2"
 Environment = "4.0"
 
 RunOnStartup = {
@@ -23,12 +23,12 @@ RunOnStartup = {
 	"db/sfp-byZone.lua",
 	"db/sfp-npc.lua",
 	"db/sfp-questnpc.lua",
+	"db/poa-quests.lua",
+	"db/poa-byZone.lua",
+	"db/poa-npc.lua",
+	"db/poa-questnpc.lua",
 }
 
 Dependencies = {
 	EnKai= {"required", "before"},
 }
--- X-Curse-Packaged-Version: V2.0.1
--- X-Curse-Project-Name: nkQuestBase
--- X-Curse-Project-ID: nkquestbase
--- X-Curse-Repository-ID: rift/nkquestbase/mainline

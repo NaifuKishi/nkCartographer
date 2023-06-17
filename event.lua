@@ -73,7 +73,7 @@ function _events.SystemUpdate ()
 	if data.forceUpdate == true then
 		
 		if data.postponedAdds ~= nil then
-			if nkQuestBase.query.isInit() == true and nkQuestBase.query.isPackageLoaded('nt') == true and nkQuestBase.query.isPackageLoaded('classic') == true then
+			if nkQuestBase.query.isInit() == true and nkQuestBase.query.isPackageLoaded('poa') == true and nkQuestBase.query.isPackageLoaded('nt') == true and nkQuestBase.query.isPackageLoaded('classic') == true then
 				local temp = EnKai.tools.table.copy(data.postponedAdds)
 				data.postponedAdds = nil
 				_internal.UpdateMap(temp, "add", "_events.SystemUpdate")

@@ -289,4 +289,6 @@ U44F134FE0E2CB49B={DE='Okulierer von Kamoho',FR='Greffeur de Kamoho',EN='Grafter
 U3AA5135F08BEC782={DE='Atrophinius',FR='Atrophinius',EN='Atrophinius',lvl=60},
 U577B815A6F0448F0={DE='Arethea',FR='Arethea',EN='Arethea',scene={DE='Atragarianische Quelle',FR='Puits Atragarian',EN='Atragarian Well'},lvl=60},
 UFF25B32723C48AE4={DE='Agent Ronan',FR='Agent Ronan',EN='Agent Ronan',scene={DE='Arlans Herausforderung',FR='Défi d\'Arlan',EN='Arlan\'s Challenge'},lvl=60},
+U80000000C10006D3={DE='Romas Periga',FR='Romas Periga',EN='Romas Periga',scene={DE='Die Kanäle',FR='Les Canaux',EN='The Canals'},lvl=60},
+U80000000C1000737={DE='Elena Lyra',FR='Elena Lyra',EN='Elena Lyra',scene={DE='Die Kanäle',FR='Les Canaux',EN='The Canals'},lvl=63},
 }) end
