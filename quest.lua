@@ -88,51 +88,38 @@ local function _fctProcessObjectives (key, questName, domain, objectiveList, isC
 
 	if nkDebug then nkDebug.logEntry (addonInfo.identifier, "_fctProcessObjectives", questName, objectiveList) end
 
-	--if isComplete == true then
-	--	local id = "q-" .. key .. "-o1-i1"
-	--	local indicators = objectiveList[1].indicator
-	--	local thisEntry = { id = id, type = "QUEST.RETURN", descList = { objectiveList[1].description }, 
-	--						title = questName,
-	--						coordX = indicators[1].x, coordY = indicators[1].y, coordZ = indicators[1].z }
-	--	
-	--	data.currentQuestList[key][id] = true
-	--	addInfo[id] = thisEntry
-	--	hasAdd = true
-	--else
+	for idx1 = 1, #objectiveList, 1 do
 
-		for idx1 = 1, #objectiveList, 1 do
+		if objectiveList[idx1] ~= nil and objectiveList[idx1].complete ~= true then
 
-			if objectiveList[idx1] ~= nil and objectiveList[idx1].complete ~= true then
+			local indicators = objectiveList[idx1].indicator
 
-				local indicators = objectiveList[idx1].indicator
+			if indicators ~= nil then
+				for idx2 = 1, #indicators, 1 do
+					local id = "q-" .. key .. "-o" .. idx1 .. "-i" .. idx2
+					local thisEntry = { id = id, type = "QUEST.POINT", descList = { objectiveList[idx1].description }, 
+										title = questName,
+										coordX = indicators[idx2].x, coordY = indicators[idx2].y, coordZ = indicators[idx2].z }
 
-				if indicators ~= nil then
-					for idx2 = 1, #indicators, 1 do
-						local id = "q-" .. key .. "-o" .. idx1 .. "-i" .. idx2
-						local thisEntry = { id = id, type = "QUEST.POINT", descList = { objectiveList[idx1].description }, 
-											title = questName,
-											coordX = indicators[idx2].x, coordY = indicators[idx2].y, coordZ = indicators[idx2].z }
+					if isComplete == true then
+						thisEntry.type = "QUEST.RETURN"	
+					elseif indicators[idx2].radius and indicators[idx2].radius <=30 then 
+						thisEntry.type = "QUEST.POINT"
+					elseif indicators[idx2].radius and indicators[idx2].radius > 30 then 
+						thisEntry.type = "QUEST.AREA"
+						thisEntry.radius = indicators[idx2].radius
+					elseif domain == "area" then
+						thisEntry.type = "QUEST.ZONEEVENT"
+					end
 
-						if isComplete == true then
-							thisEntry.type = "QUEST.RETURN"	
-						elseif indicators[idx2].radius and indicators[idx2].radius <=30 then 
-							thisEntry.type = "QUEST.POINT"
-						elseif indicators[idx2].radius and indicators[idx2].radius > 30 then 
-							thisEntry.type = "QUEST.AREA"
-							thisEntry.radius = indicators[idx2].radius
-						elseif domain == "area" then
-							thisEntry.type = "QUEST.ZONEEVENT"
-						end
+					data.currentQuestList[key][id] = true
+					addInfo[id] = thisEntry
+					hasAdd = true
 
-						data.currentQuestList[key][id] = true
-						addInfo[id] = thisEntry
-						hasAdd = true
-
-					end -- for idx2
-				end -- indicators?
-			end -- complete?
-		end -- idx1
-	--end
+				end -- for idx2
+			end -- indicators?
+		end -- complete?
+	end -- idx1
 
 	return hasAdd, addInfo
 
@@ -203,8 +190,6 @@ end
 local function _fctProcessMissingZoneQuests (questList)
 
 	for _, questId in pairs (questList) do
-
-		--local questId = questList[idx]
 
 		if _fctIsQuestComplete(questId) == false then
 
@@ -289,8 +274,6 @@ local function _fctCheckUnknown(npcName, thisData)
 	local retFlag = false
 	local quests = {}
 
-	--print (npcName)
-
 	if _npcCache[npcName] == nil then
 		_npcCache[npcName] = nkQuestBase.query.NPCByName (npcName)
 
@@ -310,53 +293,49 @@ local function _fctCheckUnknown(npcName, thisData)
 		
 	end
 
-	--for idx = 1, #_npcCache[npcName], 1 do
-	
-		--local quests = _npcCache[npcName][idx].questList
+	if quests ~= nil and oInspectSystemWatchdog() >= 0.1 then
+		local flag, questDetailList = pcall(oInspectQuestDetail, quests)
 
-		if quests ~= nil and oInspectSystemWatchdog() >= 0.1 then
-			local flag, questDetailList = pcall(oInspectQuestDetail, quests)
+		if flag then
 
-			if flag then
+			for _, questInfo in pairs(questDetailList) do
 
-				for _, questInfo in pairs(questDetailList) do
+				if questInfo.complete ~= true then
 
-					--if questInfo.complete ~= true and _fctIsCurrentWorld(questInfo) == true then
-					if questInfo.complete ~= true then
+					--print (questInfo.id)
 
-						--print (questInfo.id)
+					_unknownIdentified[npcName] = questInfo.id
+					if questInfo.tag ~= nil and oSFind(questInfo.tag, "pvp daily") ~= nil then
+						thisData.type = "QUEST.PVPDAILY"
+					elseif questInfo.tag ~= nil and (oSFind(questInfo.tag, "daily") ~= nil or oSFind(questInfo.tag, "weekly") ~= nil) then
+						thisData.type = "QUEST.DAILY"
+					else
+						thisData.type = "QUEST.START"
+					end
 
-						--if thisData.id == details.id then retFlag = true end
-						_unknownIdentified[npcName] = questInfo.id
-						if questInfo.tag ~= nil and oSFind(questInfo.tag, "pvp daily") ~= nil then
-							thisData.type = "QUEST.PVPDAILY"
-						elseif questInfo.tag ~= nil and (oSFind(questInfo.tag, "daily") ~= nil or oSFind(questInfo.tag, "weekly") ~= nil) then
-							thisData.type = "QUEST.DAILY"
-						else
-							thisData.type = "QUEST.START"
-						end
+					--print (questInfo.name)
+					--print (thisData.type)
 
-						thisData.title = questInfo.name
+					thisData.title = questInfo.name
 
-						local tempDesc = questInfo.summary or questInfo.description
-						if tempDesc ~= nil then thisData.descList = EnKai.strings.split(tempDesc, "\n") end
+					local tempDesc = questInfo.summary or questInfo.description
+					if tempDesc ~= nil then thisData.descList = EnKai.strings.split(tempDesc, "\n") end
 
-						thisData.name = questInfo.name
+					thisData.name = questInfo.name
 
-						uiElements.mapUI:AddElement(thisData)
-						data.minimapQuestList[questInfo.id] = thisData
-						data.minimapIdToQuest[thisData.id] = id
+					uiElements.mapUI:AddElement(thisData)
+					data.minimapQuestList[questInfo.id] = thisData
+					data.minimapIdToQuest[thisData.id] = id
 
-						if data.missingQuestList[id] ~= nil then
-							for id, details in pairs(data.missingQuestList[id]) do
-								uiElements.mapUI:RemoveElement({[id] = true})
-							end
+					if data.missingQuestList[id] ~= nil then
+						for id, details in pairs(data.missingQuestList[id]) do
+							uiElements.mapUI:RemoveElement({[id] = true})
 						end
 					end
-				end          
-			end
+				end
+			end          
 		end
-	--end
+	end
 	
 	return retFlag
 
