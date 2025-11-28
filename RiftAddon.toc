@@ -6,7 +6,7 @@ Description = "Replacement of the standard main and minimap with added functiona
 Author = "Naifu"
 Email = "naifukishi@gmail.com"
 
-Version = "2.3.6"
+Version = "2.3.10"
 Environment = "4.0"
 
 RunOnStartup = {
@@ -41,7 +41,3 @@ SavedVariables = {
    nkCartSetup 	   = "character",
    nkCartGathering = "account"
 }
--- X-Curse-Packaged-Version: V2.3.1
--- X-Curse-Project-Name: nkCartographer
--- X-Curse-Project-ID: nkcartographer
--- X-Curse-Repository-ID: rift/nkcartographer/mainline

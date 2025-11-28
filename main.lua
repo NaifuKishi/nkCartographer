@@ -16,6 +16,10 @@ local _events     = privateVars.events
 
 ---------- init local variables ---------
 
+---------- make global functions local ---------
+
+local _oInspectTimeReal = Inspect.Time.Real
+
 ---------- init variables ---------
 
 data.playerUID            = nil -- id of the current player
@@ -50,7 +54,7 @@ uiElements.contextSecure:SetSecureMode ('restricted')
 
 -- end
 
-local function _showHide()
+function _internal.showHide()
 
 	if uiElements.mapUI:GetVisible() == true then
       uiElements.mapUI:SetVisible(false)
@@ -78,7 +82,7 @@ local function _commandHandler (commandline)
 		uiElements.debugPanel:SetCoord(mapInfo.x1, mapInfo.x2, mapInfo.y1, mapInfo.y2)
 		
 	elseif string.find(commandline, "show") ~= nil then
-		_showHide()
+		_internal.showHide()
 	elseif string.find(commandline, "add") ~= nil then
 		local thisCommand = EnKai.strings.split(commandline, " ")
 		
@@ -105,7 +109,7 @@ end
 
 local function _main(_, addon)
 
-  if addon == addonInfo.identifier then
+  if addon ~= addonInfo.identifier then return end
 
     local syslang = Inspect.System.Language()
 
@@ -200,19 +204,20 @@ local function _main(_, addon)
       Command.Event.Attach(Event.Message.Receive, _events.messageReceive, "nkCartographer.Message.Receive")
     end
     
+    --[[
     local items = {
       { label = privateVars.langTexts.configuration, callBack = _internal.ShowConfig},
-      { label = privateVars.langTexts.showhide, callBack = _showHide},
+      { label = privateVars.langTexts.showhide, callBack = _internal.showHide},
       { label = privateVars.langTexts.toggle, callBack = function() uiElements.mapUI:ToggleMinMax() end}
     }
     
     EnKai.manager.init('nkCartographer', items, nil)
-	
+	  ]]
+    
     Command.Console.Display("general", true, string.format(privateVars.langTexts.startUp, addonInfo.toc.Version), true)
     
     EnKai.version.init(addonInfo.toc.Identifier, addonInfo.toc.Version)
-  end  
-  
+    
 end
 
 local function _performGatheringTransfer()

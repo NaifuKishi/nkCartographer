@@ -21,6 +21,7 @@ local _oInspectSystemSecure = Inspect.System.Secure
 local _oInspectSystemWatchdog = Inspect.System.Watchdog
 local _oInspectItemDetail = Inspect.Item.Detail
 local _oInspectMouse = Inspect.Mouse
+local _oInspectTimeReal = Inspect.Time.Real
 
 ---------- local function block ---------
 
@@ -240,6 +241,7 @@ function _internal.initMap ()
 	uiElements.mapUI:SetPointMaximized(nkCartSetup.maximizedX, nkCartSetup.maximizedY)  
 	uiElements.mapUI:SetWidthMaximized(nkCartSetup.maximizedWidth)
 	uiElements.mapUI:SetHeightMaximized(nkCartSetup.maximizedHeight)
+
 	uiElements.mapUI:SetPoint("TOPLEFT", UIParent, "TOPLEFT", nkCartSetup.x, nkCartSetup.y)
 	uiElements.mapUI:SetZoom(nkCartSetup.scale, false)
 	uiElements.mapUI:SetZoom(nkCartSetup.maximizedScale, true)
@@ -252,6 +254,34 @@ function _internal.initMap ()
 		local mapInfo = uiElements.mapUI:GetMapInfo()
 		uiElements.debugPanel:SetCoord(mapInfo.x1, mapInfo.x2, mapInfo.y1, mapInfo.y2)
 	end
+
+	Command.Event.Attach(Event.System.Update.Begin, function ()
+      
+      if data.delayStart ~= nil then
+          local tmpTime = _oInspectTimeReal()
+          if EnKai.tools.math.round((tmpTime - data.delayStart), 1) > 1 then 
+            uiElements.mapUI:SetPoint("TOPLEFT", UIParent, "TOPLEFT", nkCartSetup.x, nkCartSetup.y)
+            Command.Event.Detach(Event.System.Update.Begin, nil, "nkCartographer.resetPosition")	
+          end
+      else
+        data.delayStart = _oInspectTimeReal()
+      end
+      
+    end, "nkCartographer.resetPosition")		
+
+	local function _toggleMinMax()
+		uiElements.mapUI:ToggleMinMax()
+	end
+
+    EnKai.managerV2.RegisterButton('nkCartographer.config', addonInfo.id, "gfx/minimapIcon.png", _internal.ShowConfig)
+	EnKai.managerV2.RegisterButton('nkCartographer.toggle', addonInfo.id, "gfx/minimapIconCloseMap.png", _internal.showHide)
+	EnKai.managerV2.RegisterButton('nkCartographer.minmax', addonInfo.id, "gfx/minimapIconResize.png", _toggleMinMax)
+    
+    local minimapFrame = EnKai.managerV2.GetFrame()
+    if minimapFrame then      
+      minimapFrame:SetPoint("TOPLEFT", uiElements.mapUI, "BOTTOMLEFT")
+	  minimapFrame:SetWidth(uiElements.mapUI:GetWidth())
+    end
 
 	if nkDebug then debugId = nkDebug.traceEnd (addonInfo.identifier, "_internal.initMap", debugId) end
   

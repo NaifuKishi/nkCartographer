@@ -229,7 +229,7 @@ function _events.playerAvailable (_, info)
 	data.playerUID = info.id
 	_internal.initMap()
 	local details = _oInspectUnitDetail('player.target')
-    if details ~= nil then _processPlayerTarget(details.id, details) end    
+  if details ~= nil then _processPlayerTarget(details.id, details) end    
 	
 	_internal.UpdateWaypointArrows()
 	
