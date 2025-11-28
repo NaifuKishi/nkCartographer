@@ -1,0 +1,100 @@
+Identifier = "EnKai"
+Name = "EnKai Library"
+Description = "What makes all of the nkAddons work. An extensive lib with tons of reusable and helpfull goodies."
+
+Author = "Naifu"
+Email = "naifukishi@gmail.com"
+
+Version = "3.1.15"
+Environment = "4.0"
+
+RunOnStartup = {
+  "main.lua",
+  "locales/localizationDE.lua",
+  "locales/localizationFR.lua",
+  "locales/localizationEN.lua",
+  "locales/localizationRU.lua",
+  "art/theme.lua",
+  "buffManager/buffManager.lua",
+  "cooldown/cooldown.lua",
+  "coroutines/coroutines.lua",
+  "doc/doc.lua",
+  "doc/docEmbedded.lua",
+  "events/events.lua",
+  "fx/fx.lua",
+  "inventory/inventory.lua",
+  "items/items.lua",
+  "map/data.lua",
+  "map/location.lua",
+  "map/map.lua",
+  "map/zone.lua",
+  "strings/strings.lua",
+  "tools/tools.lua",
+  "tools/uuid.lua",
+  "ui/ui.lua",
+  "ui/button/actionbutton.lua",  
+  "ui/button/actionbuttonmetro.lua",  
+  "ui/button/button.lua",
+  "ui/button/buttonMetro.lua",
+  "ui/button/stepButton.lua",
+  "ui/button/stepButtonMetro.lua",
+  "ui/default/canvas.lua",
+  "ui/default/frame.lua",
+  "ui/default/text.lua",
+  "ui/default/texture.lua",
+  "ui/form/checkbox.lua",
+  "ui/form/combo.lua",
+  "ui/form/colorPicker.lua",
+  "ui/form/radiobutton.lua",
+  "ui/form/slider.lua",
+  "ui/form/textfield.lua",
+  "ui/grid/grid.lua",
+  "ui/grid/gridCell.lua",
+  "ui/grid/gridHeaderCell.lua",
+  "ui/image/imagegallery.lua",
+  "ui/map/map.lua",
+  "ui/map/elementTexture.lua",
+  "ui/map/elementCanvas.lua",
+  "ui/menu/menu.lua",
+  "ui/menu/menuEntry.lua",  
+  "ui/pane/scrollbox.lua",
+  "ui/pane/scrollpane.lua",
+  "ui/pane/tabpane.lua",
+  "ui/pane/tabPaneMetro.lua",
+  "ui/tools/progressBar.lua",
+  "ui/tooltip/infoText.lua",
+  "ui/tooltip/itemTooltip.lua",
+  "ui/tooltip/tooltip.lua",   
+  "ui/window/dialog.lua",
+  "ui/window/dialogMetro.lua",
+  "ui/window/window.lua",
+  "ui/window/windowElement.lua",
+  "ui/window/windowMetro.lua",
+  "ui/wizard/wizardInfo.lua",
+  "unit/unit.lua",
+  --"unit/unitstats.lua",
+  "manager/manager.lua",
+  "manager/managerV2.lua",
+  "version/version.lua",
+  "zip/encdec.lua",
+  "zip/zip.lua"
+}
+
+Embed = {
+	["Libs/LibAsyncTextures"] = true,
+	["Libs/LibTransform2"] = true,
+	["Libs/LibUnitChange"] = true
+}
+
+Dependencies = {
+	LibAsyncTextures = {"required", "before"},
+	LibTransform2 = {"required", "before"},
+	LibUnitChange = {"required", "before"}
+}
+
+SavedVariables = {
+  nkManagerSettings = "account",
+  EnKaiSetup = "account",
+  EnKaiInv = "account",
+  EnKaiDebug = "account",
+}
