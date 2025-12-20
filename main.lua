@@ -118,7 +118,7 @@ local function _main(_, addon)
       return
     end
 
-    EnKai.ui.registerFont (addonInfo.id, "Montserrat", "fonts/Montserrat.ttf")
+    EnKai.ui.registerFont (addonInfo.id, "Montserrat", "fonts/Montserrat-Regular.ttf")
     EnKai.ui.registerFont (addonInfo.id, "MontserratSemiBold", "fonts/Montserrat-SemiBold.ttf")
     
     table.insert(Command.Slash.Register("nkCG"), {_commandHandler, "nkCartographer", "ui"}) 
@@ -206,16 +206,6 @@ local function _main(_, addon)
       
       Command.Event.Attach(Event.Message.Receive, _events.messageReceive, "nkCartographer.Message.Receive")
     end
-    
-    --[[
-    local items = {
-      { label = privateVars.langTexts.configuration, callBack = _internal.ShowConfig},
-      { label = privateVars.langTexts.showhide, callBack = _internal.showHide},
-      { label = privateVars.langTexts.toggle, callBack = function() uiElements.mapUI:ToggleMinMax() end}
-    }
-    
-    EnKai.manager.init('nkCartographer', items, nil)
-	  ]]
     
     Command.Console.Display("general", true, string.format(privateVars.langTexts.startUp, addonInfo.toc.Version), true)
     

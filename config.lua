@@ -35,8 +35,10 @@ local function _configTabSettings(parent)
     labelGeneric = EnKai.uiCreateFrame("nkText", name .. '.labelGeneric', tabPane)
     labelGeneric:SetPoint("TOPLEFT", tabPane, "TOPLEFT")
     labelGeneric:SetEffectGlow({ offsetX = 2, offsetY = 2})
-    labelGeneric:SetText(lang.labelGenericSettings)
+    labelGeneric:SetText(lang.labelGenericSettings)    
     labelGeneric:SetFontSize(16)
+
+    EnKai.ui.setFont(labelGeneric, addonInfo.id, "MontserratSemiBold")
     
     local backgroundList = {}
     
@@ -52,6 +54,7 @@ local function _configTabSettings(parent)
     backgroundSelect:SetSelection(backgroundList)
     backgroundSelect:SetSelectedValue(nkCartSetup.background, false)
     backgroundSelect:SetText(lang.backgroundSelect)
+    backgroundSelect:SetFont(addonInfo.id, "Montserrat")
         
     Command.Event.Attach(EnKai.events[name .. ".backgroundSelect"].ComboChanged, function (_, newValue)    
       nkCartSetup.background = newValue.value
@@ -64,6 +67,7 @@ local function _configTabSettings(parent)
     lockedCheckbox:SetText(lang.lockedCheckbox)
     lockedCheckbox:SetChecked(nkCartSetup.locked)
     lockedCheckbox:SetLabelInFront(true)
+    lockedCheckbox:SetFont(addonInfo.id, "Montserrat")
     
     Command.Event.Attach(EnKai.events[name .. '.lockedCheckbox'].CheckboxChanged, function (_, newValue)   
       nkCartSetup.locked = newValue
@@ -81,6 +85,7 @@ local function _configTabSettings(parent)
     syncTargetCheckbox:SetText(lang.syncTargetCheckbox)
     syncTargetCheckbox:SetChecked(nkCartSetup.syncTarget)
     syncTargetCheckbox:SetLabelInFront(true)
+    syncTargetCheckbox:SetFont(addonInfo.id, "Montserrat")
     
     Command.Event.Attach(EnKai.events[name .. '.syncTargetCheckbox'].CheckboxChanged, function (_, newValue)   
       nkCartSetup.syncTarget = newValue
@@ -103,6 +108,8 @@ local function _configTabSettings(parent)
     labelDisplay:SetEffectGlow({ offsetX = 2, offsetY = 2})
     labelDisplay:SetText(lang.labelDisplaySettings)
     labelDisplay:SetFontSize(16)
+
+    EnKai.ui.setFont(labelDisplay, addonInfo.id, "MontserratSemiBold")
     
     poiCheckbox = EnKai.uiCreateFrame("nkCheckbox", name .. '.poiCheckbox', tabPane) 
     poiCheckbox:SetPoint("TOPLEFT", labelDisplay, "BOTTOMLEFT", 0, 10)
@@ -110,6 +117,7 @@ local function _configTabSettings(parent)
     poiCheckbox:SetText(lang.poiCheckbox)
     poiCheckbox:SetChecked(nkCartSetup.showPOI)
     poiCheckbox:SetLabelInFront(true)
+    poiCheckbox:SetFont(addonInfo.id, "Montserrat")
     
     Command.Event.Attach(EnKai.events[name .. '.poiCheckbox'].CheckboxChanged, function (_, newValue)   
       nkCartSetup.showPOI = newValue
@@ -122,6 +130,7 @@ local function _configTabSettings(parent)
     zoneTitleCheckbox:SetText(lang.zoneTitleCheckbox)
     zoneTitleCheckbox:SetChecked(nkCartSetup.showZoneTitle)
     zoneTitleCheckbox:SetLabelInFront(true)
+    zoneTitleCheckbox:SetFont(addonInfo.id, "Montserrat")
     
     Command.Event.Attach(EnKai.events[name .. '.zoneTitleCheckbox'].CheckboxChanged, function (_, newValue)   
       nkCartSetup.showZoneTitle = newValue
@@ -134,33 +143,37 @@ local function _configTabSettings(parent)
     animationsCheckbox:SetText(lang.animationsCheckbox)
     animationsCheckbox:SetChecked(nkCartSetup.animations)
     animationsCheckbox:SetLabelInFront(true)
+    animationsCheckbox:SetFont(addonInfo.id, "Montserrat")
     
     Command.Event.Attach(EnKai.events[name .. '.animationsCheckbox'].CheckboxChanged, function (_, newValue)   
-		nkCartSetup.animations = newValue
-		uiElements.mapUI:SetAnimated(newValue, nkCartSetup.animationSpeed)
-		animationSpeedSlider:SetVisible(newValue)
-		if newValue == true then
-			rareCheckbox:SetPoint("TOPLEFT", animationSpeedSlider, "BOTTOMLEFT", 0, 10)
-		else
-			rareCheckbox:SetPoint("TOPLEFT", animationsCheckbox, "BOTTOMLEFT", 0, 10)
-		end
+		  nkCartSetup.animations = newValue
+		  uiElements.mapUI:SetAnimated(newValue, nkCartSetup.animationSpeed)
+		  animationSpeedSlider:SetVisible(newValue)
+      if newValue == true then
+        rareCheckbox:SetPoint("TOPLEFT", animationSpeedSlider, "BOTTOMLEFT", 0, 10)
+      else
+        rareCheckbox:SetPoint("TOPLEFT", animationsCheckbox, "BOTTOMLEFT", 0, 10)
+      end
     end, name .. '.animationsCheckbox' ..".CheckboxChanged")
 	
-	animationsCheckboxheckboxInfo = EnKai.uiCreateFrame("nkText", name .. '.animationsCheckboxheckboxInfo', tabPane)
+	  animationsCheckboxheckboxInfo = EnKai.uiCreateFrame("nkText", name .. '.animationsCheckboxheckboxInfo', tabPane)
     animationsCheckboxheckboxInfo:SetPoint("CENTERLEFT", animationsCheckbox, "CENTERRIGHT", 10, 0)
     animationsCheckboxheckboxInfo:SetText(lang.animationsCheckboxheckboxInfo)
+    animationsCheckboxheckboxInfo:SetFontColor(1, 0, 0, 1)
+    EnKai.ui.setFont(animationsCheckboxheckboxInfo, addonInfo.id, "MontserratSemiBold")
     
-	animationSpeedSlider = EnKai.uiCreateFrame("nkSlider", name .. ".animationSpeedSlider", tabPane)
+	  animationSpeedSlider = EnKai.uiCreateFrame("nkSlider", name .. ".animationSpeedSlider", tabPane)
     animationSpeedSlider:SetRange(0, 100)
     animationSpeedSlider:SetMidValue(50)
-	animationSpeedSlider:SetLabelWidth(155)
-	animationSpeedSlider:SetWidth(250)
+	  animationSpeedSlider:SetLabelWidth(155)
+	  animationSpeedSlider:SetWidth(250)
     animationSpeedSlider:SetText(lang.animationSpeedSlider) 
     animationSpeedSlider:SetPoint("TOPLEFT", animationsCheckbox, "BOTTOMLEFT", 0, 10)
     animationSpeedSlider:AdjustValue(100 - nkCartSetup.animationSpeed * 1000)
+    animationSpeedSlider:SetFont(addonInfo.id, "Montserrat")
             
     Command.Event.Attach(EnKai.events[animationSpeedSlider:GetName()].SliderChanged, function (_, newValue)      
-	  nkCartSetup.animationSpeed = (100 - newValue) / 1000
+	    nkCartSetup.animationSpeed = (100 - newValue) / 1000
       uiElements.mapUI:SetAnimated(nkCartSetup.animations, nkCartSetup.animationSpeed)
     end, animationSpeedSlider:GetName() .. '.SliderChanged')
 	
@@ -170,6 +183,7 @@ local function _configTabSettings(parent)
     rareCheckbox:SetText(lang.rareCheckbox)
     rareCheckbox:SetChecked(nkCartSetup.rareMobs)
     rareCheckbox:SetLabelInFront(true)
+    rareCheckbox:SetFont(addonInfo.id, "Montserrat")
     
     Command.Event.Attach(EnKai.events[name .. '.rareCheckbox'].CheckboxChanged, function (_, newValue)   
       nkCartSetup.rareMobs = newValue
@@ -179,6 +193,8 @@ local function _configTabSettings(parent)
     rareCheckboxInfo = EnKai.uiCreateFrame("nkText", name .. '.rareCheckboxInfo', tabPane)
     rareCheckboxInfo:SetPoint("CENTERLEFT", rareCheckbox, "CENTERRIGHT", 10, 0)
     rareCheckboxInfo:SetText(lang.rareCheckboxInfo)
+    rareCheckboxInfo:SetFontColor(1, 0, 0, 1)
+    EnKai.ui.setFont(rareCheckboxInfo, addonInfo.id, "MontserratSemiBold")
     
     questCheckbox = EnKai.uiCreateFrame("nkCheckbox", name .. '.questCheckbox', tabPane) 
     questCheckbox:SetPoint("TOPLEFT", rareCheckbox, "BOTTOMLEFT", 0, 10)
@@ -186,6 +202,7 @@ local function _configTabSettings(parent)
     questCheckbox:SetText(lang.questCheckBox)
     questCheckbox:SetChecked(nkCartSetup.showQuest)
     questCheckbox:SetLabelInFront(true)
+    questCheckbox:SetFont(addonInfo.id, "Montserrat")
     
     Command.Event.Attach(EnKai.events[name .. '.questCheckbox'].CheckboxChanged, function (_, newValue)   
       nkCartSetup.showQuest = newValue
@@ -198,6 +215,7 @@ local function _configTabSettings(parent)
     unknownCheckbox:SetText(lang.unknownCheckbox)
     unknownCheckbox:SetChecked(nkCartSetup.showUnknown)
     unknownCheckbox:SetLabelInFront(true)
+    unknownCheckbox:SetFont(addonInfo.id, "Montserrat")
     
     Command.Event.Attach(EnKai.events[name .. '.unknownCheckbox'].CheckboxChanged, function (_, newValue)   
       nkCartSetup.showUnknown = newValue
@@ -208,6 +226,8 @@ local function _configTabSettings(parent)
     labelTrack:SetEffectGlow({ offsetX = 2, offsetY = 2})
     labelTrack:SetText(lang.labelTrackSettings)
     labelTrack:SetFontSize(16)
+
+    EnKai.ui.setFont(labelTrack, addonInfo.id, "MontserratSemiBold")
     
     gatheringCheckbox = EnKai.uiCreateFrame("nkCheckbox", name .. '.gatheringCheckbox', tabPane) 
     gatheringCheckbox:SetPoint("TOPLEFT", labelTrack, "BOTTOMLEFT", 0, 10)
@@ -215,6 +235,7 @@ local function _configTabSettings(parent)
     gatheringCheckbox:SetText(lang.gatheringCheckbox)
     gatheringCheckbox:SetChecked(nkCartSetup.trackGathering)
     gatheringCheckbox:SetLabelInFront(true)
+    gatheringCheckbox:SetFont(addonInfo.id, "Montserrat")
     
     Command.Event.Attach(EnKai.events[name .. '.gatheringCheckbox'].CheckboxChanged, function (_, newValue)   
       nkCartSetup.trackGathering = newValue
@@ -227,6 +248,7 @@ local function _configTabSettings(parent)
     artifactCheckbox:SetText(lang.artifactCheckbox)
     artifactCheckbox:SetChecked(nkCartSetup.trackArtifacts)
     artifactCheckbox:SetLabelInFront(true)
+    artifactCheckbox:SetFont(addonInfo.id, "Montserrat")
     
     Command.Event.Attach(EnKai.events[name .. '.artifactCheckbox'].CheckboxChanged, function (_, newValue)   
       nkCartSetup.trackArtifacts = newValue
@@ -259,20 +281,28 @@ local function _configTabAbout(parent)
     thanxLabel:SetFontSize(16)
     thanxLabel:SetText(lang.thanxLabel)
     
+    EnKai.ui.setFont(thanxLabel, addonInfo.id, "Montserrat")
+    
     thanxTesting = EnKai.uiCreateFrame("nkText", name .. ".thanxTesting", tabPane)
     thanxTesting:SetPoint("CENTERTOP", thanxLabel, "CENTERBOTTOM", 0, 20)
     thanxTesting:SetFontSize(16)
     thanxTesting:SetText(lang.thanxTesting)
+
+    EnKai.ui.setFont(thanxTesting, addonInfo.id, "Montserrat")
     
     thanxTesting2 = EnKai.uiCreateFrame("nkText", name .. ".thanxTesting2", tabPane)
     thanxTesting2:SetPoint("CENTERTOP", thanxTesting, "CENTERBOTTOM")
     thanxTesting2:SetFontSize(16)
     thanxTesting2:SetText(lang.thanxTesting2)
+
+    EnKai.ui.setFont(thanxTesting2, addonInfo.id, "Montserrat")
     
     thanxLibs = EnKai.uiCreateFrame("nkText", name .. ".thanxLibs", tabPane)
     thanxLibs:SetPoint("CENTERTOP", thanxTesting2, "CENTERBOTTOM", 0, 10)
     thanxLibs:SetFontSize(16)
     thanxLibs:SetText(lang.thanxLibs)
+
+    EnKai.ui.setFont(thanxLibs, addonInfo.id, "Montserrat")
     
   end
   
@@ -286,11 +316,12 @@ local function _config()
 
   local config = EnKai.uiCreateFrame("nkWindowMetro", name, uiElements.context)
   
-  config:SetWidth(400)
+  config:SetWidth(500)
   config:SetHeight(540)
   config:SetTitle(addonInfo.toc.Name)
   config:SetCloseable(true)
   config:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 600, 400)
+  config:SetTitleFont(addonInfo.id, "MontserratSemiBold")
   config:SetLayer(3)
   
   local tabPane = EnKai.uiCreateFrame("nkTabPaneMetro", name .. ".tabPane", config:GetContent())
@@ -307,6 +338,7 @@ local function _config()
   tabPane:SetBorder(false)
   tabPane:SetPoint("TOPLEFT", config:GetContent(), "TOPLEFT", 10, 10)
   tabPane:SetPoint("BOTTOMRIGHT", config:GetContent(), "BOTTOMRIGHT", -10, -50)
+  tabPane:SetFont(addonInfo.id, "MontserratSemiBold")
   tabPane:SetLayer(1)
   
   tabPane:AddPane( { label = lang.tabHeaderSettings, frame = paneTabSettings, initFunc = function() paneTabSettings:build() end}, false)
@@ -319,6 +351,7 @@ local function _config()
   closeButton:SetIcon("EnKai", "gfx/icons/close.png")
   closeButton:SetScale(.8)
   closeButton:SetLayer(9)
+  closeButton:SetFont(addonInfo.id, "MontserratSemiBold")
   
   Command.Event.Attach(EnKai.events[name .. ".closeButton"].Clicked, function (_, newValue) config:SetVisible(false) end, name .. ".closeButton.Clicked")
     

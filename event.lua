@@ -17,10 +17,10 @@ local _unitsMapping = {}
 
 ---------- make global functions local ---------
 
-local _oInspectUnitDetail = Inspect.Unit.Detail
-local _oInspectTimeReal = Inspect.Time.Real
-local _oInspectUnitCastbar = Inspect.Unit.Castbar
-local _oInspectAchievementDetail = Inspect.Achievement.Detail
+local inspectUnitDetail         = Inspect.Unit.Detail
+local inspectTimeReal           = Inspect.Time.Real
+local inspectUnitCastbar        = Inspect.Unit.Castbar
+local inspectAchievementDetail  = Inspect.Achievement.Detail
 
 ---------- local function block ---------
 
@@ -62,10 +62,10 @@ function _events.SystemUpdate ()
 
 	if data.forceUpdate ~= true then
 		if data.lastUpdate == nil then
-			data.lastUpdate = _oInspectTimeReal()
+			data.lastUpdate = inspectTimeReal()
 			privateVars.forceUpdate = true
 		else
-			local tmpTime = _oInspectTimeReal()
+			local tmpTime = inspectTimeReal()
 			if EnKai.tools.math.round((tmpTime - data.lastUpdate), 1) > .5 then data.forceUpdate = true end
 		end
 	end
@@ -77,7 +77,7 @@ function _events.SystemUpdate ()
 				local temp = EnKai.tools.table.copy(data.postponedAdds)
 				data.postponedAdds = nil
 				_internal.UpdateMap(temp, "add", "_events.SystemUpdate")
-				data.lastUpdate = _oInspectTimeReal() -- diese Abfrage direkt nach data.forceUpdate platzieren wenn andere Funktionen aufgerufen werden
+				data.lastUpdate = inspectTimeReal() -- diese Abfrage direkt nach data.forceUpdate platzieren wenn andere Funktionen aufgerufen werden
 			end
 		end
 		
@@ -208,11 +208,11 @@ function _events.ShardChange (_, info)
   
   _internal.SetZone (data.lastZone)  
   
-  local details = _oInspectUnitDetail('player')
+  local details = inspectUnitDetail('player')
 
   _internal.UpdateUnit ({[details.id] = {id = details.id, type = "player", coordX = details.coordX, coordY = details.coordY, coordZ = details.coordZ}}, "add")
   
-  local petDetails = _oInspectUnitDetail('player.pet')
+  local petDetails = inspectUnitDetail('player.pet')
   if petDetails ~= nil then
     _internal.UpdateUnit ({[petDetails.id] = {id = petDetails.id, type = "player.pet", coordX = petDetails.coordX, coordY = petDetails.coordY, coordZ = petDetails.coordZ}}, "add")
   end
@@ -228,7 +228,7 @@ function _events.playerAvailable (_, info)
 
 	data.playerUID = info.id
 	_internal.initMap()
-	local details = _oInspectUnitDetail('player.target')
+	local details = inspectUnitDetail('player.target')
   if details ~= nil then _processPlayerTarget(details.id, details) end    
 	
 	_internal.UpdateWaypointArrows()
@@ -275,9 +275,9 @@ end
 function _events.UnitCastBar (_, info)
   
   if info[data.playerUID] then
-    local details = _oInspectUnitCastbar(data.playerUID)
+    local details = inspectUnitCastbar(data.playerUID)
     if details and details.abilityNew == "A0000002B72E024A4" then
-      data.collectStart = _oInspectTimeReal()
+      data.collectStart = inspectTimeReal()
     end
   end
 
@@ -303,7 +303,7 @@ function _events.UnitChange (_, unitID, unitType)
       data.playerHostileTargetUID = nil
       data.playerTargetUID = nil
     else
-      local unitDetails = _oInspectUnitDetail(unitID)
+      local unitDetails = inspectUnitDetail(unitID)
       _processPlayerTarget(unitID, unitDetails)
     end
   elseif string.find(unitType, "player.target") == nil and string.find(unitType, "group") == 1 and string.find(unitType, "group..%.target") == nil then
@@ -325,7 +325,7 @@ function _events.UnitChange (_, unitID, unitType)
       
       if hasRemoves then _internal.UpdateMap (removes, "remove") end
     else
-      local details = _oInspectUnitDetail(unitID)
+      local details = inspectUnitDetail(unitID)
       if details ~= nil then _unitsMapping[unitType] = details.name end
     end
   end
@@ -372,7 +372,7 @@ function _events.GroupStatus (_, status)
 		return
 	end
 
-	local details = _oInspectUnitDetail(data.playerHostileTargetUID)
+	local details = inspectUnitDetail(data.playerHostileTargetUID)
 	if details == nil then 
 		if nkDebug then nkDebug.traceEnd (addonInfo.identifier, "_events.GroupStatus", debugId) end
 		return 
@@ -394,7 +394,7 @@ function _events.achievementUpdate (_, info)
     if EnKai.tools.table.isMember(data.rareMobAchievements, id) == true then
       
       for idx = 1, #data.rareMobAchievements, 1 do
-        achievement = _oInspectAchievementDetail(data.rareMobAchievements[idx])
+        achievement = inspectAchievementDetail(data.rareMobAchievements[idx])
         
         if achievement ~= nil then
         
