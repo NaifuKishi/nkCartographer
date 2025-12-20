@@ -5,10 +5,10 @@ local addonInfo, privateVars = ...
 local data        = privateVars.data
 
 local _roundPath = {	{xProportional = 0.5, yProportional = 0}, 
-						{xProportional = 1, yProportional = 0.5, xControlProportional = (61/64), yControlProportional = (3/64)},
-						{xProportional = 0.5, yProportional = 1, xControlProportional = (61/64), yControlProportional = (61/64)},
-						{xProportional = 0, yProportional = 0.5, xControlProportional = (3/64), yControlProportional = (61/64)},
-						{xProportional = 0.5, yProportional = 0, xControlProportional = (3/64), yControlProportional = (3/64)}}
+                      {xProportional = 1, yProportional = 0.5, xControlProportional = (61/64), yControlProportional = (3/64)},
+                      {xProportional = 0.5, yProportional = 1, xControlProportional = (61/64), yControlProportional = (61/64)},
+                      {xProportional = 0, yProportional = 0.5, xControlProportional = (3/64), yControlProportional = (61/64)},
+                      {xProportional = 0.5, yProportional = 0, xControlProportional = (3/64), yControlProportional = (3/64)}}
 
 ---------- resource data information ---------
 

@@ -22,6 +22,17 @@ local inspectTimeReal           = Inspect.Time.Real
 local inspectUnitCastbar        = Inspect.Unit.Castbar
 local inspectAchievementDetail  = Inspect.Achievement.Detail
 
+local EnKaiGetPlayerDetails     = EnKai.unit.getPlayerDetails
+local EnKaiGetGroupStatus       = EnKai.unit.getGroupStatus
+local EnKaiMathRound            = EnKai.tools.math.round
+local EnKaiTableCopy            = EnKai.tools.table.copy
+local EnKaiTableIsMember        = EnKai.tools.table.isMember
+local EnKaiTableSerialize       = EnKai.tools.table.serialize
+local EnKaiStringsRight         = EnKai.strings.right
+local EnKaiMapGetAll            = EnKai.map.getAll
+
+local stringFind               = string.find
+
 ---------- local function block ---------
 
 local function _processPlayerTarget(unitID, unitDetails)
@@ -66,7 +77,7 @@ function _events.SystemUpdate ()
 			privateVars.forceUpdate = true
 		else
 			local tmpTime = inspectTimeReal()
-			if EnKai.tools.math.round((tmpTime - data.lastUpdate), 1) > .5 then data.forceUpdate = true end
+			if EnKaiMathRound((tmpTime - data.lastUpdate), 1) > .5 then data.forceUpdate = true end
 		end
 	end
 
@@ -74,7 +85,7 @@ function _events.SystemUpdate ()
 		
 		if data.postponedAdds ~= nil then
 			if nkQuestBase.query.isInit() == true and nkQuestBase.query.isPackageLoaded('poa') == true and nkQuestBase.query.isPackageLoaded('nt') == true and nkQuestBase.query.isPackageLoaded('classic') == true then
-				local temp = EnKai.tools.table.copy(data.postponedAdds)
+				local temp = EnKaiTableCopy(data.postponedAdds)
 				data.postponedAdds = nil
 				_internal.UpdateMap(temp, "add", "_events.SystemUpdate")
 				data.lastUpdate = inspectTimeReal() -- diese Abfrage direkt nach data.forceUpdate platzieren wenn andere Funktionen aufgerufen werden
@@ -91,13 +102,13 @@ function _events.broadcastTarget (info)
   if nkCartSetup.syncTarget ~= true then return end
 
   local bType = "party"
-  if EnKai.unit.getGroupStatus() == 'raid' then
+  if EnKaiGetGroupStatus() == 'raid' then
     bType = "raid" 
-  elseif EnKai.unit.getGroupStatus() ~= "group" then
+  elseif EnKaiGetGroupStatus() ~= "group" then
     return
   end 
   
-  local thisData = "info=" .. EnKai.tools.table.serialize (info)
+  local thisData = "info=" .. EnKaiTableSerialize (info)
   
   Command.Message.Broadcast(bType, nil, "nkCartographer.target", thisData)
 
@@ -108,13 +119,13 @@ function _events.messageReceive (_, from, type, channel, identifier, data)
   if nkCartSetup.syncTarget ~= true then return end
   if uiElements.mapUI == nil then return end
 
-  local pDetails = EnKai.unit.getPlayerDetails()
+  local pDetails = EnKaiGetPlayerDetails()
   if pDetails == nil then return end  
   if pDetails.name == from then return end
   
-  if string.find(identifier, "nkCartographer") == nil then return end
+  if stringFind(identifier, "nkCartographer") == nil then return end
   
-  local tempString = EnKai.strings.right (data, "info=")
+  local tempString = EnKaiStringsRight (data, "info=")
   local dataFunc = loadstring("return {".. tempString .. "}")
   local thisData = dataFunc()
 
@@ -200,7 +211,7 @@ function _events.ShardChange (_, info)
   
   data.lastShard = info
 
-  local points, units = EnKai.map.getAll()
+  local points, units = EnKaiMapGetAll()
   _internal.UpdateMap(points, "remove")
   --_internal.UpdateUnit (units, "remove")
   
@@ -306,7 +317,7 @@ function _events.UnitChange (_, unitID, unitType)
       local unitDetails = inspectUnitDetail(unitID)
       _processPlayerTarget(unitID, unitDetails)
     end
-  elseif string.find(unitType, "player.target") == nil and string.find(unitType, "group") == 1 and string.find(unitType, "group..%.target") == nil then
+  elseif stringFind(unitType, "player.target") == nil and stringFind(unitType, "group") == 1 and stringFind(unitType, "group..%.target") == nil then
   
     if unitID == false then
       local removes, hasRemoves = {}, false
@@ -391,7 +402,7 @@ function _events.achievementUpdate (_, info)
   local refreshNeeded = false
   
   for id, _ in pairs(info) do
-    if EnKai.tools.table.isMember(data.rareMobAchievements, id) == true then
+    if EnKaiTableIsMember(data.rareMobAchievements, id) == true then
       
       for idx = 1, #data.rareMobAchievements, 1 do
         achievement = inspectAchievementDetail(data.rareMobAchievements[idx])

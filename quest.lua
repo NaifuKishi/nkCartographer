@@ -2,10 +2,10 @@ local addonInfo, privateVars = ...
 
 ---------- init namespace ---------
 
-local data        = privateVars.data
-local uiElements  = privateVars.uiElements
-local _internal   = privateVars.internal
-local _events     = privateVars.events
+local data        	= privateVars.data
+local uiElements  	= privateVars.uiElements
+local internalFunc  = privateVars.internal
+local _events     	= privateVars.events
 
 ---------- init variables ---------
 
@@ -27,40 +27,46 @@ local _npcCache				= {}  -- list of identified NPC and their quests
 
 ---------- make global functions local ---------
 
-local oInspectQuestDetail   = Inspect.Quest.Detail
-local oInspectQuestComplete = Inspect.Quest.Complete
-local oInspectQuestList     = Inspect.Quest.List
-local oInspectSystemSecure	= Inspect.System.Secure
-local oInspectTimeFrame		= Inspect.Time.Frame
-local oInspectSystemWatchdog= Inspect.System.Watchdog
-local oSSub                 = string.sub
-local oSFormat              = string.format
-local oSFind                = string.find
-local qByKey                = nkQuestBase.query.byKey
-local qByNPC                = nkQuestBase.query.NPC
-local qNPCQuests            = nkQuestBase.query.NPCQuests
+local inspectQuestDetail   	= Inspect.Quest.Detail
+local inspectQuestComplete 	= Inspect.Quest.Complete
+local inspectQuestList     	= Inspect.Quest.List
+local inspectSystemSecure	= Inspect.System.Secure
+local inspectTimeFrame		= Inspect.Time.Frame
+local inspectSystemWatchdog	= Inspect.System.Watchdog
+
+local stringSub             = string.sub
+local stringFormat          = string.format
+local stringFind            = string.find
+
+local questQueryByKey       = nkQuestBase.query.byKey
+local questQueryByNPC       = nkQuestBase.query.NPC
+local questGetZoneByQuest	= nkQuestBase.query.getZoneByQuest
+local questGetQuestsByZone	= nkQuestBase.query.getQuestsByZone
+local questNPCByName		= nkQuestBase.query.NPCByName
+local questNPCQuests		= nkQuestBase.query.NPCQuests
+local questIsInit			= nkQuestBase.query.isInit
+
+local EnKaiMapGetZoneByName		= EnKai.map.GetZoneByName
+local EnKaiMapGetZoneDetails	= EnKai.map.GetZoneDetails
+
+local EnKaiTableIsMember 		= EnKai.tools.table.isMember
+local EnKaiTableGetTablePos		= EnKai.tools.table.getTablePos
+local EnKaiCoroutinesAdd		= EnKai.coroutines.add
+local EnKaiStringsSplit			= EnKai.strings.split
+local EnKaiEventsAddInsecure	= EnKai.events.addInsecure
 
 ---------- local function block ---------
 
-local function _fctIsCurrentWorld (details)
-
-	--print ('_fctIsCurrentWorld')
-	--print (data.currentWorld)	
+local function isCurrentWorld (details)
 
 	if data.currentWorld == nil then return false end
 	
 	if details.categoryName ~= nil then
-		--if details.name == 'Nichts bleibt verloren' then print (details.categoryName) end
-
-		--dump(details)
-	
-		local zoneId, zoneDetails = EnKai.map.GetZoneByName(details.categoryName)
-		
-		--print (zoneId, zoneDetails)
+		local zoneId, zoneDetails = EnKaiMapGetZoneByName(details.categoryName)
 		
 		if zoneDetails == nil then
-			zoneId = nkQuestBase.query.getZoneByQuest(details.id)
-			zoneDetails = EnKai.map.GetZoneDetails (zoneID)
+			zoneId = questGetZoneByQuest(details.id)
+			zoneDetails = EnKaiMapGetZoneDetails (zoneID)
 		else
 			--print (zoneDetails.map)
 		end
@@ -69,9 +75,9 @@ local function _fctIsCurrentWorld (details)
 	end  
 
 	if details.tag ~= nil then
-		local tagList = EnKai.strings.split(details.tag, " ")
-		if EnKai.tools.table.isMember(tagList, "daily") or EnKai.tools.table.isMember(tagList, "weekly") or EnKai.tools.table.isMember(tagList, "monthly") then
-			local lvl, dbQuests = qByKey(details.id)
+		local tagList = EnKaiStringsSplit(details.tag, " ")
+		if EnKaiTableIsMember(tagList, "daily") or EnKaiTableIsMember(tagList, "weekly") or EnKaiTableIsMember(tagList, "monthly") then
+			local lvl, dbQuests = questQueryByKey(details.id)
 			if lvl == nil then return false end
 			if lvl <= 50 and data.currentWorld == "world1" then return true end
 			if lvl <= 60 and data.currentWorld == "world2" then return true end  
@@ -84,9 +90,9 @@ local function _fctIsCurrentWorld (details)
 
 end
 
-local function _fctProcessObjectives (key, questName, domain, objectiveList, isComplete, hasAdd, addInfo)
+local function processObjectives (key, questName, domain, objectiveList, isComplete, hasAdd, addInfo)
 
-	if nkDebug then nkDebug.logEntry (addonInfo.identifier, "_fctProcessObjectives", questName, objectiveList) end
+	if nkDebug then nkDebug.logEntry (addonInfo.identifier, "processObjectives", questName, objectiveList) end
 
 	for idx1 = 1, #objectiveList, 1 do
 
@@ -125,18 +131,18 @@ local function _fctProcessObjectives (key, questName, domain, objectiveList, isC
 
 end
 
-local function _fctProcessQuests (questList, addFlag)
+local function processQuests (questList, addFlag)
 
   local addInfo, removeInfo = {}, {}
   local hasAdd, hasRemove = false, false
 
-  local flag, questDetails = pcall(oInspectQuestDetail, questList)
+  local flag, questDetails = pcall(inspectQuestDetail, questList)
   
   if flag then
   
     for key, details in pairs(questDetails) do
       
-      if addFlag == true or _fctIsCurrentWorld(details) == true then
+      if addFlag == true or isCurrentWorld(details) == true then
       
         -- check if quest was identified through the minimap unknown entries
         
@@ -163,22 +169,22 @@ local function _fctProcessQuests (questList, addFlag)
         
         data.currentQuestList[key] = {}
 		
-        hasAdd, addInfo = _fctProcessObjectives (key, details.name, details.domain, objectives, details.complete, hasAdd, addInfo)
+        hasAdd, addInfo = processObjectives (key, details.name, details.domain, objectives, details.complete, hasAdd, addInfo)
           
       end -- if
     end -- for
   end
   
-  if hasRemove == true then _internal.UpdateMap (removeInfo, "remove") end
-  if hasAdd == true then _internal.UpdateMap (addInfo, "add", "_fctProcessQuests") end
+  if hasRemove == true then internalFunc.UpdateMap (removeInfo, "remove") end
+  if hasAdd == true then internalFunc.UpdateMap (addInfo, "add", "processQuests") end
 
 end
 
-local function _fctIsQuestComplete(questId)
+local function isQuestComplete(questId)
 
   if completedList[questId] ~= nil then return true end
   
-  local abbrev = oSFormat("%sxxxxxxxx", oSSub(questId, 1, 8))
+  local abbrev = stringFormat("%sxxxxxxxx", stringSub(questId, 1, 8))
   if completedList[abbrev] ~= nil then return true end
   
   data.minimapQuestList[questId] = nil 
@@ -187,27 +193,27 @@ local function _fctIsQuestComplete(questId)
 
 end
 
-local function _fctProcessMissingZoneQuests (questList)
+local function processMissingZoneQuests (questList)
 
 	for _, questId in pairs (questList) do
 
-		if _fctIsQuestComplete(questId) == false then
+		if isQuestComplete(questId) == false then
 
-			local lvl, libDetails = qByKey(questId, false)
+			local lvl, libDetails = questQueryByKey(questId, false)
 
 			if libDetails ~= nil and libDetails.domain ~= "ia" and libDetails.giver ~= nil then
 
-				local npc = qByNPC(libDetails.giver)
+				local npc = questQueryByNPC(libDetails.giver)
 
 				if npc.x ~= nil then
 
-					local flag, detailsList = pcall(oInspectQuestDetail, {[questId]=true})
+					local flag, detailsList = pcall(inspectQuestDetail, {[questId]=true})
 
 					if flag then
 						for key, details in pairs(detailsList) do   
 							local id = "mq-" .. key
 							local qType = "QUEST.MISSING"
-							if libDetails.type ~= nil and EnKai.tools.table.getTablePos(libDetails.type, 3) ~= -1 then qType = "QUEST.DAILY" end
+							if libDetails.type ~= nil and EnKaiTableGetTablePos(libDetails.type, 3) ~= -1 then qType = "QUEST.DAILY" end
 
 							local thisEntry = { id = id, type = qType, descList = { details.summary }, title = details.name, coordX = npc.x, coordY = npc.y, coordZ = npc.z }
 							data.missingQuestList[key] = {}
@@ -227,12 +233,12 @@ local function _fctProcessMissingZoneQuests (questList)
 
 end
 
-local function _fctFindMissingRun ()
+local function findMissingRun ()
 
   if completedList == nil then
-    if oInspectSystemSecure() == false then Command.System.Watchdog.Quiet() end
+    if inspectSystemSecure() == false then Command.System.Watchdog.Quiet() end
     local flag
-    flag, completedList = pcall (oInspectQuestComplete)
+    flag, completedList = pcall (inspectQuestComplete)
   
     if flag == false then
       print ("problem getting list of completed quests in delayed function")
@@ -240,7 +246,7 @@ local function _fctFindMissingRun ()
     end
   end
   
-  local list = nkQuestBase.query.getQuestsByZone(data.lastZone)
+  local list = questGetQuestsByZone(data.lastZone)
   if list == nil or #list == 0 then return end -- not quests in this zone
   
   local questList = {}
@@ -260,27 +266,27 @@ local function _fctFindMissingRun ()
   
   local missingCoRoutine = coroutine.create( function ()
     for idx = 1, #questList, 1 do
-      _fctProcessMissingZoneQuests(questList[idx])
+      processMissingZoneQuests(questList[idx])
       coroutine.yield(idx)
     end
   end)
       
-  EnKai.coroutines.add ({ func = missingCoRoutine, counter = #questList, active = true })
+  EnKaiCoroutinesAdd ({ func = missingCoRoutine, counter = #questList, active = true })
 
 end
 
-local function _fctCheckUnknown(npcName, thisData)
+local function checkUnknown(npcName, thisData)
 
 	local retFlag = false
 	local quests = {}
 
 	if _npcCache[npcName] == nil then
-		_npcCache[npcName] = nkQuestBase.query.NPCByName (npcName)
+		_npcCache[npcName] = questNPCByName (npcName)
 
 		if _npcCache[npcName] == nil then return retFlag end
 
 		for idx = 1, #_npcCache[npcName], 1 do
-			local npcQuestList = nkQuestBase.query.NPCQuests(_npcCache[npcName][idx])
+			local npcQuestList = questNPCQuests(_npcCache[npcName][idx])
 
 			--dump (npcQuestList)
 			
@@ -293,8 +299,8 @@ local function _fctCheckUnknown(npcName, thisData)
 		
 	end
 
-	if quests ~= nil and oInspectSystemWatchdog() >= 0.1 then
-		local flag, questDetailList = pcall(oInspectQuestDetail, quests)
+	if quests ~= nil and inspectSystemWatchdog() >= 0.1 then
+		local flag, questDetailList = pcall(inspectQuestDetail, quests)
 
 		if flag then
 
@@ -302,24 +308,19 @@ local function _fctCheckUnknown(npcName, thisData)
 
 				if questInfo.complete ~= true then
 
-					--print (questInfo.id)
-
 					_unknownIdentified[npcName] = questInfo.id
-					if questInfo.tag ~= nil and oSFind(questInfo.tag, "pvp daily") ~= nil then
+					if questInfo.tag ~= nil and stringFind(questInfo.tag, "pvp daily") ~= nil then
 						thisData.type = "QUEST.PVPDAILY"
-					elseif questInfo.tag ~= nil and (oSFind(questInfo.tag, "daily") ~= nil or oSFind(questInfo.tag, "weekly") ~= nil) then
+					elseif questInfo.tag ~= nil and (stringFind(questInfo.tag, "daily") ~= nil or stringFind(questInfo.tag, "weekly") ~= nil) then
 						thisData.type = "QUEST.DAILY"
 					else
 						thisData.type = "QUEST.START"
 					end
 
-					--print (questInfo.name)
-					--print (thisData.type)
-
 					thisData.title = questInfo.name
 
 					local tempDesc = questInfo.summary or questInfo.description
-					if tempDesc ~= nil then thisData.descList = EnKai.strings.split(tempDesc, "\n") end
+					if tempDesc ~= nil then thisData.descList = EnKaiStringsSplit(tempDesc, "\n") end
 
 					thisData.name = questInfo.name
 
@@ -343,9 +344,9 @@ end
 
 ---------- addon internal function block ---------
 
-function _internal.GetQuests() _fctProcessQuests (oInspectQuestList()) end
-function _events.QuestAccept (_, data) _fctProcessQuests (data, true) end
-function _events.QuestChange (_, data) _fctProcessQuests (data, false) end
+function internalFunc.GetQuests() processQuests (inspectQuestList()) end
+function _events.QuestAccept (_, data) processQuests (data, true) end
+function _events.QuestChange (_, data) processQuests (data, false) end
   
 function _events.QuestAbandon (_, updateData)
   
@@ -380,8 +381,8 @@ function _events.QuestAbandon (_, updateData)
     end
   end
   
-  if hasRemove == true then _internal.UpdateMap (removeInfo, "remove") end
-  if hasAdd == true then _internal.UpdateMap (addInfo, "add") end
+  if hasRemove == true then internalFunc.UpdateMap (removeInfo, "remove") end
+  if hasAdd == true then internalFunc.UpdateMap (addInfo, "add") end
 
 end
 
@@ -406,11 +407,11 @@ function _events.QuestComplete (_, updateData)
     end
   end
     
-  if hasRemove == true then _internal.UpdateMap (removeInfo, "remove") end
+  if hasRemove == true then internalFunc.UpdateMap (removeInfo, "remove") end
 
 end
 
-function _internal.FindMissing ()
+function internalFunc.FindMissing ()
 
   -- check aktuelle quests berücksichtigen
 
@@ -420,12 +421,12 @@ function _internal.FindMissing ()
   local flag = true
    
   if completedList == nil then   
-    if oInspectSystemSecure() == false then Command.System.Watchdog.Quiet() end
-    flag, _ = pcall (oInspectQuestComplete) -- i don't care about the result as the first call is normally not complete anyway
+    if inspectSystemSecure() == false then Command.System.Watchdog.Quiet() end
+    flag, _ = pcall (inspectQuestComplete) -- i don't care about the result as the first call is normally not complete anyway
   end
   
   if flag == true then
-    EnKai.events.addInsecure(_fctFindMissingRun, oInspectTimeFrame(), 5)
+    EnKaiEventsAddInsecure(findMissingRun, inspectTimeFrame(), 5)
     questZone = data.lastZone
   else
     print ("problem getting initial list of completed quests")
@@ -433,20 +434,20 @@ function _internal.FindMissing ()
   
 end
 
-function _internal.CheckUnknownForQuest (details) 
+function internalFunc.CheckUnknownForQuest (details) 
 
 	if details.name == nil then return false end
 	if _unknownIdentified[details.name] ~= nil then return true end
 	_unknownCache[details.name] = details
 
-	if nkQuestBase.query.isInit() == false then return false end
+	if questIsInit() == false then return false end
 	
 	local retFlag = false
 	
-	if oInspectSystemSecure() == false then Command.System.Watchdog.Quiet() end
+	if inspectSystemSecure() == false then Command.System.Watchdog.Quiet() end
 
 	for npcName, thisData in pairs (_unknownCache) do
-		retFlag = _fctCheckUnknown(npcName, thisData)
+		retFlag = checkUnknown(npcName, thisData)
 	end  
 
 	_unknownCache = {}
@@ -455,14 +456,10 @@ function _internal.CheckUnknownForQuest (details)
 
 end
 
-function _internal.IsKnownMinimapQuest (id)
+function internalFunc.IsKnownMinimapQuest (id)
 
   if data.minimapIdToQuest[id] == nil then return false end
   
   return true
-  
---  uiElements.mapUI:AddElement(data.minimapQuestList[_unknownIdentified[details.name]])
---  
---  return true
 
 end 

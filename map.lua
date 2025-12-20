@@ -23,6 +23,18 @@ local inspectItemDetail 	= Inspect.Item.Detail
 local inspectMouse 			= Inspect.Mouse
 local inspectTimeReal 		= Inspect.Time.Real
 
+local EnKaiGetLanguage		= EnKai.tools.lang.getLanguage
+local EnKaiGetLanguageShort = EnKai.tools.lang.getLanguageShort
+local EnKaiTableCopy		= EnKai.tools.table.copy
+local EnKaiUUID				= EnKai.tools.uuid
+
+local stringFind			= string.find
+local stringMatch			= string.match
+local stringFormat			= string.format
+
+local mathDeg				= math.deg
+local mathAtan2				= math.atan2
+
 ---------- local function block ---------
 
 local function _processRareData(id, counter, name, x, z, comment)
@@ -45,15 +57,15 @@ local function _getRareDarData ()
   _rareData = {}
   
   for idx = 1, #RareDar.data, 1 do
-    if RareDar.data[idx].zone[EnKai.tools.lang.getLanguage()] == _zoneDetails.name then
+    if RareDar.data[idx].zone[EnKaiGetLanguage()] == _zoneDetails.name then
       local mobs = RareDar.data[idx].mobs
       
       for idx2 = 1, #mobs, 1 do
-        if data.rareMobKilled[mobs[idx2].achv[EnKai.tools.lang.getLanguage()]] ~= true then      
+        if data.rareMobKilled[mobs[idx2].achv[EnKaiGetLanguage()]] ~= true then      
           local posList = mobs[idx2].pos
           
           for idx3 = 1, #posList, 1 do
-            _processRareData(mobs[idx2].id, idx3, mobs[idx2].targ[EnKai.tools.lang.getLanguage()], posList[idx3][1], posList[idx3][2], mobs[idx2].comment[EnKai.tools.lang.getLanguage()])
+            _processRareData(mobs[idx2].id, idx3, mobs[idx2].targ[EnKaiGetLanguage()], posList[idx3][1], posList[idx3][2], mobs[idx2].comment[EnKaiGetLanguage()])
           end
         end
       end
@@ -75,12 +87,12 @@ local function _getRareTrackerData ()
   
   for idx = 1, #mobs, 1 do
     
-    if data.rareMobKilled[mobs[idx].n[EnKai.tools.lang.getLanguageShort()]] ~= true then      
+    if data.rareMobKilled[mobs[idx].n[EnKaiGetLanguageShort()]] ~= true then      
   
       local posList = mobs[idx].loc
       
       for idx2 = 1, #posList, 1 do
-        _processRareData(mobs[idx].n[EnKai.tools.lang.getLanguageShort()], idx2, mobs[idx].n[EnKai.tools.lang.getLanguageShort()], posList[idx2].x, posList[idx2].z, "")
+        _processRareData(mobs[idx].n[EnKaiGetLanguageShort()], idx2, mobs[idx].n[EnKaiGetLanguageShort()], posList[idx2].x, posList[idx2].z, "")
       end
     end
   end
@@ -96,11 +108,11 @@ local function _trackGathering (details)
 		if data.coordX == details.coordX and data.coordZ == details.coordZ then return end
 	end
 
-	local thisData = EnKai.tools.table.copy(details)
-	thisData.type = "TRACK" .. string.match (thisData.type, "RESOURCE(.+)")
+	local thisData = EnKaiTableCopy(details)
+	thisData.type = "TRACK" .. stringMatch (thisData.type, "RESOURCE(.+)")
 
-	local thisType = string.match(details.type, "RESOURCE%.(.+)") or string.match(details.type, "RESOURCE%.(.+)%.")
-	thisData.id = thisType .. "-" .. EnKai.tools.uuid()
+	local thisType = stringMatch(details.type, "RESOURCE%.(.+)") or stringMatch(details.type, "RESOURCE%.(.+)%.")
+	thisData.id = thisType .. "-" .. EnKaiUUID()
 
 	if thisType == "ARTIFACT" then
 		nkCartGathering.artifactsData[data.lastZone][thisData.id] = thisData
@@ -304,7 +316,7 @@ function _internal.UpdateWaypointArrows ()
     if details.coordX >= mapInfo.x1 and details.coordX <= mapInfo.x2 and details.coordZ >= mapInfo.y1 and details.coordZ <= mapInfo.y2 then 
   
       if details.gfx == nil then
-        details.gfx = EnKai.uiCreateFrame("nkCanvas", "nkCartographer.waypointarrow." .. EnKai.tools.uuid(), uiElements.mapUI:GetMask())
+        details.gfx = EnKai.uiCreateFrame("nkCanvas", "nkCartographer.waypointarrow." .. EnKaiUUID(), uiElements.mapUI:GetMask())
         details.gfx:SetLayer(999)      
       end
       
@@ -422,7 +434,7 @@ function _internal.UpdateMap (mapInfo, action, debugSource, checkForMinimapQuest
 	local debugId
 	if nkDebug then debugId = nkDebug.traceStart (addonInfo.identifier, "_internal.UpdateMap") end
 	
-	if nkDebug then nkDebug.logEntry (addonInfo.identifier, "_internal.UpdateMap", string.format("%s - %s", action, debugSource), mapInfo) end
+	if nkDebug then nkDebug.logEntry (addonInfo.identifier, "_internal.UpdateMap", stringFormat("%s - %s", action, debugSource), mapInfo) end
 	
 	for key, details in pairs (mapInfo) do
 		if action == "remove" then
@@ -441,7 +453,7 @@ function _internal.UpdateMap (mapInfo, action, debugSource, checkForMinimapQuest
 			elseif details.type ~= "UNKNOWN" and details.type ~= "PORTAL" then -- filter minimap portal and use poi portal instead
 				--print ("add", details.type)
 				uiElements.mapUI:AddElement(details)
-				if string.find(details.type, "RESOURCE") == 1 and nkCartSetup.trackGathering == true then _trackGathering(details) end
+				if stringFind(details.type, "RESOURCE") == 1 and nkCartSetup.trackGathering == true then _trackGathering(details) end
 			elseif details.type == "UNKNOWN" then
 				if data.postponedAdds == nil then data.postponedAdds = {} end
 				if nkQuestBase.query.isInit() == false or nkQuestBase.query.isPackageLoaded('poa') == false or nkQuestBase.query.isPackageLoaded('nt') == false or nkQuestBase.query.isPackageLoaded('classic') == false then
@@ -538,7 +550,7 @@ function _internal.UpdateUnit (mapInfo, action)
 				details.type = "UNIT.PLAYERPET"
 				details.title = unitDetails.name         
 				uiElements.mapUI:AddElement(details)
-			elseif string.find(details.type, "group") ~= nil and string.find(details.type, "group..%.") == nil then				
+			elseif stringFind(details.type, "group") ~= nil and stringFind(details.type, "group..%.") == nil then				
 			
 				local unitDetails = inspectUnitDetail(details.type)
 				details.type = "UNIT.GROUPMEMBER"        
@@ -550,7 +562,7 @@ function _internal.UpdateUnit (mapInfo, action)
 					nkDebug.logEntry (addonInfo.identifier, "_internal.UpdateUnit", action .. ": " .. (details.type or '?'), details)
 				end
 			else
-				if nkDebug and string.find(details.type, "mouseover") == nil then 
+				if nkDebug and stringFind(details.type, "mouseover") == nil then 
 					nkDebug.logEntry (addonInfo.identifier, "_internal.UpdateUnit", "not adding " .. (details.type or '?'), details)
 				end
 				--dump (details)
@@ -566,7 +578,7 @@ function _internal.UpdateUnit (mapInfo, action)
 				local deltaZ = details.coordZ - coordZ
 				local deltaX = details.coordX - coordX
 
-				local angle = math.deg(math.atan2(deltaZ, deltaX))								
+				local angle = mathDeg(mathAtan2(deltaZ, deltaX))								
 				details.angle = -angle
 			end
 
@@ -585,7 +597,7 @@ function _internal.UpdateUnit (mapInfo, action)
 					end
 				end
 
-			elseif string.find(details.type, "mouseover") == nil and string.find(details.type, ".pet") == nil and string.find(details.type, "player.target.target.target") == nil then
+			elseif stringFind(details.type, "mouseover") == nil and stringFind(details.type, ".pet") == nil and stringFind(details.type, "player.target.target.target") == nil then
 				
 				-- if nkDebug and details.type ~= "UNIT.PLAYER" then 
 					-- nkDebug.logEntry (addonInfo.identifier, "_internal.UpdateUnit", "changing " .. (details.type or '?'), details)
@@ -681,7 +693,7 @@ function _internal.ShowPOI(flag)
         lastPoi[k].title = lang.poiPuzzle
       end
 
-      lastPoi[k].descList = { v[EnKai.tools.lang.getLanguageShort ()] }
+      lastPoi[k].descList = { v[EnKaiGetLanguageShort ()] }
     end
   end  
   
@@ -760,9 +772,9 @@ function _internal.CollectArtifact(itemData)
 	
 	--dump(details)
     
-    if details and string.find(details.category, "artifact") == 1 then
+    if details and stringFind(details.category, "artifact") == 1 then
     
-      local artifactType = string.upper(string.match(details.category, "artifact (.+)"))
+      local artifactType = string.upper(stringMatch(details.category, "artifact (.+)"))
       if artifactType == "FAE YULE" then artifactType = "FAEYULE" end
       local type = "TRACK.ARTIFACT." .. artifactType
       
@@ -777,7 +789,7 @@ function _internal.CollectArtifact(itemData)
       end
       
       if knownPos == false then
-        local thisData = { id = string.match(type, "TRACK.(.+)") .. EnKai.tools.uuid(), type = type, descList = {}, coordX = unitDetails.coordX, coordY = unitDetails.coordY, coordZ = unitDetails.coordZ }
+        local thisData = { id = stringMatch(type, "TRACK.(.+)") .. EnKaiUUID(), type = type, descList = {}, coordX = unitDetails.coordX, coordY = unitDetails.coordY, coordZ = unitDetails.coordZ }
         nkCartGathering.artifactsData[data.lastZone][thisData.id] = thisData
       end
     end
@@ -801,6 +813,7 @@ function _internal.WaypointDialog()
 		uiElements.waypointDialog:SetHeight(140)	
 		uiElements.waypointDialog:SetTitle(lang.waypointDialogTitle)
 		uiElements.waypointDialog:SetSecureMode('restricted')
+		uiElements.waypointDialog:SetTitleFont(addonInfo.id, "MontserratSemiBold")
 		
 		Command.Event.Attach(EnKai.events[name].Closed, function () 
 			xposEdit:Leave()
@@ -812,12 +825,16 @@ function _internal.WaypointDialog()
 		coordLabel:SetFontColor(1, 1, 1, 1)
 		coordLabel:SetFontSize(12)
 		coordLabel:SetText(lang.coordLabel)
+
+		EnKai.ui.setFont(coordLabel, addonInfo.id, "Montserrat")
 		
 		sepLabel = EnKai.uiCreateFrame("nkText", name .. ".sepLabel", uiElements.waypointDialog:GetContent())
 		sepLabel:SetPoint("CENTERTOP", coordLabel, "CENTERBOTTOM", 0, 10)
 		sepLabel:SetFontColor(1, 1, 1, 1)
 		sepLabel:SetFontSize(12)
 		sepLabel:SetText("/")
+
+		EnKai.ui.setFont(sepLabel, addonInfo.id, "Montserrat")
 				
 		xposEdit = EnKai.uiCreateFrame("nkTextField", name .. ".xposEdit", uiElements.waypointDialog:GetContent())
 		yposEdit = EnKai.uiCreateFrame("nkTextField", name .. ".yposEdit", uiElements.waypointDialog:GetContent())
@@ -829,7 +846,7 @@ function _internal.WaypointDialog()
 		local function _setMacro()
 			if xpos == nil or ypos == nil or tonumber(xpos) == nil or tonumber(ypos) == nil then return end
 			
-			EnKai.events.addInsecure(function() setButton:SetMacro(string.format("setwaypoint %d %d", xpos, ypos)) end)
+			EnKai.events.addInsecure(function() setButton:SetMacro(stringFormat("setwaypoint %d %d", xpos, ypos)) end)
 		end
 		
 		Command.Event.Attach(EnKai.events[name .. ".xposEdit"].TextfieldChanged, function (_, newValue) 
@@ -852,6 +869,7 @@ function _internal.WaypointDialog()
 		setButton:SetIcon("EnKai", "gfx/icons/ok.png")
 		setButton:SetScale(.8)
 		setButton:SetLayer(9)
+		setButton:SetFont(addonInfo.id, "MontserratSemiBold")
 
 		Command.Event.Attach(EnKai.events[name .. ".setButton"].Clicked, function () 
 			xposEdit:Leave()
@@ -884,7 +902,7 @@ function _internal.AddCustomPoint(x, y, title)
 
 	if nkCartSetup.userPOI[data.currentWorld] == nil then nkCartSetup.userPOI[data.currentWorld] = {} end
 	
-	local thisID = "CUSTOMPOI" .. EnKai.tools.uuid ()
+	local thisID = "CUSTOMPOI" .. EnKaiUUID ()
 	local thisEntry = {
 		[thisID] = {
 			coordX = x,
