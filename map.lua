@@ -15,13 +15,13 @@ local _rareData             = {}
 
 ---------- make global functions local ---------
 
-local _oInspectUnitDetail = Inspect.Unit.Detail
-local _oInspectZoneDetail = Inspect.Zone.Detail
-local _oInspectSystemSecure = Inspect.System.Secure
-local _oInspectSystemWatchdog = Inspect.System.Watchdog
-local _oInspectItemDetail = Inspect.Item.Detail
-local _oInspectMouse = Inspect.Mouse
-local _oInspectTimeReal = Inspect.Time.Real
+local inspectUnitDetail 	= Inspect.Unit.Detail
+local inspectZoneDetail 	= Inspect.Zone.Detail
+local inspectSystemSecure 	= Inspect.System.Secure
+local inspectSystemWatchdog = Inspect.System.Watchdog
+local inspectItemDetail 	= Inspect.Item.Detail
+local inspectMouse 			= Inspect.Mouse
+local inspectTimeReal 		= Inspect.Time.Real
 
 ---------- local function block ---------
 
@@ -148,6 +148,9 @@ local function _fctMapUI ()
 	local zoneTitle = EnKai.uiCreateFrame("nkText", "nkCartographer.map.zoneTitle", mapUI:GetMask())
 	zoneTitle:SetPoint("CENTERTOP", mapUI:GetContent(), "CENTERTOP")
 	zoneTitle:SetLayer(9999)
+	
+	EnKai.ui.setFont (zoneTitle, addonInfo.id, "MontserratSemiBold")
+
 	zoneTitle:SetEffectGlow({ colorB = 0, colorA = 1, colorG = 0, colorR = 0, strength = 3, blurX = 3, blurY = 3 })
 
 	function mapUI:SetZoneTitle(flag)
@@ -235,7 +238,7 @@ function _internal.initMap ()
 	uiElements.mapUI:SetWidth(nkCartSetup.width)
 	uiElements.mapUI:SetHeight(nkCartSetup.height)
 
-	local details = _oInspectUnitDetail(data.playerUID)
+	local details = inspectUnitDetail(data.playerUID)
 	_internal.SetZone (details.zone)
 
 	uiElements.mapUI:SetPointMaximized(nkCartSetup.maximizedX, nkCartSetup.maximizedY)  
@@ -258,13 +261,13 @@ function _internal.initMap ()
 	Command.Event.Attach(Event.System.Update.Begin, function ()
       
       if data.delayStart ~= nil then
-          local tmpTime = _oInspectTimeReal()
+          local tmpTime = inspectTimeReal()
           if EnKai.tools.math.round((tmpTime - data.delayStart), 1) > 1 then 
             uiElements.mapUI:SetPoint("TOPLEFT", UIParent, "TOPLEFT", nkCartSetup.x, nkCartSetup.y)
             Command.Event.Detach(Event.System.Update.Begin, nil, "nkCartographer.resetPosition")	
           end
       else
-        data.delayStart = _oInspectTimeReal()
+        data.delayStart = inspectTimeReal()
       end
       
     end, "nkCartographer.resetPosition")		
@@ -383,14 +386,14 @@ function _internal.SetZone (newZoneID)
 
 	uiElements.mapUI:SetMap("world", data.currentWorld)
 
-	local details = _oInspectUnitDetail(data.playerUID)
+	local details = inspectUnitDetail(data.playerUID)
 	data.locationName = details.locationName
 	uiElements.mapUI:SetCoord(details.coordX, details.coordZ)
 
-	_zoneDetails = _oInspectZoneDetail(newZoneID)
+	_zoneDetails = inspectZoneDetail(newZoneID)
 	uiElements.mapUI:SetZoneTitle(nkCartSetup.showZoneTitle)
 
-	if _oInspectSystemSecure() == false then Command.System.Watchdog.Quiet() end
+	if inspectSystemSecure() == false then Command.System.Watchdog.Quiet() end
 
 	data.lastZone = newZoneID
 	_internal.ShowPOI(true)  
@@ -444,7 +447,7 @@ function _internal.UpdateMap (mapInfo, action, debugSource, checkForMinimapQuest
 				if nkQuestBase.query.isInit() == false or nkQuestBase.query.isPackageLoaded('poa') == false or nkQuestBase.query.isPackageLoaded('nt') == false or nkQuestBase.query.isPackageLoaded('classic') == false then
 					data.postponedAdds[key] = details
 				else
-					if _oInspectSystemWatchdog() < 0.1 then
+					if inspectSystemWatchdog() < 0.1 then
 						data.postponedAdds[key] = details
 					else
 						if _internal.IsKnownMinimapQuest (details.id) == false then
@@ -479,7 +482,7 @@ function _internal.UpdateMap (mapInfo, action, debugSource, checkForMinimapQuest
 				end
 			end
 		elseif action == "waypoint-add" then
-			local unitDetails = _oInspectUnitDetail(key)
+			local unitDetails = inspectUnitDetail(key)
 			uiElements.mapUI:AddElement({ id = "wp-" .. key, type = "WAYPOINT", descList = { unitDetails.name }, coordX = details.coordX, coordZ = details.coordZ })
 			data.waypoints[key] = { coordX = details.coordX, coordZ = details.coordZ }
 			if key == data.playerUID then data.waypoints[key].player = true end      
@@ -524,20 +527,20 @@ function _internal.UpdateUnit (mapInfo, action)
 		if action == "add" then
 
 			if details.type == "player" then
-				local unitDetails = _oInspectUnitDetail("player")
+				local unitDetails = inspectUnitDetail("player")
 				details.type = "UNIT.PLAYER"
 				details.title = unitDetails.name
 				details.angle = 0         
 				data.centerElement = key
 				uiElements.mapUI:AddElement(details)
 			elseif details.type == "player.pet" then
-				local unitDetails = _oInspectUnitDetail("player.pet")
+				local unitDetails = inspectUnitDetail("player.pet")
 				details.type = "UNIT.PLAYERPET"
 				details.title = unitDetails.name         
 				uiElements.mapUI:AddElement(details)
 			elseif string.find(details.type, "group") ~= nil and string.find(details.type, "group..%.") == nil then				
 			
-				local unitDetails = _oInspectUnitDetail(details.type)
+				local unitDetails = inspectUnitDetail(details.type)
 				details.type = "UNIT.GROUPMEMBER"        
 				details.title = unitDetails.name
 				details.smoothCoords = true
@@ -748,12 +751,12 @@ function _internal.CollectArtifact(itemData)
 
   if nkCartGathering.artifactsData[data.lastZone] == nil then nkCartGathering.artifactsData[data.lastZone] = {} end
 
-  local unitDetails = _oInspectUnitDetail('player') 
+  local unitDetails = inspectUnitDetail('player') 
   local coordRangeX = {unitDetails.coordX-2, unitDetails.coordX+2}
   local coordRangeZ = {unitDetails.coordZ-2, unitDetails.coordZ+2}      
 
   for key, _ in pairs (itemData) do
-    local details = _oInspectItemDetail(key)
+    local details = inspectItemDetail(key)
 	
 	--dump(details)
     
@@ -786,7 +789,7 @@ function _internal.WaypointDialog()
 
 	local xpos, ypos
 	
-	if _oInspectSystemSecure() == true then return end
+	if inspectSystemSecure() == true then return end
 
 	if uiElements.waypointDialog == nil then
 		local name = "nkCartographer.waypointDialog"
@@ -866,7 +869,7 @@ function _internal.WaypointDialog()
 		end		
 	end
 	
-	local mouseData = _oInspectMouse()
+	local mouseData = inspectMouse()
 	uiElements.waypointDialog:SetPoint("TOPLEFT", UIParent, "TOPLEFT", mouseData.x - uiElements.waypointDialog:GetWidth(), mouseData.y - uiElements.waypointDialog:GetHeight())
 
 end

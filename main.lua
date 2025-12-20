@@ -117,6 +117,9 @@ local function _main(_, addon)
       _languageNotSupported()
       return
     end
+
+    EnKai.ui.registerFont (addonInfo.id, "Montserrat", "fonts/Montserrat.ttf")
+    EnKai.ui.registerFont (addonInfo.id, "MontserratSemiBold", "fonts/Montserrat-SemiBold.ttf")
     
     table.insert(Command.Slash.Register("nkCG"), {_commandHandler, "nkCartographer", "ui"}) 
     table.insert(Command.Slash.Register("nkCartographer"), {_commandHandler, "nkCartographer", "ui"})
