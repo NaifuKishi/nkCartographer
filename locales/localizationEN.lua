@@ -49,7 +49,7 @@ if EnKai.tools.lang.getLanguage() == "English" or EnKai.tools.lang.getLanguage()
 	coordLabel			 = 'Please enter the coordinates:',
 	btSet				 = 'Set',
 
-	questCarnage		 = "Massaker:"
+	questCarnage		 = "Carnage:"
 	}
 	
 end

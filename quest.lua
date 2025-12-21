@@ -118,7 +118,6 @@ local function processObjectives (key, questName, domain, objectiveList, isCompl
 					elseif indicators[idx2].radius and indicators[idx2].radius <=30 then 
 						thisEntry.type = "QUEST.POINT"
 					elseif indicators[idx2].radius and indicators[idx2].radius > 30 then 
-
 						if stringFind(questName, lang.questCarnage) then							
 							thisEntry.type = "QUEST.CARNAGE"
 						else
