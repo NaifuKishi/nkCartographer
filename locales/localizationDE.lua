@@ -48,6 +48,8 @@ if ( EnKai.tools.lang.getLanguage()  == "German") then
 		waypointDialogTitle	 = 'Wegpunkt',
 		coordLabel			 = 'Geben Sie die Koordinaten ein:',
 		btSet				 = 'Setzen',
+
+		questCarnage		 = "Massaker:"
   }
 	
 

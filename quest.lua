@@ -6,6 +6,7 @@ local data        	= privateVars.data
 local uiElements  	= privateVars.uiElements
 local internalFunc  = privateVars.internal
 local _events     	= privateVars.events
+local lang        	= privateVars.langTexts
 
 ---------- init variables ---------
 
@@ -90,9 +91,12 @@ local function isCurrentWorld (details)
 
 end
 
-local function processObjectives (key, questName, domain, objectiveList, isComplete, hasAdd, addInfo)
+local function processObjectives (key, questName, domain, objectiveList, isComplete, hasAdd, addInfo)		
 
 	if nkDebug then nkDebug.logEntry (addonInfo.identifier, "processObjectives", questName, objectiveList) end
+
+	if nkDebug then nkDebug.logEntry (addonInfo.identifier, "processObjectives", questName, addInfo) end
+	
 
 	for idx1 = 1, #objectiveList, 1 do
 
@@ -102,6 +106,8 @@ local function processObjectives (key, questName, domain, objectiveList, isCompl
 
 			if indicators ~= nil then
 				for idx2 = 1, #indicators, 1 do
+					if isComplete and idx2 > 1 then break end
+
 					local id = "q-" .. key .. "-o" .. idx1 .. "-i" .. idx2
 					local thisEntry = { id = id, type = "QUEST.POINT", descList = { objectiveList[idx1].description }, 
 										title = questName,
@@ -112,7 +118,12 @@ local function processObjectives (key, questName, domain, objectiveList, isCompl
 					elseif indicators[idx2].radius and indicators[idx2].radius <=30 then 
 						thisEntry.type = "QUEST.POINT"
 					elseif indicators[idx2].radius and indicators[idx2].radius > 30 then 
-						thisEntry.type = "QUEST.AREA"
+
+						if stringFind(questName, lang.questCarnage) then							
+							thisEntry.type = "QUEST.CARNAGE"
+						else
+							thisEntry.type = "QUEST.AREA"
+						end
 						thisEntry.radius = indicators[idx2].radius
 					elseif domain == "area" then
 						thisEntry.type = "QUEST.ZONEEVENT"
@@ -141,6 +152,8 @@ local function processQuests (questList, addFlag)
   if flag then
   
     for key, details in pairs(questDetails) do
+	
+		if nkDebug then nkDebug.logEntry (addonInfo.identifier, "processQuests", key, details) end
       
       if addFlag == true or isCurrentWorld(details) == true then
       

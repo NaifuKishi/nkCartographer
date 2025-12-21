@@ -22,8 +22,8 @@ if EnKai.tools.lang.getLanguage() == "Russian" then
     poiCheckbox          = 'Points of interest',
     zoneTitleCheckbox    = 'Zone name',
     animationsCheckbox   = 'Animations',
-	animationsCheckboxheckboxInfo     = 'WARNING: performance intensive!',
-	animationSpeedSlider = 'Update frequency %d%%',
+	  animationsCheckboxheckboxInfo     = 'WARNING: performance intensive!',
+	  animationSpeedSlider = 'Update frequency %d%%',
     rareCheckbox         = 'Rare Mobs',
     rareCheckboxInfo     = 'Requires RareDar or RareTracker addon',
     questCheckBox        = 'Quests',
@@ -39,7 +39,9 @@ if EnKai.tools.lang.getLanguage() == "Russian" then
     poiAchievement       = 'Achievement',
     poiPuzzle            = 'Puzzle',
     
-    startUp              =  '<font color="#0094FF">nkCartographer</font> V%s loaded\n/nkCG toggle - switch between map sizes\n/nkCG show - show / hide map'
+    startUp              =  '<font color="#0094FF">nkCartographer</font> V%s loaded\n/nkCG toggle - switch between map sizes\n/nkCG show - show / hide map',
+
+    questCarnage		     = "Carnage:"
   }
   
 end

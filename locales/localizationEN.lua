@@ -48,6 +48,8 @@ if EnKai.tools.lang.getLanguage() == "English" or EnKai.tools.lang.getLanguage()
 	waypointDialogTitle	 = 'Waypoint',
 	coordLabel			 = 'Please enter the coordinates:',
 	btSet				 = 'Set',
+
+	questCarnage		 = "Massaker:"
 	}
 	
 end
