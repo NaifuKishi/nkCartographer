@@ -429,7 +429,10 @@ end
 
 function internalFunc.UpdateMap (mapInfo, action, debugSource, checkForMinimapQuest)
 
-	if uiElements.mapUI == nil then return end
+	if uiElements.mapUI == nil then 
+		if nkDebug then nkDebug.logEntry (addonInfo.identifier, "internalFunc.UpdateMap", "No mapUI", mapInfo) end
+		return 
+	end
 
 	local debugId
 	if nkDebug then debugId = nkDebug.traceStart (addonInfo.identifier, "internalFunc.UpdateMap") end

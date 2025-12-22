@@ -93,9 +93,9 @@ end
 
 local function processObjectives (key, questName, domain, objectiveList, isComplete, hasAdd, addInfo)		
 
-	if nkDebug then nkDebug.logEntry (addonInfo.identifier, "processObjectives", questName, objectiveList) end
+	if nkDebug then nkDebug.logEntry (addonInfo.identifier, "processObjectives 1", questName, objectiveList) end
 
-	if nkDebug then nkDebug.logEntry (addonInfo.identifier, "processObjectives", questName, addInfo) end
+	if nkDebug then nkDebug.logEntry (addonInfo.identifier, "processObjectives 2", questName, addInfo) end
 	
 
 	for idx1 = 1, #objectiveList, 1 do
@@ -128,6 +128,8 @@ local function processObjectives (key, questName, domain, objectiveList, isCompl
 						thisEntry.type = "QUEST.ZONEEVENT"
 					end
 
+					if nkDebug then nkDebug.logEntry (addonInfo.identifier, stringFormat("processObjectives 3-%d", idx2), questName, thisEntry) end
+
 					data.currentQuestList[key][id] = true
 					addInfo[id] = thisEntry
 					hasAdd = true
@@ -143,52 +145,55 @@ end
 
 local function processQuests (questList, addFlag)
 
-  local addInfo, removeInfo = {}, {}
-  local hasAdd, hasRemove = false, false
+	local addInfo, removeInfo = {}, {}
+	local hasAdd, hasRemove = false, false
 
-  local flag, questDetails = pcall(inspectQuestDetail, questList)
+	local flag, questDetails = pcall(inspectQuestDetail, questList)
+
+	if flag then
+
+		for key, details in pairs(questDetails) do
+
+			if nkDebug then nkDebug.logEntry (addonInfo.identifier, "processQuests", key, details) end
+			
+			if addFlag == true or isCurrentWorld(details) == true then
+			
+			-- check if quest was identified through the minimap unknown entries
+			
+			if data.minimapQuestList[key] ~= nil then
+				uiElements.mapUI:RemoveElement(data.minimapQuestList[key].id)
+			end
+
+			-- check if quest is part of the missing quest list (in case of accepting a new quest)
+
+			if data.missingQuestList[key] ~= nil then
+				for _, details in pairs (data.missingQuestList[key]) do removeInfo[details.id] = true end
+				hasRemove = true
+			end
+				
+			-- check for quest objectives change
+
+			local objectives = details.objective
+			local incompleteCount = 0
+			
+			if data.currentQuestList[key] ~= nil then 
+				for key, _ in pairs(data.currentQuestList[key]) do removeInfo[key] = true end
+				hasRemove = true
+			end
+			
+			data.currentQuestList[key] = {}
+			
+			hasAdd, addInfo = processObjectives (key, details.name, details.domain, objectives, details.complete, hasAdd, addInfo)
+				
+			end -- if
+		end -- for
+	end
   
-  if flag then
-  
-    for key, details in pairs(questDetails) do
-	
-		if nkDebug then nkDebug.logEntry (addonInfo.identifier, "processQuests", key, details) end
-      
-      if addFlag == true or isCurrentWorld(details) == true then
-      
-        -- check if quest was identified through the minimap unknown entries
-        
-        if data.minimapQuestList[key] ~= nil then
-          uiElements.mapUI:RemoveElement(data.minimapQuestList[key].id)
-        end
-  
-        -- check if quest is part of the missing quest list (in case of accepting a new quest)
-  
-        if data.missingQuestList[key] ~= nil then
-          for _, details in pairs (data.missingQuestList[key]) do removeInfo[details.id] = true end
-          hasRemove = true
-        end
-          
-        -- check for quest objectives change
-  
-        local objectives = details.objective
-        local incompleteCount = 0
-        
-        if data.currentQuestList[key] ~= nil then 
-          for key, _ in pairs(data.currentQuestList[key]) do removeInfo[key] = true end
-          hasRemove = true
-        end
-        
-        data.currentQuestList[key] = {}
-		
-        hasAdd, addInfo = processObjectives (key, details.name, details.domain, objectives, details.complete, hasAdd, addInfo)
-          
-      end -- if
-    end -- for
-  end
-  
-  if hasRemove == true then internalFunc.UpdateMap (removeInfo, "remove") end
-  if hasAdd == true then internalFunc.UpdateMap (addInfo, "add", "processQuests") end
+  	if hasRemove == true then internalFunc.UpdateMap (removeInfo, "remove") end
+  	if hasAdd == true then 
+		if nkDebug then nkDebug.logEntry (addonInfo.identifier, "processQuests", "hasAdd", addInfo) end
+		internalFunc.UpdateMap (addInfo, "add", "processQuests") 
+	end
 
 end
 
