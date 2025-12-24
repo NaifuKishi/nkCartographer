@@ -60,9 +60,11 @@ local EnKaiEventsAddInsecure	= EnKai.events.addInsecure
 
 local function isCurrentWorld (details)
 
+	-- maybe at some point find a solution for categoryName = "Profession"
+
 	if data.currentWorld == nil then return false end
 	
-	if details.categoryName ~= nil then
+	if details.categoryName ~= nil then				
 		local zoneId, zoneDetails = EnKaiMapGetZoneByName(details.categoryName)
 		
 		if zoneDetails == nil then
@@ -109,6 +111,9 @@ local function processObjectives (key, questName, domain, objectiveList, isCompl
 					if isComplete and idx2 > 1 then break end
 
 					local id = "q-" .. key .. "-o" .. idx1 .. "-i" .. idx2
+
+					--print (id)
+
 					local thisEntry = { id = id, type = "QUEST.POINT", descList = { objectiveList[idx1].description }, 
 										title = questName,
 										coordX = indicators[idx2].x, coordY = indicators[idx2].y, coordZ = indicators[idx2].z }
@@ -154,36 +159,41 @@ local function processQuests (questList, addFlag)
 
 		for key, details in pairs(questDetails) do
 
-			if nkDebug then nkDebug.logEntry (addonInfo.identifier, "processQuests", key, details) end
+			if nkDebug then 
+				nkDebug.logEntry (addonInfo.identifier, "-------------------", "") 
+				nkDebug.logEntry (addonInfo.identifier, "processQuests", details.name, details) 
+				nkDebug.logEntry (addonInfo.identifier, "processQuests", addFlag) 
+				nkDebug.logEntry (addonInfo.identifier, "processQuests", isCurrentWorld(details)) 
+			end
 			
 			if addFlag == true or isCurrentWorld(details) == true then
 			
-			-- check if quest was identified through the minimap unknown entries
-			
-			if data.minimapQuestList[key] ~= nil then
-				uiElements.mapUI:RemoveElement(data.minimapQuestList[key].id)
-			end
-
-			-- check if quest is part of the missing quest list (in case of accepting a new quest)
-
-			if data.missingQuestList[key] ~= nil then
-				for _, details in pairs (data.missingQuestList[key]) do removeInfo[details.id] = true end
-				hasRemove = true
-			end
+				-- check if quest was identified through the minimap unknown entries
 				
-			-- check for quest objectives change
+				if data.minimapQuestList[key] ~= nil then
+					uiElements.mapUI:RemoveElement(data.minimapQuestList[key].id)
+				end
 
-			local objectives = details.objective
-			local incompleteCount = 0
-			
-			if data.currentQuestList[key] ~= nil then 
-				for key, _ in pairs(data.currentQuestList[key]) do removeInfo[key] = true end
-				hasRemove = true
-			end
-			
-			data.currentQuestList[key] = {}
-			
-			hasAdd, addInfo = processObjectives (key, details.name, details.domain, objectives, details.complete, hasAdd, addInfo)
+				-- check if quest is part of the missing quest list (in case of accepting a new quest)
+
+				if data.missingQuestList[key] ~= nil then
+					for _, details in pairs (data.missingQuestList[key]) do removeInfo[details.id] = true end
+					hasRemove = true
+				end
+					
+				-- check for quest objectives change
+
+				local objectives = details.objective
+				local incompleteCount = 0
+				
+				if data.currentQuestList[key] ~= nil then 
+					for key, _ in pairs(data.currentQuestList[key]) do removeInfo[key] = true end
+					hasRemove = true
+				end
+				
+				data.currentQuestList[key] = {}
+				
+				hasAdd, addInfo = processObjectives (key, details.name, details.domain, objectives, details.complete, hasAdd, addInfo)
 				
 			end -- if
 		end -- for
@@ -361,9 +371,18 @@ end
 
 ---------- addon internal function block ---------
 
-function internalFunc.GetQuests() processQuests (inspectQuestList()) end
-function _events.QuestAccept (_, data) processQuests (data, true) end
-function _events.QuestChange (_, data) processQuests (data, false) end
+function internalFunc.GetQuests() 
+	--print ("get quests")
+	processQuests (inspectQuestList()) 
+end
+function _events.QuestAccept (_, data) 
+	--print ("quest accept")
+	processQuests (data, true) 
+end
+function _events.QuestChange (_, data) 
+	--print ("change quests")
+	processQuests (data, false) 
+end
   
 function _events.QuestAbandon (_, updateData)
   

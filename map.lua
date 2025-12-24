@@ -454,7 +454,7 @@ function internalFunc.UpdateMap (mapInfo, action, debugSource, checkForMinimapQu
 					nkDebug.logEntry (addonInfo.identifier, "internalFunc.UpdateMap add", "details.type == nil", details)
 				end
 			elseif details.type ~= "UNKNOWN" and details.type ~= "PORTAL" then -- filter minimap portal and use poi portal instead
-				--dump(details)
+				--if debugSource == "processQuests" then dump (details) end
 				uiElements.mapUI:AddElement(details)
 				if stringFind(details.type, "RESOURCE") == 1 and nkCartSetup.trackGathering == true then _trackGathering(details) end
 			elseif details.type == "UNKNOWN" then
