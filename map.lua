@@ -4,8 +4,8 @@ local addonInfo, privateVars = ...
 
 local data                  = privateVars.data
 local uiElements            = privateVars.uiElements
-local internalFunc          = privateVars.internal
-local _events               = privateVars.events
+local internalFunc          = privateVars.internalFunc
+local events               = privateVars.events
 local lang        			= privateVars.langTexts
 
 ---------- init local variables ---------
@@ -627,7 +627,7 @@ function internalFunc.UpdateUnit (mapInfo, action)
 			if key == data.playerHostileTargetUID then
 				details.id = "e" .. key
 				local bData = {change = {["e" .. key] = details}}
-				_events.broadcastTarget(bData)
+				events.broadcastTarget(bData)
 			end
 
 		elseif action == "remove" then

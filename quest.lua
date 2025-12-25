@@ -4,8 +4,8 @@ local addonInfo, privateVars = ...
 
 local data        	= privateVars.data
 local uiElements  	= privateVars.uiElements
-local internalFunc  = privateVars.internal
-local _events     	= privateVars.events
+local internalFunc  = privateVars.internalFunc
+local events     	= privateVars.events
 local lang        	= privateVars.langTexts
 
 ---------- init variables ---------
@@ -375,16 +375,16 @@ function internalFunc.GetQuests()
 	--print ("get quests")
 	processQuests (inspectQuestList()) 
 end
-function _events.QuestAccept (_, data) 
+function events.QuestAccept (_, data) 
 	--print ("quest accept")
 	processQuests (data, true) 
 end
-function _events.QuestChange (_, data) 
+function events.QuestChange (_, data) 
 	--print ("change quests")
 	processQuests (data, false) 
 end
   
-function _events.QuestAbandon (_, updateData)
+function events.QuestAbandon (_, updateData)
   
   local removeInfo, addInfo = {}, {}
   local hasRemove, hasAdd = false, false
@@ -422,7 +422,7 @@ function _events.QuestAbandon (_, updateData)
 
 end
 
-function _events.QuestComplete (_, updateData)
+function events.QuestComplete (_, updateData)
 
   local removeInfo = {}
   local hasRemove = false

@@ -19,7 +19,8 @@ RunOnStartup = {
   "api.lua",
   "config.lua",
   "data.lua",
-  "quest.lua"
+  "quest.lua",
+  "theme.lua"
 }
 
 Embed = {	

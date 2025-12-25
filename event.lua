@@ -2,10 +2,10 @@ local addonInfo, privateVars = ...
 
 ---------- init namespace ---------
 
-local data        = privateVars.data
-local uiElements  = privateVars.uiElements
-local _internal   = privateVars.internal
-local _events     = privateVars.events
+local data          = privateVars.data
+local uiElements    = privateVars.uiElements
+local internalFunc  = privateVars.internalFunc
+local events       = privateVars.events
 
 ---------- init local variables ---------
 
@@ -53,11 +53,11 @@ local function _processPlayerTarget(unitID, unitDetails)
 	local thisData = {	["t" .. unitID] = {id = "t" .. unitID, type = "UNIT.TARGET." .. rel, coordX = unitDetails.coordX, coordY = unitDetails.coordY, coordZ = unitDetails.coordZ, title = unitDetails.name},
 						["npc" .. unitID] = {id = "npc" .. unitID, type = "VARIA.NPC." .. rel, coordX = unitDetails.coordX, coordY = unitDetails.coordY, coordZ = unitDetails.coordZ, title = unitDetails.name}}
 
-	_internal.UpdateMap (thisData, "add", "_processPlayerTarget")
+	internalFunc.UpdateMap (thisData, "add", "_processPlayerTarget")
 
 	if rel == "HOSTILE" then
 		local bData = {add = {["e" .. unitID] = {id = "e" .. unitID, type = "UNIT.ENEMY", coordX = unitDetails.coordX, coordY = unitDetails.coordY, coordZ = unitDetails.coordZ, title = unitDetails.name }}}
-		_events.broadcastTarget(bData)
+		events.broadcastTarget(bData)
 		data.playerHostileTargetUID = unitID
 	else
 		data.playerHostileTargetUID = nil
@@ -69,7 +69,7 @@ end
 
 ---------- addon internal function block ---------
 
-function _events.SystemUpdate ()
+function events.SystemUpdate ()
 
 	if data.forceUpdate ~= true then
 		if data.lastUpdate == nil then
@@ -87,7 +87,7 @@ function _events.SystemUpdate ()
 			if nkQuestBase.query.isInit() == true and nkQuestBase.query.isPackageLoaded('poa') == true and nkQuestBase.query.isPackageLoaded('nt') == true and nkQuestBase.query.isPackageLoaded('classic') == true then
 				local temp = EnKaiTableCopy(data.postponedAdds)
 				data.postponedAdds = nil
-				_internal.UpdateMap(temp, "add", "_events.SystemUpdate")
+				internalFunc.UpdateMap(temp, "add", "events.SystemUpdate")
 				data.lastUpdate = inspectTimeReal() -- diese Abfrage direkt nach data.forceUpdate platzieren wenn andere Funktionen aufgerufen werden
 			end
 		end
@@ -97,7 +97,7 @@ function _events.SystemUpdate ()
 
 end
 
-function _events.broadcastTarget (info)
+function events.broadcastTarget (info)
 
   if nkCartSetup.syncTarget ~= true then return end
 
@@ -114,7 +114,7 @@ function _events.broadcastTarget (info)
 
 end
 
-function _events.messageReceive (_, from, type, channel, identifier, data)
+function events.messageReceive (_, from, type, channel, identifier, data)
   
   if nkCartSetup.syncTarget ~= true then return end
   if uiElements.mapUI == nil then return end
@@ -168,32 +168,32 @@ function _events.messageReceive (_, from, type, channel, identifier, data)
     
   end
   
-  if hasRemoves then _internal.UpdateMap (removes, "remove") end
-  if hasAdds then _internal.UpdateMap (adds, "add", "_events.messageReceive") end
+  if hasRemoves then internalFunc.UpdateMap (removes, "remove") end
+  if hasAdds then internalFunc.UpdateMap (adds, "add", "events.messageReceive") end
   if hasUpdates then 
-	_internal.UpdateMap (updates, "change", '_events.messageReceive') 
+	internalFunc.UpdateMap (updates, "change", 'events.messageReceive') 
 	end
 
 end
 
-function _events.removeTargets ()
+function events.removeTargets ()
 
   for key, _ in pairs(_foreignUnits) do
-    _internal.UpdateMap ({[key] = true}, "remove")
+    internalFunc.UpdateMap ({[key] = true}, "remove")
   end
   
   _foreignUnits = {}
 
 end
 
-function _events.ZoneChange (_, info) 
+function events.ZoneChange (_, info) 
 
 	for unit, zoneId in pairs (info) do
 		if unit == data.playerUID then
 			if uiElements.mapUI == nil then 
-				_internal.initMap ()
+				internalFunc.initMap ()
 			else
-				_internal.SetZone (zoneId) 
+				internalFunc.SetZone (zoneId) 
 			end
 
 			return
@@ -202,7 +202,7 @@ function _events.ZoneChange (_, info)
 
 end
 
-function _events.ShardChange (_, info)
+function events.ShardChange (_, info)
 
   if data.lastShard == nil then data.lastShard = info end
 
@@ -212,52 +212,52 @@ function _events.ShardChange (_, info)
   data.lastShard = info
 
   local points, units = EnKaiMapGetAll()
-  _internal.UpdateMap(points, "remove")
-  --_internal.UpdateUnit (units, "remove")
+  internalFunc.UpdateMap(points, "remove")
+  --internalFunc.UpdateUnit (units, "remove")
   
 --  uiElements.mapUI:RemoveAllElements()
   
-  _internal.SetZone (data.lastZone)  
+  internalFunc.SetZone (data.lastZone)  
   
   local details = inspectUnitDetail('player')
 
-  _internal.UpdateUnit ({[details.id] = {id = details.id, type = "player", coordX = details.coordX, coordY = details.coordY, coordZ = details.coordZ}}, "add")
+  internalFunc.UpdateUnit ({[details.id] = {id = details.id, type = "player", coordX = details.coordX, coordY = details.coordY, coordZ = details.coordZ}}, "add")
   
   local petDetails = inspectUnitDetail('player.pet')
   if petDetails ~= nil then
-    _internal.UpdateUnit ({[petDetails.id] = {id = petDetails.id, type = "player.pet", coordX = petDetails.coordX, coordY = petDetails.coordY, coordZ = petDetails.coordZ}}, "add")
+    internalFunc.UpdateUnit ({[petDetails.id] = {id = petDetails.id, type = "player.pet", coordX = petDetails.coordX, coordY = petDetails.coordY, coordZ = petDetails.coordZ}}, "add")
   end
 
   --EnKai.map.refresh()
 
 end
 
-function _events.playerAvailable (_, info) 
+function events.playerAvailable (_, info) 
 
 	local debugId
-	--if nkDebug then debugId = nkDebug.traceStart (addonInfo.identifier, "_events.playerAvailable") end
+	--if nkDebug then debugId = nkDebug.traceStart (addonInfo.identifier, "events.playerAvailable") end
 
 	data.playerUID = info.id
-	_internal.initMap()
+	internalFunc.initMap()
 	local details = inspectUnitDetail('player.target')
   if details ~= nil then _processPlayerTarget(details.id, details) end    
 	
-	_internal.UpdateWaypointArrows()
+	internalFunc.UpdateWaypointArrows()
 	
-	--if nkDebug then nkDebug.traceEnd (addonInfo.identifier, "_events.playerAvailable", debugId) end
+	--if nkDebug then nkDebug.traceEnd (addonInfo.identifier, "events.playerAvailable", debugId) end
 
 end
 
-function _events.UnitUnavailable (_, info)
+function events.UnitUnavailable (_, info)
 
   for unitId, _ in pairs (info) do _units[unitId] = nil end
 
 end
 
-function _events.UnitCoordChange (_, x, y, z)
+function events.UnitCoordChange (_, x, y, z)
 
 	local debugId
-	if nkDebug then debugId = nkDebug.traceStart (addonInfo.identifier, "_events.UnitCoordChange") end
+	if nkDebug then debugId = nkDebug.traceStart (addonInfo.identifier, "events.UnitCoordChange") end
 
 	local updates, adds = {}, {}
 	local hasUpdates, hasAdds = false, false
@@ -276,14 +276,14 @@ function _events.UnitCoordChange (_, x, y, z)
 		end
 	end
 
-	if hasUpdates == true then _internal.UpdateMap (updates, "coord", "_events.UnitCoordChange") end
-	if hasAdds == true then _internal.UpdateMap (adds, "add") end
+	if hasUpdates == true then internalFunc.UpdateMap (updates, "coord", "events.UnitCoordChange") end
+	if hasAdds == true then internalFunc.UpdateMap (adds, "add") end
 
-	if nkDebug then nkDebug.traceEnd (addonInfo.identifier, "_events.UnitCoordChange", debugId) end
+	if nkDebug then nkDebug.traceEnd (addonInfo.identifier, "events.UnitCoordChange", debugId) end
 
 end
 
-function _events.UnitCastBar (_, info)
+function events.UnitCastBar (_, info)
   
   if info[data.playerUID] then
     local details = inspectUnitCastbar(data.playerUID)
@@ -294,20 +294,20 @@ function _events.UnitCastBar (_, info)
 
  end
 
-function _events.UnitChange (_, unitID, unitType)
+function events.UnitChange (_, unitID, unitType)
 
   local debugId
-  if nkDebug then debugId = nkDebug.traceStart (addonInfo.identifier, "_events.UnitChange") end
+  if nkDebug then debugId = nkDebug.traceStart (addonInfo.identifier, "events.UnitChange") end
 
   -- check for player target change and check if group status changes and process their targets
   
   if unitType == "player.target" then
   
-    if data.playerTargetUID ~= nil then _internal.UpdateMap ({["t" .. data.playerTargetUID] = false, ["npc" .. data.playerTargetUID] = false}, "remove") end
+    if data.playerTargetUID ~= nil then internalFunc.UpdateMap ({["t" .. data.playerTargetUID] = false, ["npc" .. data.playerTargetUID] = false}, "remove") end
       
     if data.playerHostileTargetUID ~= nil then
       local bData = {remove = {["e" .. data.playerHostileTargetUID] = false }}
-      _events.broadcastTarget(bData)
+      events.broadcastTarget(bData)
     end
   
     if unitID == false then
@@ -334,21 +334,21 @@ function _events.UnitChange (_, unitID, unitType)
 
       _unitsMapping[unitType] = nil      
       
-      if hasRemoves then _internal.UpdateMap (removes, "remove") end
+      if hasRemoves then internalFunc.UpdateMap (removes, "remove") end
     else
       local details = inspectUnitDetail(unitID)
       if details ~= nil then _unitsMapping[unitType] = details.name end
     end
   end
   
-  if nkDebug then nkDebug.traceEnd (addonInfo.identifier, "_events.UnitChange", debugId) end
+  if nkDebug then nkDebug.traceEnd (addonInfo.identifier, "events.UnitChange", debugId) end
 
 end
 
-function _events.GroupStatus (_, status)
+function events.GroupStatus (_, status)
 	
 	local debugId
-	if nkDebug then debugId = nkDebug.traceStart (addonInfo.identifier, "_events.GroupStatus") end
+	if nkDebug then debugId = nkDebug.traceStart (addonInfo.identifier, "events.GroupStatus") end
 
 	if data.lastGroupStatus ~= status then
 
@@ -364,39 +364,39 @@ function _events.GroupStatus (_, status)
 			end
 		end
 
-		if hasRemoves then _internal.UpdateMap(removes, "waypoint-remove") end
+		if hasRemoves then internalFunc.UpdateMap(removes, "waypoint-remove") end
 		data.lastGroupStatus = status
 	end
 
 	if nkCartSetup.syncTarget ~= true then 
-		if nkDebug then nkDebug.traceEnd (addonInfo.identifier, "_events.GroupStatus", debugId) end
+		if nkDebug then nkDebug.traceEnd (addonInfo.identifier, "events.GroupStatus", debugId) end
 		return 
 	end
 	
 	if data.playerHostileTargetUID == nil then
-		if nkDebug then nkDebug.traceEnd (addonInfo.identifier, "_events.GroupStatus", debugId) end
+		if nkDebug then nkDebug.traceEnd (addonInfo.identifier, "events.GroupStatus", debugId) end
 		return
 	end
 	
 	if status ~= "group" and status ~= "raid" then
-		if nkDebug then nkDebug.traceEnd (addonInfo.identifier, "_events.GroupStatus", debugId) end
+		if nkDebug then nkDebug.traceEnd (addonInfo.identifier, "events.GroupStatus", debugId) end
 		return
 	end
 
 	local details = inspectUnitDetail(data.playerHostileTargetUID)
 	if details == nil then 
-		if nkDebug then nkDebug.traceEnd (addonInfo.identifier, "_events.GroupStatus", debugId) end
+		if nkDebug then nkDebug.traceEnd (addonInfo.identifier, "events.GroupStatus", debugId) end
 		return 
 	end
 
 	local bData = {add = {["e" .. details.id] = {id = "e" .. details.id, type = "UNIT.ENEMY", coordX = details.coordX, coordY = details.coordY, coordZ = details.coordZ, title = details.name }}}
-	_events.broadcastTarget(bData)
+	events.broadcastTarget(bData)
 	
-	if nkDebug then nkDebug.traceEnd (addonInfo.identifier, "_events.GroupStatus", debugId) end
+	if nkDebug then nkDebug.traceEnd (addonInfo.identifier, "events.GroupStatus", debugId) end
 
 end
 
-function _events.achievementUpdate (_, info)
+function events.achievementUpdate (_, info)
 
   local achievement = nil
   local refreshNeeded = false
@@ -429,13 +429,13 @@ function _events.achievementUpdate (_, info)
   end
   
   if nkCartSetup.rareMobs == true and refreshNeeded == true then
-    _internal.ShowRareMobs(false)
-    _internal.ShowRareMobs(true)
+    internalFunc.ShowRareMobs(false)
+    internalFunc.ShowRareMobs(true)
   end
   
 end
 
-function _events.UpdateLocation (_, info)
+function events.UpdateLocation (_, info)
 
   if data.playerUID == nil then return end
     

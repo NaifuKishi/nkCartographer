@@ -23,7 +23,7 @@ if ( EnKai.tools.lang.getLanguage()  == "German") then
 		zoneTitleCheckbox    = 'Name der Zone',
 		animationsCheckbox   = 'Animationen',
 		animationsCheckboxheckboxInfo     = 'WARNUNG: Performance intensiv!',
-		animationSpeedSlider = 'Update Frequenz %d%%',
+		animationSpeedSlider = "Update Frequenz <font color='#3399FF'>%d%%</font>",
 		rareCheckbox         = 'Seltene Mobs',
 		rareCheckboxInfo     = 'Benötigt RareDar oder RareTracker',
 		questCheckBox        = 'Quests',
