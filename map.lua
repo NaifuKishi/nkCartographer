@@ -131,8 +131,10 @@ local function _fctMapUI ()
 
 	mapUI:SetResizable(locked)
 	mapUI:SetDragable(locked)
-
 	mapUI:SetLayer(2)
+
+	mapUI:ShowHeader(false)
+	mapUI:ShowCoords(false)	
 
 	local texture = EnKai.uiCreateFrame("nkTexture", "nkCartographer.map.texture", uiElements.context)
 	texture:SetLayer(1)
@@ -165,6 +167,18 @@ local function _fctMapUI ()
 
 	zoneTitle:SetEffectGlow({ colorB = 0, colorA = 1, colorG = 0, colorR = 0, strength = 3, blurX = 3, blurY = 3 })
 
+	local coords = EnKai.uiCreateFrame("nkText", "nkCartographer.map.coords", mapUI)
+	coords:SetPoint("CENTERBOTTOM", mapUI:GetContent(), "CENTERBOTTOM", 0, 15)
+	coords:SetLayer(9999)
+	coords:SetFontSize(20)
+	coords:SetEffectGlow({ colorB = 0, colorA = 1, colorG = 0, colorR = 0, strength = 3, blurX = 3, blurY = 3 })
+	
+	EnKai.ui.setFont (coords, addonInfo.id, "MontserratBold")
+
+	function mapUI:SetCoordsLabel(x, y)
+		coords:SetText(stringFormat("%d / %d", x, y))
+	end
+
 	function mapUI:SetZoneTitle(flag)
 
 		if flag == false then
@@ -179,7 +193,7 @@ local function _fctMapUI ()
 		end
 	end
 
-	local setupIcon = EnKai.uiCreateFrame("nkTexture", "nkCartographer.map.setupIcon",  mapUI:GetHeader())
+	--[[local setupIcon = EnKai.uiCreateFrame("nkTexture", "nkCartographer.map.setupIcon",  mapUI:GetHeader())
 	setupIcon:SetPoint("CENTERLEFT", mapUI:GetHeader(), "CENTERLEFT", 5, 0)
 	setupIcon:SetHeight(16)
 	setupIcon:SetWidth(16)
@@ -193,7 +207,7 @@ local function _fctMapUI ()
 	waypointIcon:SetWidth(16)
 	waypointIcon:SetTextureAsync("EnKai", "gfx/icons/pin.png")
 
-	waypointIcon:EventAttach(Event.UI.Input.Mouse.Left.Down, function () internalFunc.WaypointDialog() end, waypointIcon:GetName() .. ".Mouse.Left.Down")
+	waypointIcon:EventAttach(Event.UI.Input.Mouse.Left.Down, function () internalFunc.WaypointDialog() end, waypointIcon:GetName() .. ".Mouse.Left.Down")]]
 
 	Command.Event.Attach(EnKai.events["nkCartographer.map"].Moved, function (_, x, y, maximized)
 
@@ -400,7 +414,8 @@ function internalFunc.SetZone (newZoneID)
 
 	local details = inspectUnitDetail(data.playerUID)
 	data.locationName = details.locationName
-	uiElements.mapUI:SetCoord(details.coordX, details.coordZ)
+	uiElements.mapUI:SetCoord(details.coordX, details.coordZ)	
+	uiElements.mapUI:SetCoordsLabel(details.coordX, details.coordZ)	
 
 	_zoneDetails = inspectZoneDetail(newZoneID)
 	uiElements.mapUI:SetZoneTitle(nkCartSetup.showZoneTitle)
@@ -621,6 +636,7 @@ function internalFunc.UpdateUnit (mapInfo, action)
 
 			if key == data.playerUID then
 				uiElements.mapUI:SetCoord(details.coordX, details.coordZ)
+				uiElements.mapUI:SetCoordsLabel(details.coordX, details.coordZ)	
 				internalFunc.UpdateWaypointArrows ()
 			end
 
