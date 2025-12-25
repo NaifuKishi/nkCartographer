@@ -64,8 +64,7 @@ function internalFunc.showHide()
 
 end
 
-local function _commandHandler (commandline)    animationSpeedSlider:SetFont(addonInfo.id, "Montserrat")
-
+local function _commandHandler (commandline)
 
 	if commandline == nil then return end
 	if uiElements.mapUI == nil then return end
