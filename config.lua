@@ -146,7 +146,7 @@ local function _configTabSettings(parent)
     end
     
     backgroundSelect = settingsUI.combobox(name .. ".backgroundSelect", tabPane, lang.backgroundSelect, true, function(newValue)        
-      nkCartSetup.background = newValue.value
+      nkCartSetup.background = newValue
       uiElements.mapUI:SetBackground(nkCartSetup.background)
     end)
 

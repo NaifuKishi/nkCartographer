@@ -140,6 +140,8 @@ local function _fctMapUI ()
 	texture:SetLayer(1)
 
 	function mapUI:SetBackground(newBG)
+		if nkCartSetup.background == nil then return end
+
 		if data.borderDesigns[nkCartSetup.background].addon == nil then
 			texture:SetVisible(false)
 		else
