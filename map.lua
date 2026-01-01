@@ -31,6 +31,7 @@ local EnKaiUUID				= EnKai.tools.uuid
 local stringFind			= string.find
 local stringMatch			= string.match
 local stringFormat			= string.format
+local stringUpper			= string.upper
 
 local mathDeg				= math.deg
 local mathAtan2				= math.atan2
@@ -795,7 +796,7 @@ function internalFunc.CollectArtifact(itemData)
     
     if details and stringFind(details.category, "artifact") == 1 then
     
-      local artifactType = string.upper(stringMatch(details.category, "artifact (.+)"))
+      local artifactType = stringUpper(stringMatch(details.category, "artifact (.+)"))
       if artifactType == "FAE YULE" then artifactType = "FAEYULE" end
       local type = "TRACK.ARTIFACT." .. artifactType
       

@@ -4,15 +4,19 @@ local addonInfo, privateVars = ...
 
 if not nkCartographer then nkCartographer = {} end
 
-privateVars.data        = {}
-privateVars.internalFunc    = {}
-privateVars.uiElements  = {}
-privateVars.events      = {}
+privateVars.data          = {}
+privateVars.internalFunc  = {}
+privateVars.uiElements    = {}
+privateVars.events        = {}
 
-local data        = privateVars.data
-local uiElements  = privateVars.uiElements
-local internalFunc   = privateVars.internalFunc
-local events     = privateVars.events
+local data          = privateVars.data
+local uiElements    = privateVars.uiElements
+local internalFunc  = privateVars.internalFunc
+local events        = privateVars.events
+
+local stringFind    = string.find
+local stringMatch   = string.match
+local stringFormat  = string.format
 
 ---------- init local variables ---------
 
@@ -69,9 +73,9 @@ local function _commandHandler (commandline)
 	if commandline == nil then return end
 	if uiElements.mapUI == nil then return end
 
-	if string.find(commandline, "toggle") ~= nil then 
+	if stringFind(commandline, "toggle") ~= nil then 
 		uiElements.mapUI:ToggleMinMax(true)
-	elseif string.find(commandline, "debug") ~= nil and nkDebug then
+	elseif stringFind(commandline, "debug") ~= nil and nkDebug then
 		if uiElements.debugPanel == nil then 
 			uiElements.debugPanel = internalFunc.debugPanel()
 		else
@@ -81,9 +85,9 @@ local function _commandHandler (commandline)
 		local mapInfo = uiElements.mapUI:GetMapInfo()
 		uiElements.debugPanel:SetCoord(mapInfo.x1, mapInfo.x2, mapInfo.y1, mapInfo.y2)
 		
-	elseif string.find(commandline, "show") ~= nil then
+	elseif stringFind(commandline, "show") ~= nil then
 		internalFunc.showHide()
-	elseif string.find(commandline, "add") ~= nil then
+	elseif stringFind(commandline, "add") ~= nil then
 		local thisCommand = EnKai.strings.split(commandline, " ")
 		
 		if #thisCommand < 4 then
@@ -92,7 +96,7 @@ local function _commandHandler (commandline)
 			
 			internalFunc.AddCustomPoint(tonumber(thisCommand[2]), tonumber(thisCommand[3]), EnKai.strings.right(commandline, thisCommand[3]))
 		end
-	elseif string.find(commandline, "clear") ~= nil then
+	elseif stringFind(commandline, "clear") ~= nil then
 		internalFunc.ClearCustomPoints()
 	end
 
@@ -130,7 +134,7 @@ local function _main(_, addon)
     for key, design in pairs(data.resourceData) do
       local ressourceEntries = EnKai.map.GetMapElementbyType (key)
       for key2, details in pairs (ressourceEntries) do
-        EnKai.map.replaceMapElement ("TRACK" .. string.match (key2, "RESOURCE(.+)"), design)
+        EnKai.map.replaceMapElement ("TRACK" .. stringMatch (key2, "RESOURCE(.+)"), design)
       end		
     end
 	
@@ -208,7 +212,7 @@ local function _main(_, addon)
       Command.Event.Attach(Event.Message.Receive, events.messageReceive, "nkCartographer.Message.Receive")
     end
     
-    Command.Console.Display("general", true, string.format(privateVars.langTexts.startUp, addonInfo.toc.Version), true)
+    Command.Console.Display("general", true, stringFormat(privateVars.langTexts.startUp, addonInfo.toc.Version), true)
     
     EnKai.version.init(addonInfo.toc.Identifier, addonInfo.toc.Version)
     
@@ -277,7 +281,7 @@ local function _settingsHandler(_, addon)
         nkCartGathering.gatheringData[zoneid] = {}
       
         for key, details in pairs(data) do
-          if string.find(key, "ARTIFAC") ~= nil then
+          if stringFind(key, "ARTIFAC") ~= nil then
             if nkCartGathering.artifactsData[zoneid] == nil then
               nkCartGathering.artifactsData[zoneid] = {}
             end
