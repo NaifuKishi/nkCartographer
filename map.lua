@@ -174,9 +174,18 @@ local function _fctMapUI ()
 	coords:SetPoint("CENTERBOTTOM", mapUI:GetContent(), "CENTERBOTTOM", 0, 15)
 	coords:SetLayer(9999)
 	coords:SetFontSize(20)
-	coords:SetEffectGlow({ colorB = 0, colorA = 1, colorG = 0, colorR = 0, strength = 3, blurX = 3, blurY = 3 })
+	coords:SetEffectGlow({ strength = 3})
 	
 	EnKai.ui.setFont (coords, addonInfo.id, "MontserratBold")
+
+	local mouseCoords = EnKai.uiCreateFrame("nkText", "nkCartographer.map.mouseCoords", mapUI)
+	mouseCoords:SetPoint("CENTERBOTTOM", coords, "CENTERTOP", 0, 5)
+	mouseCoords:SetLayer(9999)
+	mouseCoords:SetFontSize(18)
+	mouseCoords:SetFontColor(1, 0.8, 0, 1)
+	mouseCoords:SetEffectGlow({ strength = 3})
+	
+	EnKai.ui.setFont (mouseCoords, addonInfo.id, "MontserratBold")
 
 	function mapUI:SetCoordsLabel(x, y)
 		coords:SetText(stringFormat("%d / %d", x, y))
@@ -211,6 +220,10 @@ local function _fctMapUI ()
 	waypointIcon:SetTextureAsync("EnKai", "gfx/icons/pin.png")
 
 	waypointIcon:EventAttach(Event.UI.Input.Mouse.Left.Down, function () internalFunc.WaypointDialog() end, waypointIcon:GetName() .. ".Mouse.Left.Down")]]
+
+	Command.Event.Attach(EnKai.events["nkCartographer.map"].MouseMoved, function (_, text)
+		mouseCoords:SetText(text)
+	end, "nkCartographer.map.MouseMoved")  
 
 	Command.Event.Attach(EnKai.events["nkCartographer.map"].Moved, function (_, x, y, maximized)
 
