@@ -213,9 +213,6 @@ function events.ShardChange (_, info)
 
   local points, units = EnKaiMapGetAll()
   internalFunc.UpdateMap(points, "remove")
-  --internalFunc.UpdateUnit (units, "remove")
-  
---  uiElements.mapUI:RemoveAllElements()
   
   internalFunc.SetZone (data.lastZone)  
   
@@ -227,8 +224,6 @@ function events.ShardChange (_, info)
   if petDetails ~= nil then
     internalFunc.UpdateUnit ({[petDetails.id] = {id = petDetails.id, type = "player.pet", coordX = petDetails.coordX, coordY = petDetails.coordY, coordZ = petDetails.coordZ}}, "add")
   end
-
-  --EnKai.map.refresh()
 
 end
 
