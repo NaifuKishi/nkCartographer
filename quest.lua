@@ -99,48 +99,57 @@ local function processObjectives (key, questName, domain, objectiveList, isCompl
 
 	if nkDebug then nkDebug.logEntry (addonInfo.identifier, "processObjectives 2", questName, addInfo) end
 	
+	local lastIndicator
 
 	for idx1 = 1, #objectiveList, 1 do
 
-		if objectiveList[idx1] ~= nil and objectiveList[idx1].complete ~= true then
+		if objectiveList[idx1] ~= nil then
+			if objectiveList[idx1].complete ~= true then
 
-			local indicators = objectiveList[idx1].indicator
+				local indicators = objectiveList[idx1].indicator
+				if not indicators then indicators = lastIndicator end
 
-			if indicators ~= nil then
-				for idx2 = 1, #indicators, 1 do
-					if isComplete and idx2 > 1 then break end
+				if indicators ~= nil then
+					for idx2 = 1, #indicators, 1 do
+						if isComplete and idx2 > 1 then break end
 
-					local id = "q-" .. key .. "-o" .. idx1 .. "-i" .. idx2
+						local id = "q-" .. key .. "-o" .. idx1 .. "-i" .. idx2
 
-					--print (id)
+						--print (id)
 
-					local thisEntry = { id = id, type = "QUEST.POINT", descList = { objectiveList[idx1].description }, 
-										title = questName,
-										coordX = indicators[idx2].x, coordY = indicators[idx2].y, coordZ = indicators[idx2].z }
+						local thisEntry = { id = id, type = "QUEST.POINT", descList = { objectiveList[idx1].description }, 
+											title = questName,
+											coordX = indicators[idx2].x, coordY = indicators[idx2].y, coordZ = indicators[idx2].z }
 
-					if isComplete == true then
-						thisEntry.type = "QUEST.RETURN"	
-					elseif indicators[idx2].radius and indicators[idx2].radius <=30 then 
-						thisEntry.type = "QUEST.POINT"
-					elseif indicators[idx2].radius and indicators[idx2].radius > 30 then 
-						if stringFind(questName, lang.questCarnage) then							
-							thisEntry.type = "QUEST.CARNAGE"
-						else
-							thisEntry.type = "QUEST.AREA"
+						if isComplete == true then
+							thisEntry.type = "QUEST.RETURN"	
+						elseif indicators[idx2].radius and indicators[idx2].radius <=30 then 
+							thisEntry.type = "QUEST.POINT"
+						elseif indicators[idx2].radius and indicators[idx2].radius > 30 then 
+							if stringFind(questName, lang.questCarnage) then							
+								thisEntry.type = "QUEST.CARNAGE"
+							else
+								thisEntry.type = "QUEST.AREA"
+							end
+							thisEntry.radius = indicators[idx2].radius
+						elseif domain == "area" then
+							thisEntry.type = "QUEST.ZONEEVENT"
 						end
-						thisEntry.radius = indicators[idx2].radius
-					elseif domain == "area" then
-						thisEntry.type = "QUEST.ZONEEVENT"
-					end
 
-					if nkDebug then nkDebug.logEntry (addonInfo.identifier, stringFormat("processObjectives 3-%d", idx2), questName, thisEntry) end
+						if nkDebug then nkDebug.logEntry (addonInfo.identifier, stringFormat("processObjectives 3-%d", idx2), questName, thisEntry) end
 
-					data.currentQuestList[key][id] = true
-					addInfo[id] = thisEntry
-					hasAdd = true
+						data.currentQuestList[key][id] = true
+						addInfo[id] = thisEntry
+						hasAdd = true
 
-				end -- for idx2
-			end -- indicators?
+					end -- for idx2
+				end -- indicators?
+
+				lastIndicator = indicators
+
+			elseif lastIndicator == nil then
+				lastIndicator = objectiveList[idx1].indicator
+			end			
 		end -- complete?
 	end -- idx1
 
@@ -194,7 +203,6 @@ local function processQuests (questList, addFlag)
 				data.currentQuestList[key] = {}
 				
 				hasAdd, addInfo = processObjectives (key, details.name, details.domain, objectives, details.complete, hasAdd, addInfo)
-				
 			end -- if
 		end -- for
 	end
