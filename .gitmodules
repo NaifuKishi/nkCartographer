@@ -2,5 +2,5 @@
 	path = Libs/EnKai
 	url = https://github.com/NaifuKishi/EnKai.git
 [submodule "Libs/nkQuestBase"]
-	path = Libs/EnKai
+	path = Libs/nkQuestBase
 	url = https://github.com/NaifuKishi/nkQuestBase.git
