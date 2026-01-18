@@ -41,6 +41,13 @@ local function _fctSettingsHandler(_, addon)
 	if LibMap.internal.checkEvents ("LibMap.internal", true) == false then return nil end
 		
 	LibMap.eventHandlers["LibMap.internal"]["gcChanged"], LibMap.events["LibMap.internal"]["gcChanged"] = Utility.Event.Create(addonInfo.identifier, "LibMap.internal.gcChanged")
+
+	LibMap.ui.registerFont(addonInfo.id, "Montserrat", "fonts/Montserrat-Regular.ttf")
+	LibMap.ui.registerFont(addonInfo.id, "MontserratSemiBold", "fonts/LibMap-Montserrat-SemiBold.ttf")
+	LibMap.ui.registerFont(addonInfo.id, "MontserratBold", "fonts/Montserrat-Bold.ttf")
+	LibMap.ui.registerFont(addonInfo.id, "FiraMonoBold", "fonts/FiraMono-Bold.ttf")
+	LibMap.ui.registerFont(addonInfo.id, "FiraMonoMedium", "fonts/FiraMono-Medium.ttf")
+	LibMap.ui.registerFont(addonInfo.id, "FiraMono", "fonts/FiraMono-Regular.ttf")	
 	
 	LibMap.internal.checkEvents ("LibMap.map", true)
 	LibMap.internal.checkEvents ("LibMap.waypoint", true)
@@ -57,7 +64,7 @@ local function _fctSettingsHandler(_, addon)
 
 	LibMap.eventHandlers["LibMap.waypoint"]["change"], LibMap.events["LibMap.waypoint"]["change"] = Utility.Event.Create(addonInfo.identifier, "LibMap.waypoint.change")
 	LibMap.eventHandlers["LibMap.waypoint"]["add"], LibMap.events["LibMap.waypoint"]["add"] = Utility.Event.Create(addonInfo.identifier, "LibMap.waypoint.add")
-	LibMap.eventHandlers["LibMap.waypoint"]["remove"], LibMap.events["LibMap.waypoint"]["remove"] = Utility.Event.Create(addonInfo.identifier, "LibMap.waypoint.remove")
+	LibMap.eventHandlers["LibMap.waypoint"]["remove"], LibMap.events["LibMap.waypoint"]["remove"] = Utility.Event.Create(addonInfo.identifier, "LibMap.waypoint.remove")	
 	
 	internal.uiSetupBoundCheck()
 	

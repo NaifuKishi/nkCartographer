@@ -905,10 +905,3 @@ function LibMap.ui.setFont (uiElement, addonId, name)
 	uiElement:SetFont(addonId, _fonts[addonId][name])
 
 end
-
-LibMap.ui.registerFont(addonInfo.id, "Montserrat", "fonts/Montserrat-Regular.ttf")
-LibMap.ui.registerFont(addonInfo.id, "MontserratSemiBold", "fonts/Montserrat-SemiBold.ttf")
-LibMap.ui.registerFont(addonInfo.id, "MontserratBold", "fonts/Montserrat-Bold.ttf")
-LibMap.ui.registerFont(addonInfo.id, "FiraMonoBold", "fonts/FiraMono-Bold.ttf")
-LibMap.ui.registerFont(addonInfo.id, "FiraMonoMedium", "fonts/FiraMono-Medium.ttf")
-LibMap.ui.registerFont(addonInfo.id, "FiraMono", "fonts/FiraMono-Regular.ttf")
