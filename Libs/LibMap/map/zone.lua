@@ -2,8 +2,8 @@ local addonInfo, privateVars = ...
 
 ---------- init namespace ---------
 
-if not EnKai then EnKai = {} end
-if not EnKai.map then EnKai.map = {} end
+if not LibMap then LibMap = {} end
+if not LibMap.map then LibMap.map = {} end
 
 local internal   = privateVars.internal
 
@@ -750,7 +750,7 @@ local function _fctZoneEvent (_, info)
 
   for unitId, zoneId in pairs (info) do _zoneData[unitId] = zoneId end
   
-  EnKai.eventHandlers["EnKai.map"]["zone"](info)
+  LibMap.eventHandlers["LibMap.map"]["zone"](info)
 
 end
 
@@ -766,7 +766,7 @@ local function _fctZoneCheckUnit (_, info, raiseEvent)
     end
   end
   
-  if raiseEvent ~= false then EnKai.eventHandlers["EnKai.map"]["zone"](eventData) end  
+  if raiseEvent ~= false then LibMap.eventHandlers["LibMap.map"]["zone"](eventData) end  
 
 end
 
@@ -775,7 +775,7 @@ end
 function internal.checkShard()
 
 	local debugId  
-    if nkDebug then debugId = nkDebug.traceStart (InspectAddonCurrent(), "EnKai internal.checkShard") end
+    if nkDebug then debugId = nkDebug.traceStart (InspectAddonCurrent(), "LibMap internal.checkShard") end
 
   -- local now = oFuncs.oInspectTimeFrame()
   -- if updateTime == nil or now - updateTime > 1 then
@@ -799,13 +799,13 @@ function internal.checkShard()
           if name == zone.name then
             if _shardName ~= InspectShard().name then
               _shardName = InspectShard().name
-              EnKai.eventHandlers["EnKai.map"]["shard"](_shardName)
+              LibMap.eventHandlers["LibMap.map"]["shard"](_shardName)
             end
             return
           elseif (name:sub(1, zone.name:len()+1) == zone.name.."@") then
             if _shardName ~= name:sub(zone.name:len()+2) then
               _shardName = name:sub(zone.name:len()+2)
-              EnKai.eventHandlers["EnKai.map"]["shard"](_shardName)
+              LibMap.eventHandlers["LibMap.map"]["shard"](_shardName)
             end
             return
           end
@@ -814,39 +814,39 @@ function internal.checkShard()
     end -- for consoleDetails
   --end
 
-  if nkDebug then nkDebug.traceEnd (InspectAddonCurrent(), "EnKai internal.checkShard", debugId) end	
+  if nkDebug then nkDebug.traceEnd (InspectAddonCurrent(), "LibMap internal.checkShard", debugId) end	
   
 end
 
 ---------- library public function block ---------
 
-function EnKai.map.calcZoneList()
+function LibMap.map.calcZoneList()
 
-  EnKaiSetup.zoneList = {}
+  LibMapSetup.zoneList = {}
   
   for world, zones in pairs(_zoneMapping) do
     for idx = 1, #zones, 1 do
       local detail = InspectZoneDetail(zones[idx])
-      EnKaiSetup.zoneList[zones[idx]] = { world = world, zone = detail.name, type = detail.type }
+      LibMapSetup.zoneList[zones[idx]] = { world = world, zone = detail.name, type = detail.type }
     end
   end
 
 end
 
-function EnKai.map.zoneInit(flag)
+function LibMap.map.zoneInit(flag)
 
   if flag == true and _zoneEvents == false then
     _zoneData = {}
     
     _shardName = InspectShard().name
   
-    Command.Event.Attach(Event.Unit.Detail.Zone, _fctZoneEvent, "EnKai.Zone.Unit.Detail.Zone")
-    Command.Event.Attach(Event.Unit.Availability.Full, _fctZoneCheckUnit, "EnKai.Zone.Unit.Availability.Full")
+    Command.Event.Attach(Event.Unit.Detail.Zone, _fctZoneEvent, "LibMap.Zone.Unit.Detail.Zone")
+    Command.Event.Attach(Event.Unit.Availability.Full, _fctZoneCheckUnit, "LibMap.Zone.Unit.Availability.Full")
     
     _fctZoneCheckUnit (_, InspectUnitList(), false)
   elseif flag == false and _zoneEvents == true then
-    Command.Event.Detach(Event.Unit.Detail.Zone, nil, "EnKai.Zone.Unit.Detail.Zone")
-    Command.Event.Detach(Event.Unit.Availability.Full, nil, "EnKai.Zone.Unit.Availability.Full")
+    Command.Event.Detach(Event.Unit.Detail.Zone, nil, "LibMap.Zone.Unit.Detail.Zone")
+    Command.Event.Detach(Event.Unit.Availability.Full, nil, "LibMap.Zone.Unit.Availability.Full")
   end
   
   _zoneEvents = flag
@@ -855,13 +855,13 @@ function EnKai.map.zoneInit(flag)
 
 end
 
-function EnKai.map.getZoneByUnit (unitID)
+function LibMap.map.getZoneByUnit (unitID)
 	
 	return _zoneData[unitID]
 	
 end
 
-function EnKai.map.getZoneWorld (zoneID)
+function LibMap.map.getZoneWorld (zoneID)
 
   for world, list in pairs (_zoneMapping) do
     if LibEKL.Tools.Table.IsMember(list, zoneID) == true then return world end 
@@ -871,7 +871,7 @@ function EnKai.map.getZoneWorld (zoneID)
   
 end
 
-function EnKai.map.GetZonePOI (zoneID)
+function LibMap.map.GetZonePOI (zoneID)
   
   local poiList = _zoneMapPOI[zoneID]
   
@@ -887,7 +887,7 @@ function EnKai.map.GetZonePOI (zoneID)
   
 end
 
-function EnKai.map.GetZoneByName (name)
+function LibMap.map.GetZoneByName (name)
 
   for zoneId, details in pairs(_zoneList) do
     if details[LibEKL.Tools.Lang.GetLanguageShort()] == name then
@@ -899,7 +899,7 @@ function EnKai.map.GetZoneByName (name)
 
 end
 
-function EnKai.map.GetZoneDetails (zoneID)
+function LibMap.map.GetZoneDetails (zoneID)
 
 	return _zoneList[zoneID]
 

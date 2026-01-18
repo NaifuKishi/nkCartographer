@@ -2,7 +2,7 @@ local addonInfo, privateVars = ...
 
 ---------- init namespace ---------
 
-if not EnKai then EnKai = {} end
+if not LibMap then LibMap = {} end
 
 if not privateVars.uiFunctions then privateVars.uiFunctions = {} end
 
@@ -15,10 +15,10 @@ local internal      = privateVars.internal
 
 local function _uiTexture(name, parent) 
 
-	--if EnKai.internal.checkEvents (name, true) == false then return nil end
+	--if LibMap.internal.checkEvents (name, true) == false then return nil end
 	
 	data.textureCount = data.textureCount + 1
-	local thisName = "EnKai.Texture." .. data.textureCount
+	local thisName = "LibMap.Texture." .. data.textureCount
 	
 	if uiNames.NKTEXTURE == nil then uiNames.NKTEXTURE = {} end
 	uiNames.NKTEXTURE[thisName] = name

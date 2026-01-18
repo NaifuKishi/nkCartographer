@@ -2,7 +2,7 @@ local addonInfo, privateVars = ...
 
 ---------- init namespace ---------
 
-if not EnKai then EnKai = {} end
+if not LibMap then LibMap = {} end
 
 if not privateVars.uiFunctions then privateVars.uiFunctions = {} end
 
@@ -15,10 +15,10 @@ local internal		= privateVars.internal
 
 local function _uiFrame(name, parent) 
 
-	--if EnKai.internal.checkEvents (name, true) == false then return nil end
+	--if LibMap.internal.checkEvents (name, true) == false then return nil end
 
 	data.frameCount = data.frameCount + 1
-	local thisName = "EnKai.Frame." .. data.frameCount
+	local thisName = "LibMap.Frame." .. data.frameCount
 
 	if uiNames.NKFRAME == nil then uiNames.NKFRAME = {} end
 	uiNames.NKFRAME[thisName] = name

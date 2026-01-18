@@ -2,7 +2,7 @@ local addonInfo, privateVars = ...
 
 ---------- init namespace ---------
 
-if not EnKai then EnKai = {} end
+if not LibMap then LibMap = {} end
 
 if not privateVars.uiFunctions then privateVars.uiFunctions = {} end
 
@@ -15,10 +15,10 @@ local internal      = privateVars.internal
 
 local function _uiText(name, parent) 
 
-	--if EnKai.internal.checkEvents (name, true) == false then return nil end
+	--if LibMap.internal.checkEvents (name, true) == false then return nil end
 	
 	data.textCount = data.textCount + 1
-	local thisName = "EnKai.Text." .. data.textCount
+	local thisName = "LibMap.Text." .. data.textCount
 	
 	if uiNames.NKTEXT == nil then uiNames.NKTEXT = {} end
 	uiNames.NKTEXT[thisName] = name
@@ -45,7 +45,7 @@ local function _uiText(name, parent)
 		end
 	end
 
-	function text:SetTextFont(addonInfo, fontName) EnKai.ui.setFont(text, addonInfo, fontName) end
+	function text:SetTextFont(addonInfo, fontName) LibMap.ui.setFont(text, addonInfo, fontName) end
   
 	local oEventMacroSet = text.EventMacroSet
   

@@ -2,7 +2,7 @@ local addonInfo, privateVars = ...
 
 ---------- init namespace ---------
 
-if not EnKai then EnKai = {} end
+if not LibMap then LibMap = {} end
 
 if not privateVars.uiFunctions then privateVars.uiFunctions = {} end
 
@@ -18,7 +18,7 @@ local itemCache = {}
 
 local function _uiItemTooltip(name, parent) 
 
-	--if EnKai.internal.checkEvents (name, true) == false then return nil end
+	--if LibMap.internal.checkEvents (name, true) == false then return nil end
 
 	local defaultTitleColor = {1, 1, 1, 1}
 	local defaultSubTitleColor = {1, 1, 1, 1}	
@@ -84,65 +84,65 @@ local function _uiItemTooltip(name, parent)
 	isEquipped:SetFontSize(12)
 	isEquipped:SetFontColor(0.58, 0.58, 0.58, 1)
 	isEquipped:SetPoint("TOPLEFT", tooltip, "TOPLEFT")	
-	EnKai.ui.setFont(isEquipped, addonInfo.id, "MontserratSemiBold")
+	LibMap.ui.setFont(isEquipped, addonInfo.id, "MontserratSemiBold")
 	
 	title:SetWordwrap(true)
 	title:SetFontSize(15)
 	title:SetFontColor(defaultTitleColor[1], defaultTitleColor[2], defaultTitleColor[3], defaultTitleColor[4])
-	EnKai.ui.setFont(title, addonInfo.id, "Montserrat")
+	LibMap.ui.setFont(title, addonInfo.id, "Montserrat")
 		
 	bound:SetPoint ("TOPLEFT", title, "BOTTOMLEFT", 0, -3)
 	bound:SetFontSize(12)
 	bound:SetFontColor(1, 1, 1, 1)
 	bound:SetWidth(defaultWidth- 4)
-	EnKai.ui.setFont(bound, addonInfo.id, "Montserrat")
+	LibMap.ui.setFont(bound, addonInfo.id, "Montserrat")
 	
 	itemCat:SetPoint("TOPLEFT", bound, "BOTTOMLEFT", 0, -3)
 	itemCat:SetFontSize(12)
 	itemCat:SetFontColor(1, 1, 1, 1)
 	itemCat:SetWidth(defaultWidth- 4)
-	EnKai.ui.setFont(itemCat, addonInfo.id, "Montserrat")
+	LibMap.ui.setFont(itemCat, addonInfo.id, "Montserrat")
 	
 	itemType:SetPoint("CENTERRIGHT", itemCat, "CENTERRIGHT")
 	itemType:SetFontSize(12)
 	itemType:SetFontColor(1, 1, 1, 1)
-	EnKai.ui.setFont(itemType, addonInfo.id, "Montserrat")
+	LibMap.ui.setFont(itemType, addonInfo.id, "Montserrat")
 	
 	description:SetFontSize(12)
 	description:SetFontColor (1,1,1,1)
 	description:SetWidth(defaultWidth-4)
 	description:SetWordwrap(true)
-	EnKai.ui.setFont(description, addonInfo.id, "Montserrat")
+	LibMap.ui.setFont(description, addonInfo.id, "Montserrat")
 	
 	dps:SetPoint("TOPLEFT", itemCat, "BOTTOMLEFT", 0, 10)
 	dps:SetFontSize(12)
 	dps:SetWordwrap(true)
 	dps:SetWidth(defaultWidth-4)
 	dps:SetFontColor(1, 1, 1, 1)
-	EnKai.ui.setFont(dps, addonInfo.id, "Montserrat")
+	LibMap.ui.setFont(dps, addonInfo.id, "Montserrat")
 	
 	equip:SetFontSize(12)
 	equip:SetFontColor (1,1,1,1)
 	equip:SetWidth(defaultWidth-4)
 	equip:SetWordwrap(true)
-	EnKai.ui.setFont(equip, addonInfo.id, "Montserrat")
+	LibMap.ui.setFont(equip, addonInfo.id, "Montserrat")
 	
 	use:SetFontSize(12)
 	use:SetFontColor (1,1,1,1)
 	use:SetWidth(defaultWidth-4)
 	use:SetWordwrap(true)
-	EnKai.ui.setFont(use, addonInfo.id, "Montserrat")
+	LibMap.ui.setFont(use, addonInfo.id, "Montserrat")
 	
 	set:SetFontSize(12)
 	set:SetFontColor(0.455, 0.929, 0.882, 1)
 	set:SetWidth(defaultWidth-4)
 	set:SetWordwrap(true)
-	EnKai.ui.setFont(set, addonInfo.id, "Montserrat")
+	LibMap.ui.setFont(set, addonInfo.id, "Montserrat")
 		
 	costLabel:SetFontSize(12)
 	costLabel:SetFontColor(1, 1, 1, 1)
 	costLabel:SetWordwrap(false)
-	EnKai.ui.setFont(costLabel, addonInfo.id, "Montserrat")
+	LibMap.ui.setFont(costLabel, addonInfo.id, "Montserrat")
 	if nkItemBase then costLabel:SetText(nkItemBase.texts.cost) end
 	
 	costCurrencyIcon:SetWidth(14)
@@ -150,7 +150,7 @@ local function _uiItemTooltip(name, parent)
 	
 	costCurrencyText:SetFontSize(12)
 	costCurrencyText:SetFontColor(1, 1, 1, 1)
-	EnKai.ui.setFont(costCurrencyText, addonInfo.id, "Montserrat")
+	LibMap.ui.setFont(costCurrencyText, addonInfo.id, "Montserrat")
 	
 	costCurrencyText:SetWordwrap(false)
 	costCurrencyText:SetPoint("CENTERLEFT", costCurrencyIcon, "CENTERRIGHT", 2, 0)
@@ -163,12 +163,12 @@ local function _uiItemTooltip(name, parent)
 	costShopText:SetFontColor(1, 1, 1, 1)
 	costShopText:SetWordwrap(false)
 	costShopText:SetPoint("CENTERLEFT", costShopIcon, "CENTERRIGHT", 2, 0)
-	EnKai.ui.setFont(costShopText, addonInfo.id, "Montserrat")
+	LibMap.ui.setFont(costShopText, addonInfo.id, "Montserrat")
 	
 	upgradeText:SetFontSize(12)
 	upgradeText:SetFontColor(1, 1, 1, 1)
 	upgradeText:SetWordwrap(false)
-	EnKai.ui.setFont(upgradeText, addonInfo.id, "Montserrat")
+	LibMap.ui.setFont(upgradeText, addonInfo.id, "Montserrat")
 	if nkItemBase then upgradeText:SetText(nkItemBase.texts.upgrade) end
 	
 	upgradeItem1:SetPoint("CENTERLEFT", upgradeText, "CENTERRIGHT", 2, 0)
@@ -178,7 +178,7 @@ local function _uiItemTooltip(name, parent)
 	upgradeCount1:SetPoint("CENTERLEFT", upgradeItem1, "CENTERRIGHT", 2, 0)
 	upgradeCount1:SetFontColor(1, 1, 1, 1)
 	upgradeCount1:SetWordwrap(false)
-	EnKai.ui.setFont(upgradeCount1, addonInfo.id, "Montserrat")
+	LibMap.ui.setFont(upgradeCount1, addonInfo.id, "Montserrat")
 	
 	upgradeItem2:SetPoint("CENTERLEFT", upgradeCount1, "CENTERRIGHT", 2, 0)
 	upgradeItem2:SetWidth(16)
@@ -187,7 +187,7 @@ local function _uiItemTooltip(name, parent)
 	upgradeCount2:SetPoint("CENTERLEFT", upgradeItem2, "CENTERRIGHT", 2, 0)
 	upgradeCount2:SetFontColor(1, 1, 1, 1)
 	upgradeCount2:SetWordwrap(false)
-	EnKai.ui.setFont(upgradeCount2, addonInfo.id, "Montserrat")
+	LibMap.ui.setFont(upgradeCount2, addonInfo.id, "Montserrat")
 	
 	upgradeItem3:SetPoint("CENTERLEFT", upgradeCount2, "CENTERRIGHT", 2, 0)
 	upgradeItem3:SetWidth(16)
@@ -196,22 +196,22 @@ local function _uiItemTooltip(name, parent)
 	upgradeCount3:SetPoint("CENTERLEFT", upgradeItem3, "CENTERRIGHT", 2, 0)
 	upgradeCount3:SetFontColor(1, 1, 1, 1)
 	upgradeCount3:SetWordwrap(false)
-	EnKai.ui.setFont(upgradeCount3, addonInfo.id, "Montserrat")
+	LibMap.ui.setFont(upgradeCount3, addonInfo.id, "Montserrat")
 	
 	--level:SetPoint("TOPLEFT", dps, "BOTTOMLEFT")
 	level:SetFontSize(12)
 	level:SetFontColor (1,1,1,1)
-	EnKai.ui.setFont(level, addonInfo.id, "Montserrat")
+	LibMap.ui.setFont(level, addonInfo.id, "Montserrat")
 	
 	faction:SetFontSize(12)
 	faction:SetFontColor (1,1,1,1)
 	faction:SetWordwrap(true)
-	EnKai.ui.setFont(faction, addonInfo.id, "Montserrat")
+	LibMap.ui.setFont(faction, addonInfo.id, "Montserrat")
 	
 	calling:SetPoint("TOPLEFT", level, "BOTTOMLEFT")
 	calling:SetFontSize(12)
 	calling:SetFontColor (1,1,1,1)
-	EnKai.ui.setFont(calling, addonInfo.id, "Montserrat")
+	LibMap.ui.setFont(calling, addonInfo.id, "Montserrat")
 	
 	function tooltip:SetItem(itemID, itemLibDetails, equipped, equipSlot)
 	
@@ -277,11 +277,11 @@ local function _uiItemTooltip(name, parent)
 		
 		height = height + title:GetHeight()
 		
-		local color = EnKai.items.getRarityColor ("uncommon")
+		local color = LibMap.items.getRarityColor ("uncommon")
 		
 		if details.rarity ~= nil then
-			color = EnKai.items.getRarityColor (details.rarity)
-			if color == nil then color = EnKai.items.getRarityColor ("trash") end
+			color = LibMap.items.getRarityColor (details.rarity)
+			if color == nil then color = LibMap.items.getRarityColor ("trash") end
 		end
 		
 		title:SetFontColor (color[1], color[2], color[3], color[4])
@@ -305,13 +305,13 @@ local function _uiItemTooltip(name, parent)
 
 		local riftSlot, itemTypeText = nil
 		
-		--if EnKai.items.getRessource ('riftCategoryToType', details.category) ~= nil then riftSlot = EnKai.items.getRessource ('riftCategoryToType', details.category) end
+		--if LibMap.items.getRessource ('riftCategoryToType', details.category) ~= nil then riftSlot = LibMap.items.getRessource ('riftCategoryToType', details.category) end
 
-		if EnKai.items.translateRiftCategory (details.category) ~= nil then riftSlot = EnKai.items.translateRiftCategory (details.category) end
+		if LibMap.items.translateRiftCategory (details.category) ~= nil then riftSlot = LibMap.items.translateRiftCategory (details.category) end
 		
 		if riftSlot ~= nil then
 		
-		  itemTypeText = EnKai.items.getRessource ('itemTypeTranslation', riftSlot)
+		  itemTypeText = LibMap.items.getRessource ('itemTypeTranslation', riftSlot)
 			
 			if itemTypeText == nil then
 				LibEKL.Tools.Error.Display (addonInfo.toc.Identifier, string.format("itemTooltip could not get item type for rift slot %s", riftSlot), 2)
@@ -391,7 +391,7 @@ local function _uiItemTooltip(name, parent)
 						statLine = LibEKL.UICreateFrame('nkText', name .. '.stats.' .. counter, tooltipInner)
 						statLine:SetFontSize(12)
 						statLine:SetFontColor(1,1,1,1)
-						EnKai.ui.setFont(statLine, addonInfo.id, "Montserrat")
+						LibMap.ui.setFont(statLine, addonInfo.id, "Montserrat")
 						
 						table.insert(stats, statLine)				
 					end  
@@ -562,7 +562,7 @@ local function _uiItemTooltip(name, parent)
 		if itemLibDetails ~= nil and itemLibDetails.rfl ~= nil then
 		  local levelText = lang.factionList[tonumber(itemLibDetails.rfl)]
 			if levelText == nil then
-			   LibEKL.Tools.Error.Display ("EnKai", "Unknown faction level: " .. itemLibDetails.rfl, 1) 
+			   LibEKL.Tools.Error.Display ("LibMap", "Unknown faction level: " .. itemLibDetails.rfl, 1) 
 			end
 			local factionText = itemLibDetails.rf
          
@@ -570,7 +570,7 @@ local function _uiItemTooltip(name, parent)
   			if lang.factionNames[factionText] ~= nil then			 
   			  factionText = lang.factionNames[factionText]
   			else
-  			  LibEKL.Tools.Error.Display ("EnKai", "Unknown faction: " .. itemLibDetails.rf, 1) 
+  			  LibEKL.Tools.Error.Display ("LibMap", "Unknown faction: " .. itemLibDetails.rf, 1) 
   			end
   	  end
 			local text = string.format(lang.requiredFaction, factionText, levelText)

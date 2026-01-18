@@ -2,7 +2,7 @@ local addonInfo, privateVars = ...
 
 ---------- init namespace ---------
 
-if not EnKai then EnKai = {} end
+if not LibMap then LibMap = {} end
 
 if not privateVars.uiFunctions then privateVars.uiFunctions = {} end
 
@@ -13,7 +13,7 @@ local internal      = privateVars.internal
 
 local function _uiTooltip(name, parent) 
 
-	--if EnKai.internal.checkEvents (name, true) == false then return nil end
+	--if LibMap.internal.checkEvents (name, true) == false then return nil end
 
 	local defaultTitleColor = {1, 1, 1, 1}
 	local defaultSubTitleColor = {1, 1, 1, 1}	
@@ -72,12 +72,12 @@ local function _uiTooltip(name, parent)
 	function tooltip:SetFont (addonId, fontName)
 		font = { addonId = addonId, fontName = fontName}
 
-		EnKai.ui.setFont(title, addonId, fontName)
-		EnKai.ui.setFont(subTitle, addonId, fontName)
+		LibMap.ui.setFont(title, addonId, fontName)
+		LibMap.ui.setFont(subTitle, addonId, fontName)
 
 		for idx = 1, #lines, 1 do
 			local line = lines[idx]
-			EnKai.ui.setFont(line, addonId, fontName)
+			LibMap.ui.setFont(line, addonId, fontName)
 		end
 	end
 
@@ -131,7 +131,7 @@ local function _uiTooltip(name, parent)
 				line:SetFontSize(11)
 
 				if font ~= nil then
-					EnKai.ui.setFont(line, font.addonId, font.fontName)
+					LibMap.ui.setFont(line, font.addonId, font.fontName)
 				end
 								
 				if idx == 1 then

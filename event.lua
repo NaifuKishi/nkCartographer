@@ -29,7 +29,7 @@ local LibEKLTableCopy           = LibEKL.Tools.Table.Copy
 local LibEKLTableIsMember       = LibEKL.Tools.Table.IsMember
 local LibEKLTableSerialize      = LibEKL.Tools.Table.Serialize
 local LibEKLStringsRight        = LibEKL.strings.right
-local EnKaiMapGetAll            = EnKai.map.getAll
+local LibMapMapGetAll            = LibMap.map.getAll
 
 local stringFind               = string.find
 
@@ -211,7 +211,7 @@ function events.ShardChange (_, info)
   
   data.lastShard = info
 
-  local points, units = EnKaiMapGetAll()
+  local points, units = LibMapMapGetAll()
   internalFunc.UpdateMap(points, "remove")
   
   internalFunc.SetZone (data.lastZone)  

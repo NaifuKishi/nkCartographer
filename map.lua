@@ -125,7 +125,7 @@ end
 
 local function _fctMapUI ()
 
-	local mapUI = EnKai.uiCreateFrame("nkMap", "nkCartographer.map", uiElements.context)
+	local mapUI = LibMap.uiCreateFrame("nkMap", "nkCartographer.map", uiElements.context)
 
 	local locked
 	if nkCartSetup.locked == true then locked = false else locked = true end
@@ -205,11 +205,11 @@ local function _fctMapUI ()
 		end
 	end
 
-	Command.Event.Attach(EnKai.events["nkCartographer.map"].MouseMoved, function (_, text)
+	Command.Event.Attach(LibMap.events["nkCartographer.map"].MouseMoved, function (_, text)
 		mouseCoords:SetText(text)
 	end, "nkCartographer.map.MouseMoved")  
 
-	Command.Event.Attach(EnKai.events["nkCartographer.map"].Moved, function (_, x, y, maximized)
+	Command.Event.Attach(LibMap.events["nkCartographer.map"].Moved, function (_, x, y, maximized)
 
 		if maximized == true then
 			nkCartSetup.maximizedX, nkCartSetup.maximizedY = x, y 
@@ -219,7 +219,7 @@ local function _fctMapUI ()
 
 	end, "nkCartographer.map.Moved")    
 
-	Command.Event.Attach(EnKai.events["nkCartographer.map"].Resized, function (_, newWidth, newHeight, maximized)
+	Command.Event.Attach(LibMap.events["nkCartographer.map"].Resized, function (_, newWidth, newHeight, maximized)
 
 		if maximized == true then
 			nkCartSetup.maximizedWidth, nkCartSetup.maximizedHeight = newWidth, newHeight 
@@ -229,7 +229,7 @@ local function _fctMapUI ()
 
 	end, "nkCartographer.map.Moved")
 
-	Command.Event.Attach(EnKai.events["nkCartographer.map"].Zoomed, function (_, newScale, maximized)
+	Command.Event.Attach(LibMap.events["nkCartographer.map"].Zoomed, function (_, newScale, maximized)
 		if maximized == true then
 			nkCartSetup.maximizedScale = newScale
 		else
@@ -240,7 +240,7 @@ local function _fctMapUI ()
 
 	end, "nkCartographer.map.Zoomed")
 
-	Command.Event.Attach(EnKai.events["nkCartographer.map"].Toggled, function (_, newScale, maximized)
+	Command.Event.Attach(LibMap.events["nkCartographer.map"].Toggled, function (_, newScale, maximized)
 		internalFunc.UpdateWaypointArrows ()
 		mapUI:SetZoneTitle(nkCartSetup.showZoneTitle)
 	end, "nkCartographer.map.Toggled")
@@ -275,7 +275,7 @@ function internalFunc.initMap ()
 	uiElements.mapUI:SetZoom(nkCartSetup.scale, false)
 	uiElements.mapUI:SetZoom(nkCartSetup.maximizedScale, true)
 
-	local points, units = EnKai.map.getAll()
+	local points, units = LibMap.map.getAll()
 	internalFunc.UpdateMap(points, "add", "internalFunc.initMap")
 	internalFunc.UpdateUnit (units, "add")
 
@@ -390,7 +390,7 @@ function internalFunc.SetZone (newZoneID)
 	local debugId
 	if nkDebug then debugId = nkDebug.traceStart (addonInfo.identifier, "internalFunc.SetZone") end
 
-	local newWorld = EnKai.map.getZoneWorld(newZoneID)
+	local newWorld = LibMap.map.getZoneWorld(newZoneID)
 	local isNewWorld = false
 
 	if newWorld ~= data.currentWorld then isNewWorld = true end
@@ -687,7 +687,7 @@ end
 
 function internalFunc.ShowPOI(flag)
 
-  local lastPoi = EnKai.map.GetZonePOI (data.lastZone)
+  local lastPoi = LibMap.map.GetZonePOI (data.lastZone)
   
   if flag == true and nkAM_Loot ~= nil and LibEKL.Unit.GetGroupStatus () ~= 'single' then
 	local bossInfo = nkAM_Loot.getPOI(data.lastZone)
@@ -886,7 +886,7 @@ function internalFunc.WaypointDialog()
 		setButton = LibEKL.UICreateFrame("nkButton", name .. ".setButton", uiElements.waypointDialog:GetContent())
 		setButton:SetPoint("CENTERTOP", sepLabel, "CENTERBOTTOM", 0, 20)
 		setButton:SetText(lang.btSet)
-		--setButton:SetIcon("EnKai", "gfx/icons/ok.png")
+		--setButton:SetIcon("LibMap", "gfx/icons/ok.png")
 		setButton:SetScale(.8)
 		setButton:SetLayer(9)
 		setButton:SetFont(addonInfo.id, "MontserratSemiBold")

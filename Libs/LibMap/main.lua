@@ -2,12 +2,12 @@ local addonInfo, privateVars = ...
 
 ---------- init namespace ---------
 
-if not EnKai then EnKai = {} else return end
-if not EnKai.manager then EnKai.ui = {} end
+if not LibMap then LibMap = {} else return end
+if not LibMap.manager then LibMap.ui = {} end
 
-if not EnKai.eventHandlers then EnKai.eventHandlers = {} end
-if not EnKai.events then EnKai.events = {} end
-if not EnKai.internal then EnKai.internal = {} end -- sobald nkRadial umgebaut ist das hier komplett auf internal umbauen
+if not LibMap.eventHandlers then LibMap.eventHandlers = {} end
+if not LibMap.events then LibMap.events = {} end
+if not LibMap.internal then LibMap.internal = {} end -- sobald nkRadial umgebaut ist das hier komplett auf internal umbauen
 
 privateVars.internal = {}
 privateVars.data = {}
@@ -38,26 +38,26 @@ local function _fctSettingsHandler(_, addon)
 	
 	if _libInit == true then return end
 	
-	if EnKai.internal.checkEvents ("EnKai.internal", true) == false then return nil end
+	if LibMap.internal.checkEvents ("LibMap.internal", true) == false then return nil end
 		
-	EnKai.eventHandlers["EnKai.internal"]["gcChanged"], EnKai.events["EnKai.internal"]["gcChanged"] = Utility.Event.Create(addonInfo.identifier, "EnKai.internal.gcChanged")
+	LibMap.eventHandlers["LibMap.internal"]["gcChanged"], LibMap.events["LibMap.internal"]["gcChanged"] = Utility.Event.Create(addonInfo.identifier, "LibMap.internal.gcChanged")
 	
-	EnKai.internal.checkEvents ("EnKai.map", true)
-	EnKai.internal.checkEvents ("EnKai.waypoint", true)
+	LibMap.internal.checkEvents ("LibMap.map", true)
+	LibMap.internal.checkEvents ("LibMap.waypoint", true)
 	
-	EnKai.eventHandlers["EnKai.map"]["add"], EnKai.events["EnKai.map"]["add"] = Utility.Event.Create(addonInfo.identifier, "EnKai.map.mapAdd")
-	EnKai.eventHandlers["EnKai.map"]["change"], EnKai.events["EnKai.map"]["change"] = Utility.Event.Create(addonInfo.identifier, "EnKai.map.mapChange")
-	EnKai.eventHandlers["EnKai.map"]["remove"], EnKai.events["EnKai.map"]["remove"] = Utility.Event.Create(addonInfo.identifier, "EnKai.map.mapRemove")
-	EnKai.eventHandlers["EnKai.map"]["coord"], EnKai.events["EnKai.map"]["coord"] = Utility.Event.Create(addonInfo.identifier, "EnKai.map.mapCoord")	
-	EnKai.eventHandlers["EnKai.map"]["zone"], EnKai.events["EnKai.map"]["zone"] = Utility.Event.Create(addonInfo.identifier, "EnKai.map.mapZone")
-	EnKai.eventHandlers["EnKai.map"]["shard"], EnKai.events["EnKai.map"]["shard"] = Utility.Event.Create(addonInfo.identifier, "EnKai.map.mapShard")
-	EnKai.eventHandlers["EnKai.map"]["unitAdd"], EnKai.events["EnKai.map"]["unitAdd"] = Utility.Event.Create(addonInfo.identifier, "EnKai.map.unitAdd")
-	EnKai.eventHandlers["EnKai.map"]["unitChange"], EnKai.events["EnKai.map"]["unitChange"] = Utility.Event.Create(addonInfo.identifier, "EnKai.map.unitChange")
-	EnKai.eventHandlers["EnKai.map"]["unitRemove"], EnKai.events["EnKai.map"]["unitRemove"] = Utility.Event.Create(addonInfo.identifier, "EnKai.map.unitRemove")
+	LibMap.eventHandlers["LibMap.map"]["add"], LibMap.events["LibMap.map"]["add"] = Utility.Event.Create(addonInfo.identifier, "LibMap.map.mapAdd")
+	LibMap.eventHandlers["LibMap.map"]["change"], LibMap.events["LibMap.map"]["change"] = Utility.Event.Create(addonInfo.identifier, "LibMap.map.mapChange")
+	LibMap.eventHandlers["LibMap.map"]["remove"], LibMap.events["LibMap.map"]["remove"] = Utility.Event.Create(addonInfo.identifier, "LibMap.map.mapRemove")
+	LibMap.eventHandlers["LibMap.map"]["coord"], LibMap.events["LibMap.map"]["coord"] = Utility.Event.Create(addonInfo.identifier, "LibMap.map.mapCoord")	
+	LibMap.eventHandlers["LibMap.map"]["zone"], LibMap.events["LibMap.map"]["zone"] = Utility.Event.Create(addonInfo.identifier, "LibMap.map.mapZone")
+	LibMap.eventHandlers["LibMap.map"]["shard"], LibMap.events["LibMap.map"]["shard"] = Utility.Event.Create(addonInfo.identifier, "LibMap.map.mapShard")
+	LibMap.eventHandlers["LibMap.map"]["unitAdd"], LibMap.events["LibMap.map"]["unitAdd"] = Utility.Event.Create(addonInfo.identifier, "LibMap.map.unitAdd")
+	LibMap.eventHandlers["LibMap.map"]["unitChange"], LibMap.events["LibMap.map"]["unitChange"] = Utility.Event.Create(addonInfo.identifier, "LibMap.map.unitChange")
+	LibMap.eventHandlers["LibMap.map"]["unitRemove"], LibMap.events["LibMap.map"]["unitRemove"] = Utility.Event.Create(addonInfo.identifier, "LibMap.map.unitRemove")
 
-	EnKai.eventHandlers["EnKai.waypoint"]["change"], EnKai.events["EnKai.waypoint"]["change"] = Utility.Event.Create(addonInfo.identifier, "EnKai.waypoint.change")
-	EnKai.eventHandlers["EnKai.waypoint"]["add"], EnKai.events["EnKai.waypoint"]["add"] = Utility.Event.Create(addonInfo.identifier, "EnKai.waypoint.add")
-	EnKai.eventHandlers["EnKai.waypoint"]["remove"], EnKai.events["EnKai.waypoint"]["remove"] = Utility.Event.Create(addonInfo.identifier, "EnKai.waypoint.remove")
+	LibMap.eventHandlers["LibMap.waypoint"]["change"], LibMap.events["LibMap.waypoint"]["change"] = Utility.Event.Create(addonInfo.identifier, "LibMap.waypoint.change")
+	LibMap.eventHandlers["LibMap.waypoint"]["add"], LibMap.events["LibMap.waypoint"]["add"] = Utility.Event.Create(addonInfo.identifier, "LibMap.waypoint.add")
+	LibMap.eventHandlers["LibMap.waypoint"]["remove"], LibMap.events["LibMap.waypoint"]["remove"] = Utility.Event.Create(addonInfo.identifier, "LibMap.waypoint.remove")
 	
 	internal.uiSetupBoundCheck()
 	
@@ -67,4 +67,4 @@ end
 
 -------------------- STARTUP EVENTS --------------------
 
-Command.Event.Attach(Event.Addon.SavedVariables.Load.End, _fctSettingsHandler, "EnKai.settingsHandler.SavedVariables.Load.End")
+Command.Event.Attach(Event.Addon.SavedVariables.Load.End, _fctSettingsHandler, "LibMap.settingsHandler.SavedVariables.Load.End")

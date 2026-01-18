@@ -2,8 +2,8 @@ local addonInfo, privateVars = ...
 
 ---------- init namespace ---------
 
-if not EnKai then EnKai = {} end
-if not EnKai.map then EnKai.map = {} end
+if not LibMap then LibMap = {} end
+if not LibMap.map then LibMap.map = {} end
 
 local internal    = privateVars.internal
 local data        = privateVars.data
@@ -24,8 +24,8 @@ local InspectUnitDetail		= Inspect.Unit.Detail
 local InspectAddonCurrent	= Inspect.Addon.Current
 local InspectMapWaypointGet	= Inspect.Map.Waypoint.Get
 
-local EnKaiGetLanguageShort	= LibEKL.Tools.Lang.GetLanguageShort
-local EnKaiStringsSplit		= LibEKL.strings.split
+local LibMapGetLanguageShort	= LibEKL.Tools.Lang.GetLanguageShort
+local LibMapStringsSplit		= LibEKL.strings.split
 
 local stringMatch  		= string.match
 local stringFind   		= string.find
@@ -47,19 +47,19 @@ local _playerDeath = false
 local function _fctCheckForColossus (values)
 
   if _mapColossus == nil then
-    local data = EnKai.zip.uncompress (colossusData)
+    local data = LibMap.zip.uncompress (colossusData)
     local err, func = pcall(loadstring, "return {" .. data .. "}")
     if func ~= nil then _mapColossus = func() end
     
     if _mapColossus == nil then
-      LibEKL.Tools.Error.Display ("EnKai", "Could not unzip colossus data", 1)
+      LibEKL.Tools.Error.Display ("LibMap", "Could not unzip colossus data", 1)
       return values.type
     end 
   end
  
   for k, v in pairs (_mapColossus) do
     
-    local name = v[EnKaiGetLanguageShort()]
+    local name = v[LibMapGetLanguageShort()]
     
     if values.name == name then
       local plane = stringMatch (values.type, "RIFT.INVASION.(.+)")
@@ -73,22 +73,22 @@ end
 
 local function _fctCheckForNPC (values)
 
-	local zone = EnKai.map.getZoneByUnit (LibEKL.Unit.GetPlayerDetails().id)
+	local zone = LibMap.map.getZoneByUnit (LibEKL.Unit.GetPlayerDetails().id)
 	
 	if _mapNPC [zone] == nil then
 		if NPCData[zone] == nil then return false end
-		local data = EnKai.zip.uncompress (NPCData[zone])
+		local data = LibEKL.zip.uncompress (NPCData[zone])
 		local err, func = pcall(loadstring, "return " .. data .. "")
 		if func ~= nil then _mapNPC[zone] = func() end
 
 		if _mapNPC[zone] == nil then
-			LibEKL.Tools.Error.Display ("EnKai", "Could not unzip npc data", 1)
+			LibEKL.Tools.Error.Display ("LibMap", "Could not unzip npc data", 1)
 			return false
 		end 
 	end
 
 	for k, v in pairs (_mapNPC[zone]) do
-		if values == v[EnKaiGetLanguageShort()] then
+		if values == v[LibMapGetLanguageShort()] then
 			return true
 		end	
 	end
@@ -117,7 +117,7 @@ local function _fctCheckPattern (value)
 					if stringMatch(subValue, k) then return idx, details, details.type .. "." .. v end
 				end
 
-				--LibEKL.Tools.Error.Display ("EnKai", subValue .. " not found in " .. LibEKL.Tools.Table.Serialize(details.regExValues), 2)
+				--LibEKL.Tools.Error.Display ("LibMap", subValue .. " not found in " .. LibEKL.Tools.Table.Serialize(details.regExValues), 2)
 
 			end          
 		elseif details.exact == false then
@@ -162,7 +162,7 @@ local function _fctIdentify(values)
 
 	if values.title ~= nil then 
 
-		values.titleList = EnKaiStringsSplit(values.title, "\n")
+		values.titleList = LibMapStringsSplit(values.title, "\n")
 
 		for idx = 1, #values.titleList, 1 do
 			local thisTitle = values.titleList[idx]
@@ -178,7 +178,7 @@ local function _fctIdentify(values)
 
 	if values.description ~= nil then
 	
-		values.descList = EnKaiStringsSplit(values.description, "\n")
+		values.descList = LibMapStringsSplit(values.description, "\n")
 
 		if mapIdentifier == nil then 
 			for idx = 1, #values.descList, 1 do
@@ -208,7 +208,7 @@ local function _fctIdentify(values)
 	
 	if titleIndex == 0 and descIndex == 0 then
 		if nkDebug then
-			LibEKL.Tools.Error.Display ("EnKai", "Could not identify map entry", 2)
+			LibEKL.Tools.Error.Display ("LibMap", "Could not identify map entry", 2)
 			nkDebug.logEntry (InspectAddonCurrent(), "_fctIdentify", "Unidentified map entry", values)
 		end
 		mapIdentifier = lang.mapIdentifiersGeneric["UNKNOWN"]
@@ -288,7 +288,7 @@ local function _fctMapEventRemove (_, info)
     end
   end
   
-  if hasRemoves == true then EnKai.eventHandlers["EnKai.map"]["remove"](temp) end
+  if hasRemoves == true then LibMap.eventHandlers["LibMap.map"]["remove"](temp) end
 
 end
 
@@ -339,11 +339,11 @@ local function _fctMapEventChange (_, info)
   
   if descTitleChange == true then
     _fctMapEventRemove (_, removeList)
-    EnKai.eventHandlers["EnKai.map"]["add"](addList)
+    LibMap.eventHandlers["LibMap.map"]["add"](addList)
   end
   
   if hasChange == true then
-    EnKai.eventHandlers["EnKai.map"]["change"](changeList)
+    LibMap.eventHandlers["LibMap.map"]["change"](changeList)
   end
 
 end
@@ -370,7 +370,7 @@ local function _fctMapEventCoord  (_, x, y, z)
   end
   
   if hasAdd == true then internal.mapEvent.add (_, addList) end
-  if hasChanges == true then EnKai.eventHandlers["EnKai.map"]["coord"](changeList) end
+  if hasChanges == true then LibMap.eventHandlers["LibMap.map"]["coord"](changeList) end
 
 end
 
@@ -397,8 +397,8 @@ local function _fctMapEventUnitCoordChange (_, x, y, z)
     end
   end
   
-  if hasAdd then EnKai.eventHandlers["EnKai.map"]["unitAdd"](addUnit) end
-  if hasChange then EnKai.eventHandlers["EnKai.map"]["unitChange"](changeUnit) end
+  if hasAdd then LibMap.eventHandlers["LibMap.map"]["unitAdd"](addUnit) end
+  if hasChange then LibMap.eventHandlers["LibMap.map"]["unitChange"](changeUnit) end
 
 end
 
@@ -416,7 +416,7 @@ local function _fctMapEventUnitUnavailable (_, info)
     end
   end 
   
-  if hasRemoves == true then EnKai.eventHandlers["EnKai.map"]["unitRemove"](removeUnit) end
+  if hasRemoves == true then LibMap.eventHandlers["LibMap.map"]["unitRemove"](removeUnit) end
   
 end
 
@@ -435,7 +435,7 @@ local function _fctMapEventUnitAvailable (_, info)
     end
   end 
   
-  if hasAdds == true then EnKai.eventHandlers["EnKai.map"]["unitAdd"](addUnit) end
+  if hasAdds == true then LibMap.eventHandlers["LibMap.map"]["unitAdd"](addUnit) end
 
 end
 
@@ -448,7 +448,7 @@ local function _fctMapEventCombatDeath (_, info)
     local details = InspectUnitDetail('player')
     local addInfo = {}
     addInfo["pb" .. data.playerDetails.id] = {id = "pb" .. data.playerDetails.id, type = "UNIT.BODY", coordX = details.coordX, coordY = details.coordY, coordZ = details.coordZ}
-    EnKai.eventHandlers["EnKai.map"]["add"](addInfo)
+    LibMap.eventHandlers["LibMap.map"]["add"](addInfo)
   end
   
 end
@@ -460,19 +460,19 @@ local function _fctMapEventUnitHealth (_, info)
   if info[data.playerDetails.id] == nil or info[data.playerDetails.id] == 0 then return end
   
   _playerDeath = false
-  EnKai.eventHandlers["EnKai.map"]["remove"]({["pb" .. data.playerDetails.id] = true})
+  LibMap.eventHandlers["LibMap.map"]["remove"]({["pb" .. data.playerDetails.id] = true})
   
 end 
 
 ---------- library public function block ---------
 
-function EnKai.map.replaceData (key, data)        mapData.mapData[key] = data     end
-function EnKai.map.replaceMapElement (key, data)  mapData.mapElements[key] = data end
-function EnKai.map.getAll()                       return _mapPoints, _mapUnits    end
-function EnKai.map.addMapElement (key, data)      mapData.mapElements[key] = data end
-function EnKai.map.getMapData (id)					return mapData.mapData[id] end
+function LibMap.map.replaceData (key, data)        mapData.mapData[key] = data     end
+function LibMap.map.replaceMapElement (key, data)  mapData.mapElements[key] = data end
+function LibMap.map.getAll()                       return _mapPoints, _mapUnits    end
+function LibMap.map.addMapElement (key, data)      mapData.mapElements[key] = data end
+function LibMap.map.getMapData (id)					return mapData.mapData[id] end
 
-function EnKai.map.GetMapElementbyType (typeString)
+function LibMap.map.GetMapElementbyType (typeString)
 
 	local retTable = {}
 
@@ -486,44 +486,44 @@ function EnKai.map.GetMapElementbyType (typeString)
 
 end
 
-function EnKai.map.clearAll()
+function LibMap.map.clearAll()
   _mapPoints = {}
   _mapUnits = {}
 end
 
-function EnKai.map.refresh()
+function LibMap.map.refresh()
   
-  EnKai.map.clearAll()
+  LibMap.map.clearAll()
   internal.mapEvent.add (_, InspectMapList())
 
 end
 
---function EnKai.map.getMapElements ()              return data.mapElements                               end
+--function LibMap.map.getMapElements ()              return data.mapElements                               end
 
-function EnKai.map.init(flag)
+function LibMap.map.init(flag)
 
   if flag == true and _mapEvents == false then
-    Command.Event.Attach(Event.Map.Add, internal.mapEvent.add, "EnKai.Map.Add")
-    Command.Event.Attach(Event.Map.Change, _fctMapEventChange, "EnKai.Map.Change")
-    Command.Event.Attach(Event.Map.Remove, _fctMapEventRemove, "EnKai.Map.Remove")
-    Command.Event.Attach(Event.Map.Detail.Coord, _fctMapEventCoord, "EnKai.Map.Detail.Coord")
-    Command.Event.Attach(Event.Map.Waypoint.Update, internal.MapEventWaypoint, "EnKai.Map.Waypoint.Update")
-    Command.Event.Attach(Event.Unit.Detail.Coord, _fctMapEventUnitCoordChange, "EnKai.Map.Unit.Detail.Coord")
-    Command.Event.Attach(Event.Unit.Detail.Health, _fctMapEventUnitHealth, "EnKai.Map.Unit.Detail.Health")    
-    Command.Event.Attach(Event.Unit.Availability.None, _fctMapEventUnitUnavailable, "EnKai.Map.Unit.Unavailable")
-    Command.Event.Attach(Event.Unit.Availability.Full, _fctMapEventUnitAvailable, "EnKai.Map.Unit.Full")
-    Command.Event.Attach(Event.Combat.Death, _fctMapEventCombatDeath, "EnKai.Map.Combat.Death")    
+    Command.Event.Attach(Event.Map.Add, internal.mapEvent.add, "LibMap.Map.Add")
+    Command.Event.Attach(Event.Map.Change, _fctMapEventChange, "LibMap.Map.Change")
+    Command.Event.Attach(Event.Map.Remove, _fctMapEventRemove, "LibMap.Map.Remove")
+    Command.Event.Attach(Event.Map.Detail.Coord, _fctMapEventCoord, "LibMap.Map.Detail.Coord")
+    Command.Event.Attach(Event.Map.Waypoint.Update, internal.MapEventWaypoint, "LibMap.Map.Waypoint.Update")
+    Command.Event.Attach(Event.Unit.Detail.Coord, _fctMapEventUnitCoordChange, "LibMap.Map.Unit.Detail.Coord")
+    Command.Event.Attach(Event.Unit.Detail.Health, _fctMapEventUnitHealth, "LibMap.Map.Unit.Detail.Health")    
+    Command.Event.Attach(Event.Unit.Availability.None, _fctMapEventUnitUnavailable, "LibMap.Map.Unit.Unavailable")
+    Command.Event.Attach(Event.Unit.Availability.Full, _fctMapEventUnitAvailable, "LibMap.Map.Unit.Full")
+    Command.Event.Attach(Event.Combat.Death, _fctMapEventCombatDeath, "LibMap.Map.Combat.Death")    
   elseif flag == false and _mapEvents == true then
-    Command.Event.Detach(Event.Map.Add, nil, "EnKai.Map.Add")
-    Command.Event.Detach(Event.Map.Change, nil, "EnKai.Map.Change")
-    Command.Event.Detach(Event.Map.Remove, nil, "EnKai.Map.Remove")
-    Command.Event.Detach(Event.Map.Detail.Coord, nil, "EnKai.Map.Detail.Coord")
-    Command.Event.Detach(Event.Unit.Detail.Health, nil, "EnKai.Map.Unit.Detail.Health")
-    Command.Event.Detach(Event.Map.Waypoint.Update, nil, "EnKai.Map.Waypoint.Update")
-    Command.Event.Detach(Event.Unit.Detail.Coord, nil, "EnKai.Map.Unit.Detail.Coord")
-    Command.Event.Detach(Event.Unit.Availability.None, nil, "EnKai.Map.Unit.Unavailable") 
-    Command.Event.Detach(Event.Unit.Availability.Full, nil, "EnKai.Map.Unit.Full")
-    Command.Event.Attach(Event.Combat.Death, nil, "EnKai.Map.Combat.Death")
+    Command.Event.Detach(Event.Map.Add, nil, "LibMap.Map.Add")
+    Command.Event.Detach(Event.Map.Change, nil, "LibMap.Map.Change")
+    Command.Event.Detach(Event.Map.Remove, nil, "LibMap.Map.Remove")
+    Command.Event.Detach(Event.Map.Detail.Coord, nil, "LibMap.Map.Detail.Coord")
+    Command.Event.Detach(Event.Unit.Detail.Health, nil, "LibMap.Map.Unit.Detail.Health")
+    Command.Event.Detach(Event.Map.Waypoint.Update, nil, "LibMap.Map.Waypoint.Update")
+    Command.Event.Detach(Event.Unit.Detail.Coord, nil, "LibMap.Map.Unit.Detail.Coord")
+    Command.Event.Detach(Event.Unit.Availability.None, nil, "LibMap.Map.Unit.Unavailable") 
+    Command.Event.Detach(Event.Unit.Availability.Full, nil, "LibMap.Map.Unit.Full")
+    Command.Event.Attach(Event.Combat.Death, nil, "LibMap.Map.Combat.Death")
   end
   
   Command.Map.Monitor(flag)
@@ -538,7 +538,7 @@ end
 function internal.processMap()
 
 	local debugId  
-	if nkDebug then debugId = nkDebug.traceStart (InspectAddonCurrent(), "EnKai internal.processMap") end
+	if nkDebug then debugId = nkDebug.traceStart (InspectAddonCurrent(), "LibMap internal.processMap") end
 
 	if _mapEvents == false then return end
 
@@ -579,7 +579,7 @@ function internal.processMap()
 		end
 	end
 
-	if nkDebug then nkDebug.traceEnd (InspectAddonCurrent(), "EnKai internal.processMap", debugId) end
+	if nkDebug then nkDebug.traceEnd (InspectAddonCurrent(), "LibMap internal.processMap", debugId) end
 
 end
 
@@ -614,9 +614,9 @@ function internal.MapEventWaypoint (_, info)
 		end
 	end
 
-	if hasRemove == true then EnKai.eventHandlers["EnKai.waypoint"]["remove"](removes) end
-	if hasAdd == true then EnKai.eventHandlers["EnKai.waypoint"]["add"](add) end
-	if hasChange == true then EnKai.eventHandlers["EnKai.waypoint"]["change"](change) end
+	if hasRemove == true then LibMap.eventHandlers["LibMap.waypoint"]["remove"](removes) end
+	if hasAdd == true then LibMap.eventHandlers["LibMap.waypoint"]["add"](add) end
+	if hasChange == true then LibMap.eventHandlers["LibMap.waypoint"]["change"](change) end
   
 end
 
@@ -644,7 +644,7 @@ function internal.mapEvent.add (_, info)
     
   end
   
-  if hasAdds then EnKai.eventHandlers["EnKai.map"]["add"](addList) end
-  if hasChanges then EnKai.eventHandlers["EnKai.map"]["change"](changeList) end
+  if hasAdds then LibMap.eventHandlers["LibMap.map"]["add"](addList) end
+  if hasChanges then LibMap.eventHandlers["LibMap.map"]["change"](changeList) end
 
 end

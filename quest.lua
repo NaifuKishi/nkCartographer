@@ -47,14 +47,14 @@ local questNPCByName		= LibQB.query.NPCByName
 local questNPCQuests		= LibQB.query.NPCQuests
 local questIsInit			= LibQB.query.isInit
 
-local EnKaiMapGetZoneByName		= EnKai.map.GetZoneByName
-local EnKaiMapGetZoneDetails	= EnKai.map.GetZoneDetails
+local LibMapMapGetZoneByName		= LibMap.map.GetZoneByName
+local LibMapMapGetZoneDetails	= LibMap.map.GetZoneDetails
 
-local EnKaiTableIsMember 		= LibEKL.Tools.Table.IsMember
-local EnKaiTableGetTablePos		= LibEKL.Tools.Table.GetTablePos
-local EnKaiCoroutinesAdd		= LibEKL.Coroutines.Add
-local EnKaiStringsSplit			= LibEKL.strings.split
-local EnKaiEventsAddInsecure	= LibEKL.Events.AddInsecure
+local LibMapTableIsMember 		= LibEKL.Tools.Table.IsMember
+local LibMapTableGetTablePos		= LibEKL.Tools.Table.GetTablePos
+local LibMapCoroutinesAdd		= LibEKL.Coroutines.Add
+local LibMapStringsSplit			= LibEKL.strings.split
+local LibMapEventsAddInsecure	= LibEKL.Events.AddInsecure
 
 ---------- local function block ---------
 
@@ -65,11 +65,11 @@ local function isCurrentWorld (details)
 	if data.currentWorld == nil then return false end
 	
 	if details.categoryName ~= nil then				
-		local zoneId, zoneDetails = EnKaiMapGetZoneByName(details.categoryName)
+		local zoneId, zoneDetails = LibMapMapGetZoneByName(details.categoryName)
 		
 		if zoneDetails == nil then
 			zoneId = questGetZoneByQuest(details.id)
-			zoneDetails = EnKaiMapGetZoneDetails (zoneID)
+			zoneDetails = LibMapMapGetZoneDetails (zoneID)
 		else
 			--print (zoneDetails.map)
 		end
@@ -78,8 +78,8 @@ local function isCurrentWorld (details)
 	end  
 
 	if details.tag ~= nil then
-		local tagList = EnKaiStringsSplit(details.tag, " ")
-		if EnKaiTableIsMember(tagList, "daily") or EnKaiTableIsMember(tagList, "weekly") or EnKaiTableIsMember(tagList, "monthly") then
+		local tagList = LibMapStringsSplit(details.tag, " ")
+		if LibMapTableIsMember(tagList, "daily") or LibMapTableIsMember(tagList, "weekly") or LibMapTableIsMember(tagList, "monthly") then
 			local lvl, dbQuests = questQueryByKey(details.id)
 			if lvl == nil then return false end
 			if lvl <= 50 and data.currentWorld == "world1" then return true end
@@ -248,7 +248,7 @@ local function processMissingZoneQuests (questList)
 						for key, details in pairs(detailsList) do   
 							local id = "mq-" .. key
 							local qType = "QUEST.MISSING"
-							if libDetails.type ~= nil and EnKaiTableGetTablePos(libDetails.type, 3) ~= -1 then qType = "QUEST.DAILY" end
+							if libDetails.type ~= nil and LibMapTableGetTablePos(libDetails.type, 3) ~= -1 then qType = "QUEST.DAILY" end
 
 							local thisEntry = { id = id, type = qType, descList = { details.summary }, title = details.name, coordX = npc.x, coordY = npc.y, coordZ = npc.z }
 							data.missingQuestList[key] = {}
@@ -306,7 +306,7 @@ local function findMissingRun ()
     end
   end)
       
-  EnKaiCoroutinesAdd ({ func = missingCoRoutine, counter = #questList, active = true })
+  LibMapCoroutinesAdd ({ func = missingCoRoutine, counter = #questList, active = true })
 
 end
 
@@ -355,7 +355,7 @@ local function checkUnknown(npcName, thisData)
 					thisData.title = questInfo.name
 
 					local tempDesc = questInfo.summary or questInfo.description
-					if tempDesc ~= nil then thisData.descList = EnKaiStringsSplit(tempDesc, "\n") end
+					if tempDesc ~= nil then thisData.descList = LibMapStringsSplit(tempDesc, "\n") end
 
 					thisData.name = questInfo.name
 
@@ -470,7 +470,7 @@ function internalFunc.FindMissing ()
   end
   
   if flag == true then
-    EnKaiEventsAddInsecure(findMissingRun, inspectTimeFrame(), 5)
+    LibMapEventsAddInsecure(findMissingRun, inspectTimeFrame(), 5)
     questZone = data.lastZone
   else
     print ("problem getting initial list of completed quests")

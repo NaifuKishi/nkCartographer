@@ -12,7 +12,7 @@ This is a lua application with:
 - code in `/`
 - standard libraries in '/Libs'
 
-The EnKai library must be used to write code at all times.
+The LibMap library must be used to write code at all times.
 
 # Documentation Resources
 

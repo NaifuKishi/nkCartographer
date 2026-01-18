@@ -2,8 +2,8 @@ local addonInfo, privateVars = ...
 
 ---------- init namespace ---------
 
-if not EnKai then EnKai = {} end
-if not EnKai.location then EnKai.location = {} end
+if not LibMap then LibMap = {} end
+if not LibMap.location then LibMap.location = {} end
 
 ---------- init local variables ---------
 
@@ -535,4 +535,4 @@ local _scenes = { ["Silver Landing"]={DE="Silberne Landung", loc={}},
 
 ---------- library public function block ---------
 
-function EnKai.location.getSceneInfo(scene) return _scenes[scene] end
+function LibMap.location.getSceneInfo(scene) return _scenes[scene] end

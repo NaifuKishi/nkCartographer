@@ -2,7 +2,7 @@ local addonInfo, privateVars = ...
 
 ---------- init namespace ---------
 
-if not EnKai then EnKai = {} end
+if not LibMap then LibMap = {} end
 
 if not privateVars.uiFunctions then privateVars.uiFunctions = {} end
 
@@ -15,10 +15,10 @@ local internal      = privateVars.internal
 
 local function _uiCanvas(name, parent) 
 
-	--if EnKai.internal.checkEvents (name, true) == false then return nil end
+	--if LibMap.internal.checkEvents (name, true) == false then return nil end
 
 	data.canvasCount = data.canvasCount + 1
-	local thisName = "EnKai.Canvas." .. data.canvasCount
+	local thisName = "LibMap.Canvas." .. data.canvasCount
 
 	if uiNames.NKCANVAS == nil then uiNames.NKCANVAS = {} end
 	uiNames.NKCANVAS[thisName] = name

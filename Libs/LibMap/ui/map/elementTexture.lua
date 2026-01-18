@@ -2,7 +2,7 @@ local addonInfo, privateVars = ...
 
 ---------- init namespace ---------
 
-if not EnKai then EnKai = {} end
+if not LibMap then LibMap = {} end
 
 if not privateVars.uiFunctions then privateVars.uiFunctions = {} end
 
@@ -38,7 +38,7 @@ local function _uiMapElementTexture(name, parent)
 
   local coordX, coordY, zoom = 0, 0, nil
 
-	--if EnKai.internal.checkEvents (name, true) == false then return nil end
+	--if LibMap.internal.checkEvents (name, true) == false then return nil end
 	
   local mapElement = LibEKL.UICreateFrame("nkTexture", name .. ".texture", parent)
   mapElement:SetLayer(2)

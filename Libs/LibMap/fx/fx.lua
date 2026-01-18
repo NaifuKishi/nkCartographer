@@ -2,8 +2,8 @@ local addonInfo, privateVars = ...
 
 ---------- init namespace ---------
 
-if not EnKai then EnKai = {} end
-if not EnKai.fx then EnKai.fx = {} end
+if not LibMap then LibMap = {} end
+if not LibMap.fx then LibMap.fx = {} end
 
 local internal   = privateVars.internal
 
@@ -16,14 +16,14 @@ local _fxStore = {}
 
 ---------- library public function block ---------
 
-function EnKai.fx.register (id, frame, effect)
+function LibMap.fx.register (id, frame, effect)
 
 	_fxStore[id] = { frame = frame, effect = effect }
 	_fxStore[id].lastUpdate = InspectTimeReal()
 
 end
 
-function EnKai.fx.update (id, effect)
+function LibMap.fx.update (id, effect)
 
   if _fxStore[id] == nil then return end
 
@@ -33,20 +33,20 @@ function EnKai.fx.update (id, effect)
   
 end
 
-function EnKai.fx.cancel (id) 
+function LibMap.fx.cancel (id) 
 
 	_fxStore[id] = nil 
 	
 end
 
-function EnKai.fx.updateTime (id)
+function LibMap.fx.updateTime (id)
   if _fxStore[id] ~= nil then
     _fxStore[id].lastUpdate = InspectTimeReal()
     _fxStore[id].lastRun = nil
   end
 end
 
-function EnKai.fx.pauseEffect(id)
+function LibMap.fx.pauseEffect(id)
   if _fxStore[id] ~= nil then
 	  _fxStore[id].lastUpdate = nil
   end
@@ -57,7 +57,7 @@ end
 function internal.processFX()
 
 	local debugId  
-	if nkDebug then debugId = nkDebug.traceStart (InspectAddonCurrent(), "EnKai internal.processFX") end
+	if nkDebug then debugId = nkDebug.traceStart (InspectAddonCurrent(), "LibMap internal.processFX") end
 
 	for id, details in pairs (_fxStore) do
 
@@ -109,6 +109,6 @@ function internal.processFX()
 		end
 	end
 
-	if nkDebug then nkDebug.traceEnd (InspectAddonCurrent(), "EnKai internal.processFX", debugId) end	
+	if nkDebug then nkDebug.traceEnd (InspectAddonCurrent(), "LibMap internal.processFX", debugId) end	
 
 end

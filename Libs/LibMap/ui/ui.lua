@@ -2,13 +2,13 @@ local addonInfo, privateVars = ...
 
 ---------- init namespace ---------
 
-if not EnKai then EnKai = {} end
-if not EnKai.ui then EnKai.ui = {} end
+if not LibMap then LibMap = {} end
+if not LibMap.ui then LibMap.ui = {} end
 
 if not privateVars.uiFunctions then privateVars.uiFunctions = {} end
 if not privateVars.uiNames then privateVars.uiNames = {} end
 
-if privateVars.uiContext == nil then privateVars.uiContext = UI.CreateContext("EnKai.ui") end
+if privateVars.uiContext == nil then privateVars.uiContext = UI.CreateContext("LibMap.ui") end
 
 if not privateVars.uiElements then privateVars.uiElements  = {} end
 
@@ -176,7 +176,7 @@ function internal.uiAddToGarbageCollector (frameType, element)
   table.insert(_gc[checkFrameType][element:GetSecureMode()], element) 
   if InspectSystemSecure() == false or element:GetSecureMode() == 'normal' then element:SetVisible(false) end
   
-  EnKai.eventHandlers["EnKai.internal"]["gcChanged"]()
+  LibMap.eventHandlers["LibMap.internal"]["gcChanged"]()
   
 end  
 
@@ -215,7 +215,7 @@ end
 ]]
 function internal.uiGarbageCollector ()
 	local debugId  
-    if nkDebug then debugId = nkDebug.traceStart (InspectAddonCurrent(), "EnKai internal.uiGarbageCollector") end
+    if nkDebug then debugId = nkDebug.traceStart (InspectAddonCurrent(), "LibMap internal.uiGarbageCollector") end
 
 	local secure = InspectSystemSecure()
 	local flag = false
@@ -262,9 +262,9 @@ function internal.uiGarbageCollector ()
 		
 	end
 
-	if flag == true then EnKai.eventHandlers["EnKai.internal"]["gcChanged"]() end
+	if flag == true then LibMap.eventHandlers["LibMap.internal"]["gcChanged"]() end
 
-	if nkDebug then nkDebug.traceEnd (InspectAddonCurrent(), "EnKai internal.uiGarbageCollector", debugId) end	
+	if nkDebug then nkDebug.traceEnd (InspectAddonCurrent(), "LibMap internal.uiGarbageCollector", debugId) end	
 end
 
 --[[
@@ -347,7 +347,7 @@ end
 ]]
 function internal.uiSetupBoundCheck()
 
-	local testFrameH = LibEKL.UICreateFrame ('nkFrame', "EnKai.ui.boundTestFrameH", uiContext)
+	local testFrameH = LibEKL.UICreateFrame ('nkFrame', "LibMap.ui.boundTestFrameH", uiContext)
 	testFrameH:SetBackgroundColor(0, 0, 0, 0)
 	testFrameH:SetPoint("TOPLEFT", UIParent, "TOPLEFT")
 	testFrameH:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", 0, 1)
@@ -370,7 +370,7 @@ end
 ---------- library public function block ---------
 
 
-function EnKai.uiAddToGarbageCollector(frameType, element)
+function LibMap.uiAddToGarbageCollector(frameType, element)
 	
 	-- internal.deRegisterEvents (name)
     
@@ -389,7 +389,7 @@ function EnKai.uiAddToGarbageCollector(frameType, element)
 end
 
 --[[
-    EnKai.uiCreateFrame
+    LibMap.uiCreateFrame
 
     Description:
         Creates a new UI frame of the specified type, either by reusing an existing frame from the free elements pool
@@ -423,10 +423,10 @@ end
         - The function triggers garbage collection events when frames are reused
         - Error handling is included for invalid parameters and unknown frame types
 ]]
-function EnKai.uiCreateFrame (frameType, name, parent)
+function LibMap.uiCreateFrame (frameType, name, parent)
 
 	if frameType == nil or name == nil or parent == nil then
-		LibEKL.Tools.Error.Display (addonInfo.identifier, stringFormat("EnKai.uiCreateFrame - invalid number of parameters\nexpecting: type of frame (string), name of frame (string), parent of frame (object)\nreceived: %s, %s, %s", frameType, name, parent))
+		LibEKL.Tools.Error.Display (addonInfo.identifier, stringFormat("LibMap.uiCreateFrame - invalid number of parameters\nexpecting: type of frame (string), name of frame (string), parent of frame (object)\nreceived: %s, %s, %s", frameType, name, parent))
 		return
 	end
 
@@ -436,7 +436,7 @@ function EnKai.uiCreateFrame (frameType, name, parent)
 
 	if _freeElements[checkFrameType] ~= nil and #_freeElements[checkFrameType] > 0 then
 
-		if EnKai.internal.checkEvents (name, true) == false then return nil end
+		if LibMap.internal.checkEvents (name, true) == false then return nil end
 
 		uiObject = _freeElements[checkFrameType][1]    
 		uiObject:SetParent(parent)
@@ -449,12 +449,12 @@ function EnKai.uiCreateFrame (frameType, name, parent)
 
 		table.remove(_freeElements[checkFrameType], 1)
 		
-		EnKai.eventHandlers["EnKai.internal"]["gcChanged"]()
+		LibMap.eventHandlers["LibMap.internal"]["gcChanged"]()
 		
 	else
 		local func = uiFunctions[checkFrameType]
 		if func == nil then
-			LibEKL.Tools.Error.Display (addonInfo.identifier, stringFormat("EnKai.uiCreateFrame - unknown frame type [%s]", frameType))
+			LibEKL.Tools.Error.Display (addonInfo.identifier, stringFormat("LibMap.uiCreateFrame - unknown frame type [%s]", frameType))
 		else
 			uiObject = func(name, parent)
 		end
@@ -465,7 +465,7 @@ function EnKai.uiCreateFrame (frameType, name, parent)
 end
 
 --[[
-    EnKai.getGcCount
+    LibMap.getGcCount
 	
     Description:
         This function calculates and returns the count of UI elements in the garbage collector (_gc) table.
@@ -490,7 +490,7 @@ end
         - It maintains separate counts for different element types
         - The function returns two values representing the counts
 ]]
-function EnKai.getGcCount()
+function LibMap.getGcCount()
 	local normal, restricted = 0, 0
 
 	for k, v in pairs(_gc) do
@@ -502,7 +502,7 @@ function EnKai.getGcCount()
 end
 
 --[[
-    EnKai.getFreeCount
+    LibMap.getFreeCount
 
     Description:
         This function calculates and returns the total count of free UI elements available for reuse.
@@ -525,7 +525,7 @@ end
         - It provides a single value representing the total available elements
         - The function is useful for monitoring the reuse pool
 ]]
-function EnKai.getFreeCount()
+function LibMap.getFreeCount()
 	local free = 0
 
 	for k, v in pairs(_freeElements) do
@@ -537,7 +537,7 @@ end
 
 -- deprecated functions
 
-function EnKai.uiSetBounds(left, top, right, bottom)
+function LibMap.uiSetBounds(left, top, right, bottom)
 
   if left ~= nil then data.uiBoundLeft = left end
   if top ~= nil then data.uiBoundTop = top end
@@ -546,23 +546,23 @@ function EnKai.uiSetBounds(left, top, right, bottom)
 
 end
 
-function EnKai.uiGetBoundLeft ()
+function LibMap.uiGetBoundLeft ()
 	return data.uiBoundLeft
 end
 
-function EnKai.uiGetBoundRight ()
+function LibMap.uiGetBoundRight ()
 	return data.uiBoundRight
 end
 
-function EnKai.uiGetBoundTop ()
+function LibMap.uiGetBoundTop ()
 	return data.uiBoundTop
 end
 
-function EnKai.uiGetBoundBottom ()
+function LibMap.uiGetBoundBottom ()
 	return data.uiBoundBottom
 end
 
-function EnKai.uiClearBounds()
+function LibMap.uiClearBounds()
 
   data.uiBoundLeft, data.uiBoundTop, data.uiBoundRight, data.uiBoundBottom = UIParent:GetBounds()
   
@@ -572,26 +572,26 @@ end
 
 -- tooltip functions
 
-function EnKai.ui.getItemTooltip()
+function LibMap.ui.getItemTooltip()
 
 	return uiElements.itemTooltip
 
 end
 
-function EnKai.ui.attachItemTooltip (target, itemId, callBack)
+function LibMap.ui.attachItemTooltip (target, itemId, callBack)
 
-	local name = "EnKai.itemTooltip"
+	local name = "LibMap.itemTooltip"
 
 	if privateVars.uiTooltipContext == nil then
-		privateVars.uiTooltipContext = UI.CreateContext("EnKai.ui.tooltip")
+		privateVars.uiTooltipContext = UI.CreateContext("LibMap.ui.tooltip")
 		privateVars.uiTooltipContext:SetStrata ('topmost')
 	end
 	
 	if uiElements.itemTooltip == nil then	
-		uiElements.itemTooltip = EnKai.uiCreateFrame('nkItemTooltip', name, privateVars.uiTooltipContext)
+		uiElements.itemTooltip = LibMap.uiCreateFrame('nkItemTooltip', name, privateVars.uiTooltipContext)
 		uiElements.itemTooltip:SetVisible(false)    
 		
-		EnKai.eventHandlers[name]["Visible"], EnKai.events[name]["Visible"] = Utility.Event.Create(addonInfo.identifier, name .. "Visible")
+		LibMap.eventHandlers[name]["Visible"], LibMap.events[name]["Visible"] = Utility.Event.Create(addonInfo.identifier, name .. "Visible")
 	end
 
 	if itemId == nil then
@@ -605,34 +605,34 @@ function EnKai.ui.attachItemTooltip (target, itemId, callBack)
 			uiElements.itemTooltip:SetVisible(true)			
 			
 			uiElements.itemTooltip:SetPoint("TOPLEFT", target, "BOTTOMRIGHT", 5, 5)
-			EnKai.ui.showWithinBound (uiElements.itemTooltip, target)
+			LibMap.ui.showWithinBound (uiElements.itemTooltip, target)
 			
 			if callBack ~= nil then callBack(target, itemId) end
 			
-			EnKai.eventHandlers[name]["Visible"](true)
+			LibMap.eventHandlers[name]["Visible"](true)
 			
 		end, target:GetName() .. ".Mouse.Cursor.In")
   
 		target:EventAttach(Event.UI.Input.Mouse.Cursor.Out, function (self)
 			uiElements.itemTooltip:SetVisible(false)
-			EnKai.eventHandlers[name]["Visible"](false)
+			LibMap.eventHandlers[name]["Visible"](false)
 			
 		end, target:GetName() .. ".Mouse.Cursor.Out") 
 	end
 	
 end
 
-function EnKai.ui.getItemTooltip() return uiElements.itemTooltip end
+function LibMap.ui.getItemTooltip() return uiElements.itemTooltip end
 
-function EnKai.ui.attachAbilityTooltip (target, abilityId)
+function LibMap.ui.attachAbilityTooltip (target, abilityId)
 
 	if privateVars.uiTooltipContext == nil then
-		privateVars.uiTooltipContext = UI.CreateContext("EnKai.ui.tooltip")
+		privateVars.uiTooltipContext = UI.CreateContext("LibMap.ui.tooltip")
 		privateVars.uiTooltipContext:SetStrata ('topmost')
 	end
 	
 	if uiElements.abilityTooltip == nil then	
-		uiElements.abilityTooltip = EnKai.uiCreateFrame('nkTooltip', 'EnKai.abilityTooltip', privateVars.uiTooltipContext)
+		uiElements.abilityTooltip = LibMap.uiCreateFrame('nkTooltip', 'LibMap.abilityTooltip', privateVars.uiTooltipContext)
 		uiElements.abilityTooltip:SetVisible(false)    
 	end
 
@@ -648,8 +648,8 @@ function EnKai.ui.attachAbilityTooltip (target, abilityId)
 			if err == false or abilityDetails == nil then
 				err, abilityDetails = pcall (InspectAbilityDetail, abilityId)
 				if err == false or abilityDetails == nil then
-					LibEKL.Tools.Error.Display (addonInfo.identifier, "EnKai.ui.attachAbilityTooltip: unable to get details of ability with id " .. abilityId)	
-					EnKai.ui.attachAbilityTooltip (target, nil)
+					LibEKL.Tools.Error.Display (addonInfo.identifier, "LibMap.ui.attachAbilityTooltip: unable to get details of ability with id " .. abilityId)	
+					LibMap.ui.attachAbilityTooltip (target, nil)
 					return
 				end
 			end
@@ -659,7 +659,7 @@ function EnKai.ui.attachAbilityTooltip (target, abilityId)
 			uiElements.abilityTooltip:SetLines({{ text = abilityDetails.description, wordwrap = true, minWidth = 200  }})
 						
 			uiElements.abilityTooltip:SetPoint("TOPLEFT", target, "BOTTOMRIGHT", 5, 5)
-			EnKai.ui.showWithinBound (uiElements.abilityTooltip, target)
+			LibMap.ui.showWithinBound (uiElements.abilityTooltip, target)
 			
 			uiElements.abilityTooltip:SetVisible(true)			
 		end, target:GetName() .. ".Mouse.Cursor.In")
@@ -670,15 +670,15 @@ function EnKai.ui.attachAbilityTooltip (target, abilityId)
 	end
 end
 
-function EnKai.ui.attachGenericTooltip (target, title, text)
+function LibMap.ui.attachGenericTooltip (target, title, text)
 
 	if privateVars.uiTooltipContext == nil then
-		privateVars.uiTooltipContext = UI.CreateContext("EnKai.ui.tooltip")
+		privateVars.uiTooltipContext = UI.CreateContext("LibMap.ui.tooltip")
 		privateVars.uiTooltipContext:SetStrata ('topmost')
 	end
 	
 	if uiElements.genericTooltip == nil then	
-		uiElements.genericTooltip = EnKai.uiCreateFrame('nkTooltip', 'EnKai.genericTooltip', privateVars.uiTooltipContext)
+		uiElements.genericTooltip = LibMap.uiCreateFrame('nkTooltip', 'LibMap.genericTooltip', privateVars.uiTooltipContext)
 		uiElements.genericTooltip:SetVisible(false)    
 	end
 
@@ -700,7 +700,7 @@ function EnKai.ui.attachGenericTooltip (target, title, text)
 							
 			uiElements.genericTooltip:SetPoint("TOPLEFT", target, "BOTTOMRIGHT", 5, 5)
 
-			EnKai.ui.showWithinBound (uiElements.genericTooltip, target)
+			LibMap.ui.showWithinBound (uiElements.genericTooltip, target)
 			
 			uiElements.genericTooltip:SetVisible(true)			
 		end, target:GetName() .. ".Mouse.Cursor.In")
@@ -712,21 +712,21 @@ function EnKai.ui.attachGenericTooltip (target, title, text)
 
 end
 
-function EnKai.ui.genericTooltipSetFont (addonId, fontName)
+function LibMap.ui.genericTooltipSetFont (addonId, fontName)
 	if privateVars.uiTooltipContext == nil then return end
 	if uiElements.genericTooltip == nil then return end
 
 	uiElements.genericTooltip:SetFont (addonId, fontName)
 end
 
-function EnKai.ui.abilityTooltipSetFont (addonId, fontName)
+function LibMap.ui.abilityTooltipSetFont (addonId, fontName)
 	if privateVars.uiTooltipContext == nil then return end
 	if uiElements.abilityTooltip == nil then return end
 
 	uiElements.abilityTooltip:SetFont (addonId, fontName)
 end
 
-function EnKai.ui.confirmDialog (message, yesFunc, noFunc)
+function LibMap.ui.confirmDialog (message, yesFunc, noFunc)
 
 	local thisDialog
 
@@ -739,11 +739,11 @@ function EnKai.ui.confirmDialog (message, yesFunc, noFunc)
 
 	if thisDialog == nil then
 		if privateVars.uiDialogContext == nil then 
-			privateVars.uiDialogContext = UI.CreateContext("EnKai.ui.dialog") 
+			privateVars.uiDialogContext = UI.CreateContext("LibMap.ui.dialog") 
 			privateVars.uiDialogContext:SetStrata ('topmost')
 		end
 	
-		local name = "EnKaiConfirmDialog." .. (#uiElements.messageDialog+1)
+		local name = "LibMapConfirmDialog." .. (#uiElements.messageDialog+1)
 	
 		thisDialog = LibEKL.UICreateFrame("nkDialog", name, privateVars.uiDialogContext)
 		thisDialog:SetLayer(2)
@@ -757,21 +757,21 @@ function EnKai.ui.confirmDialog (message, yesFunc, noFunc)
 	thisDialog:SetMessage(message)
 	thisDialog:SetVisible(true)
 
-	Command.Event.Detach(EnKai.events[thisDialog:GetName()].LeftButtonClicked, nil, thisDialog:GetName() .. ".LeftButtonClicked") -- detach event if was previously used
+	Command.Event.Detach(LibMap.events[thisDialog:GetName()].LeftButtonClicked, nil, thisDialog:GetName() .. ".LeftButtonClicked") -- detach event if was previously used
 	
-	Command.Event.Attach(EnKai.events[thisDialog:GetName()].LeftButtonClicked, function ()
+	Command.Event.Attach(LibMap.events[thisDialog:GetName()].LeftButtonClicked, function ()
 		if yesFunc ~= nil then yesFunc() end
 	end, thisDialog:GetName() .. ".LeftButtonClicked")
 	
-	Command.Event.Detach(EnKai.events[thisDialog:GetName()].RightButtonClicked, nil, thisDialog:GetName() .. ".RightButtonClicked") -- detach event if was previously used
+	Command.Event.Detach(LibMap.events[thisDialog:GetName()].RightButtonClicked, nil, thisDialog:GetName() .. ".RightButtonClicked") -- detach event if was previously used
 	
-	Command.Event.Attach(EnKai.events[thisDialog:GetName()].RightButtonClicked, function ()
+	Command.Event.Attach(LibMap.events[thisDialog:GetName()].RightButtonClicked, function ()
 		if noFunc ~= nil then noFunc() end
 	end, thisDialog:GetName() .. ".RightButtonClicked")
 	    
 end
 
-function EnKai.ui.messageDialog (message, okFunc)
+function LibMap.ui.messageDialog (message, okFunc)
 
 	local thisDialog
 
@@ -784,11 +784,11 @@ function EnKai.ui.messageDialog (message, okFunc)
 	
 	if thisDialog == nil then
 		if privateVars.uiDialogContext == nil then 
-			privateVars.uiDialogContext = UI.CreateContext("EnKai.ui.dialog") 
+			privateVars.uiDialogContext = UI.CreateContext("LibMap.ui.dialog") 
 			privateVars.uiDialogContext:SetStrata ('topmost')
 		end
 		
-		local name = "EnKaiMessageDialog." .. LibEKL.Tools.UUID ()
+		local name = "LibMapMessageDialog." .. LibEKL.Tools.UUID ()
 	
 		thisDialog = LibEKL.UICreateFrame("nkDialog", name, privateVars.uiDialogContext)
 		thisDialog:SetLayer(2)
@@ -802,10 +802,10 @@ function EnKai.ui.messageDialog (message, okFunc)
 	thisDialog:SetMessage(message)
 	thisDialog:SetVisible(true)
 	
-	Command.Event.Detach(EnKai.events[thisDialog:GetName()].CenterButtonClicked, nil, thisDialog:GetName() .. ".CenterButtonClicked") -- detach event if was previously used
+	Command.Event.Detach(LibMap.events[thisDialog:GetName()].CenterButtonClicked, nil, thisDialog:GetName() .. ".CenterButtonClicked") -- detach event if was previously used
 	
 	if okFunc ~= nil then
-		Command.Event.Attach(EnKai.events[thisDialog:GetName()].CenterButtonClicked, function ()
+		Command.Event.Attach(LibMap.events[thisDialog:GetName()].CenterButtonClicked, function ()
 			okFunc()
 		end, thisDialog:GetName() .. ".CenterButtonClicked")
 	end
@@ -814,15 +814,15 @@ end
 
 -- generic ui functions to handle screen size and bounds
 
-function EnKai.ui.getBoundBottom() return data.uiBoundBottom end
-function EnKai.ui.getBoundRight() return data.uiBoundRight end
+function LibMap.ui.getBoundBottom() return data.uiBoundBottom end
+function LibMap.ui.getBoundRight() return data.uiBoundRight end
 
-function EnKai.ui.showWithinBound (element, target)
+function LibMap.ui.showWithinBound (element, target)
 
 	local from, to, x, y
 
-	if element:GetTop() + element:GetHeight() > EnKai.ui.getBoundBottom() then
-		if element:GetLeft() + element:GetWidth() > EnKai.ui.getBoundRight() then
+	if element:GetTop() + element:GetHeight() > LibMap.ui.getBoundBottom() then
+		if element:GetLeft() + element:GetWidth() > LibMap.ui.getBoundRight() then
 			from, to, x, y = "BOTTOMRIGHT", "TOPLEFT", -5, -5
 		else
 			from, to, x, y = "BOTTOMLEFT", "TOPRIGHT", 5, -5
@@ -841,10 +841,10 @@ function EnKai.ui.showWithinBound (element, target)
 
 end
 
-function EnKai.ui.reloadDialog (title)
+function LibMap.ui.reloadDialog (title)
 
 	if uiElements.reloadDialog ~= nil then
-		EnKai.events.addInsecure(function() 
+		LibMap.events.addInsecure(function() 
 			uiElements.reloadDialog:SetTitle(title)
 			uiElements.reloadDialog:SetTitleAlign('center')
 			uiElements.reloadDialog:SetVisible(true)
@@ -853,12 +853,12 @@ function EnKai.ui.reloadDialog (title)
 	end
 	
 	if privateVars.uiContextSecure == nil then 
-		privateVars.uiContextSecure = UI.CreateContext("EnKai.ui.secure") 
+		privateVars.uiContextSecure = UI.CreateContext("LibMap.ui.secure") 
 		privateVars.uiContextSecure:SetStrata ('topmost')
 		privateVars.uiContextSecure:SetSecureMode('restricted')
 	end
 	
-	local name = "EnKai.reloadDialog"
+	local name = "LibMap.reloadDialog"
 	
 	uiElements.reloadDialog = LibEKL.UICreateFrame("nkWindow", name, privateVars.uiContextSecure)
 	uiElements.reloadDialog:SetSecureMode('restricted')
@@ -883,7 +883,7 @@ function EnKai.ui.reloadDialog (title)
 	
 end
 
-function EnKai.ui.registerFont (addonId, name, path)
+function LibMap.ui.registerFont (addonId, name, path)
 
 	if _fonts[addonId] == nil then _fonts[addonId] = {} end
 
@@ -892,7 +892,7 @@ function EnKai.ui.registerFont (addonId, name, path)
 end
 
 
-function EnKai.ui.getFont (addonId, name, path)
+function LibMap.ui.getFont (addonId, name, path)
 
 	if _fonts[addonId] == nil then return nil end
 
@@ -900,15 +900,15 @@ function EnKai.ui.getFont (addonId, name, path)
 
 end
 
-function EnKai.ui.setFont (uiElement, addonId, name)
+function LibMap.ui.setFont (uiElement, addonId, name)
 
 	uiElement:SetFont(addonId, _fonts[addonId][name])
 
 end
 
-EnKai.ui.registerFont(addonInfo.id, "Montserrat", "fonts/Montserrat-Regular.ttf")
-EnKai.ui.registerFont(addonInfo.id, "MontserratSemiBold", "fonts/Montserrat-SemiBold.ttf")
-EnKai.ui.registerFont(addonInfo.id, "MontserratBold", "fonts/Montserrat-Bold.ttf")
-EnKai.ui.registerFont(addonInfo.id, "FiraMonoBold", "fonts/FiraMono-Bold.ttf")
-EnKai.ui.registerFont(addonInfo.id, "FiraMonoMedium", "fonts/FiraMono-Medium.ttf")
-EnKai.ui.registerFont(addonInfo.id, "FiraMono", "fonts/FiraMono-Regular.ttf")
+LibMap.ui.registerFont(addonInfo.id, "Montserrat", "fonts/Montserrat-Regular.ttf")
+LibMap.ui.registerFont(addonInfo.id, "MontserratSemiBold", "fonts/Montserrat-SemiBold.ttf")
+LibMap.ui.registerFont(addonInfo.id, "MontserratBold", "fonts/Montserrat-Bold.ttf")
+LibMap.ui.registerFont(addonInfo.id, "FiraMonoBold", "fonts/FiraMono-Bold.ttf")
+LibMap.ui.registerFont(addonInfo.id, "FiraMonoMedium", "fonts/FiraMono-Medium.ttf")
+LibMap.ui.registerFont(addonInfo.id, "FiraMono", "fonts/FiraMono-Regular.ttf")

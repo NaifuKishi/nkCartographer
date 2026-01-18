@@ -2,7 +2,7 @@ local addonInfo, privateVars = ...
 
 ---------- init namespace ---------
 
-if not EnKai then EnKai = {} end
+if not LibMap then LibMap = {} end
 
 if not privateVars.uiFunctions then privateVars.uiFunctions = {} end
 
@@ -51,7 +51,7 @@ local function _uiMapElementCanvas(name, parent)
 
 	function mapElement:destroy()
 		if effectName ~= nil then
-			EnKai.fx.cancel(effectName)
+			LibMap.fx.cancel(effectName)
 			effectName = nil
 		end    
 
@@ -176,7 +176,7 @@ local function _uiMapElementCanvas(name, parent)
 			mapElement:ReDraw()
 		else
 			local scale = 1 / thisMapData.width * mapElement:GetWidth()
-			EnKai.fx.update (effectName, { scale = scale}) 
+			LibMap.fx.update (effectName, { scale = scale}) 
 		end
 		
 	end
@@ -238,7 +238,7 @@ local function _uiMapElementCanvas(name, parent)
 				local animZoom = thisMapData.animZoom or 1
 				local scale = 1 / thisMapData.width * mapElement:GetWidth()
 
-				EnKai.fx.register (effectName, mapElement, {id = "rotateCanvas", speed = (thisAnimationSpeed or 0), scale = scale, path = path, fill = fill  })
+				LibMap.fx.register (effectName, mapElement, {id = "rotateCanvas", speed = (thisAnimationSpeed or 0), scale = scale, path = path, fill = fill  })
 			else
 				effectName = nil
 			end
@@ -253,7 +253,7 @@ local function _uiMapElementCanvas(name, parent)
 		if newAnimationSpeed ~= animationSpeed then
 			animationSpeed = newAnimationSpeed or 0
 			if effectName ~= nil then 
-				EnKai.fx.cancel(effectName)
+				LibMap.fx.cancel(effectName)
 				effectName = nil 
 			end
 		end	
@@ -262,7 +262,7 @@ local function _uiMapElementCanvas(name, parent)
 			if effectName == nil then mapElement:RegisterAnimation(animationSpeed) end
 		else
 			if effectName ~= nil then 
-				EnKai.fx.cancel(effectName)
+				LibMap.fx.cancel(effectName)
 				effectName = nil 
 			end
 		end
@@ -295,9 +295,9 @@ local function _uiMapElementCanvas(name, parent)
 
 		if effectName then
 			if flag then
-				EnKai.fx.updateTime(effectName)
+				LibMap.fx.updateTime(effectName)
 			else
-				EnKai.fx.pauseEffect(effectName)
+				LibMap.fx.pauseEffect(effectName)
 			end
 		end
 	end

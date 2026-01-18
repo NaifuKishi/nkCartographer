@@ -205,7 +205,7 @@ function internalFunc.setupDefaults()
         nkUISetup.modules.actionBars.bars[LibEKL.Unit.GetPlayerDetails().name] = { roles = {} }
     end
 
-    nkUISetup = EnKai.tools.updateSettings (_defaults, nkUISetup)
+    nkUISetup = LibMap.tools.updateSettings (_defaults, nkUISetup)
 
 end
 
@@ -240,7 +240,7 @@ function settingsUI.checkbox (name, parent, text, active, callBack)
     thisCheckbox:SetColorInner(data.theme.formElementColorSub)
     thisCheckbox:SetEffectGlow({strength = 3})
     
-    Command.Event.Attach(EnKai.events[name].CheckboxChanged, function (_, newValue)		
+    Command.Event.Attach(LibMap.events[name].CheckboxChanged, function (_, newValue)		
         callBack(newValue)
     end, name .. ".CheckboxChanged")
 
@@ -264,7 +264,7 @@ function settingsUI.combobox (name, parent, text, active, callBack)
     thisCombobox:SetColorSelected(data.theme.labelColor)
     thisCombobox:SetEffectGlow({strength = 3})
 
-    Command.Event.Attach(EnKai.events[name].ComboChanged, function (_, newValue)		
+    Command.Event.Attach(LibMap.events[name].ComboChanged, function (_, newValue)		
         callBack(newValue.value)
     end, name .. ".CheckboxChanged")
 
@@ -288,7 +288,7 @@ function settingsUI.slider (name, parent, text, active, callBack)
     thisSlider:SetColorHighlight(data.theme.formElementColorMain)    
     thisSlider:SetEffectGlow({strength = 3})
 
-    Command.Event.Attach(EnKai.events[name].SliderChanged, function (_, newValue)
+    Command.Event.Attach(LibMap.events[name].SliderChanged, function (_, newValue)
         callBack(newValue)
     end, name .. ".SliderChanged")
 
@@ -388,11 +388,11 @@ function internalFunc.setupUI ()
 
     local paneTabUnitFrames = settingsUI.uiConfigTabUnitFrames(name .. ".tab.UnitFrames", tabPane)
 
-    --local EnKaiLogo = LibEKL.UICreateFrame("nkTexture", name .. ".EnKaiLogo", config)
-    --EnKaiLogo:SetTextureAsync(LibEKL.Art.GetThemeLogo()[1],LibEKL.Art.GetThemeLogo()[2])
-    --EnKaiLogo:SetPoint("BOTTOMLEFT", config:GetContent(), "BOTTOMLEFT", 10, -5)
-    ---EnKaiLogo:SetWidth(125)
-    --EnKaiLogo:SetHeight(33)
+    --local LibMapLogo = LibEKL.UICreateFrame("nkTexture", name .. ".LibMapLogo", config)
+    --LibMapLogo:SetTextureAsync(LibEKL.Art.GetThemeLogo()[1],LibEKL.Art.GetThemeLogo()[2])
+    --LibMapLogo:SetPoint("BOTTOMLEFT", config:GetContent(), "BOTTOMLEFT", 10, -5)
+    ---LibMapLogo:SetWidth(125)
+    --LibMapLogo:SetHeight(33)
 
     local versionText = LibEKL.UICreateFrame("nkText", name .. ".versionText", config)
     versionText:SetFontSize(11)
@@ -401,7 +401,7 @@ function internalFunc.setupUI ()
     versionText:SetPoint("BOTTOMRIGHT", tabPane, "BOTTOMRIGHT", -5, -5)
     versionText:SetLayer(99)
 
-    EnKai.ui.setFont(versionText, addonInfo.id, "Montserrat")
+    LibMap.ui.setFont(versionText, addonInfo.id, "Montserrat")
 
     local closeButton = LibEKL.UICreateFrame("nkButtonMetro", name .. ".closeButton", config:GetContent())
 
@@ -415,7 +415,7 @@ function internalFunc.setupUI ()
     closeButton:SetFillColor({ type = "solid", r = 0, g = 0, b = 0, a = .4})
     closeButton:SetBorderColor({ r = 0, g = 0, b = 0, a = .7, thickness = 1})
 
-    Command.Event.Attach(EnKai.events[name .. ".closeButton"].Clicked, function (_, newValue)
+    Command.Event.Attach(LibMap.events[name .. ".closeButton"].Clicked, function (_, newValue)
         uiElements.settings:SetVisible(false)   
     end, name .. ".closeButton.Clicked")
 
@@ -431,7 +431,7 @@ function internalFunc.setupUI ()
     tutorialButton:SetFillColor({ type = "solid", r = 0, g = 0, b = 0, a = .4})
     tutorialButton:SetBorderColor({ r = 0, g = 0, b = 0, a = .7, thickness = 1})
 
-    Command.Event.Attach(EnKai.events[name .. ".tutorialButton"].Clicked, function (_, newValue)
+    Command.Event.Attach(LibMap.events[name .. ".tutorialButton"].Clicked, function (_, newValue)
         internalFunc.tutorial()
     end, name .. ".tutorialButton.Clicked")
 
@@ -447,7 +447,7 @@ function internalFunc.setupUI ()
     moveButton:SetFillColor({ type = "solid", r = 0, g = 0, b = 0, a = .4})
     moveButton:SetBorderColor({ r = 0, g = 0, b = 0, a = .7, thickness = 1})
 
-    Command.Event.Attach(EnKai.events[name .. ".moveButton"].Clicked, function (_, newValue)
+    Command.Event.Attach(LibMap.events[name .. ".moveButton"].Clicked, function (_, newValue)
         internalFunc.initMove()
         config:SetVisible(false)
     end, name .. ".moveButton.Clicked")
@@ -480,7 +480,7 @@ function internalFunc.setupUI ()
 
     tabPane:AddPane( { label = "Units", effect = { strength = 3 }, frame = paneTabUnitFrames, initFunc = function() paneTabUnitFrames:build() end}, true)
 
-    --if EnKai.events.checkEvents ("nkRadial", true) == false then return nil end
+    --if LibMap.events.checkEvents ("nkRadial", true) == false then return nil end
 
     config:SetVisible(true)
 

@@ -132,34 +132,34 @@ local function _main(_, addon)
     --RESOURCE.ARTIFACT
     
     for key, design in pairs(data.resourceData) do
-      local ressourceEntries = EnKai.map.GetMapElementbyType (key)
+      local ressourceEntries = LibMap.map.GetMapElementbyType (key)
       for key2, details in pairs (ressourceEntries) do
-        EnKai.map.replaceMapElement ("TRACK" .. stringMatch (key2, "RESOURCE(.+)"), design)
+        LibMap.map.replaceMapElement ("TRACK" .. stringMatch (key2, "RESOURCE(.+)"), design)
       end		
     end
 	
-    EnKai.map.replaceMapElement ("TRACK.ARTIFACT.NORMAL", data.resourceData['RESOURCE.ARTIFACT'])
-    EnKai.map.replaceMapElement ("TRACK.ARTIFACT.TWISTED", data.resourceData['RESOURCE.ARTIFACT'])
-    EnKai.map.replaceMapElement ("TRACK.ARTIFACT.UNSTABLE", data.resourceData['RESOURCE.ARTIFACT'])
-    EnKai.map.replaceMapElement ("TRACK.ARTIFACT.FAEYULE", data.resourceData['RESOURCE.ARTIFACT'])
-    EnKai.map.replaceMapElement ("TRACK.ARTIFACT.OTHER", data.resourceData['RESOURCE.ARTIFACT'])
-    EnKai.map.replaceMapElement ("TRACK.BOAT", data.resourceData['RESOURCE.ARTIFACT'])
-    EnKai.map.replaceMapElement ("TRACK.ARTIFACT.POISON", data.resourceData['RESOURCE.ARTIFACT'])
-    EnKai.map.replaceMapElement ("TRACK.ARTIFACT.BURNING", data.resourceData['RESOURCE.ARTIFACT'])
-    EnKai.map.replaceMapElement ("TRACK.ARTIFACT.NIGHTMARE", data.resourceData['RESOURCE.ARTIFACT'])
+    LibMap.map.replaceMapElement ("TRACK.ARTIFACT.NORMAL", data.resourceData['RESOURCE.ARTIFACT'])
+    LibMap.map.replaceMapElement ("TRACK.ARTIFACT.TWISTED", data.resourceData['RESOURCE.ARTIFACT'])
+    LibMap.map.replaceMapElement ("TRACK.ARTIFACT.UNSTABLE", data.resourceData['RESOURCE.ARTIFACT'])
+    LibMap.map.replaceMapElement ("TRACK.ARTIFACT.FAEYULE", data.resourceData['RESOURCE.ARTIFACT'])
+    LibMap.map.replaceMapElement ("TRACK.ARTIFACT.OTHER", data.resourceData['RESOURCE.ARTIFACT'])
+    LibMap.map.replaceMapElement ("TRACK.BOAT", data.resourceData['RESOURCE.ARTIFACT'])
+    LibMap.map.replaceMapElement ("TRACK.ARTIFACT.POISON", data.resourceData['RESOURCE.ARTIFACT'])
+    LibMap.map.replaceMapElement ("TRACK.ARTIFACT.BURNING", data.resourceData['RESOURCE.ARTIFACT'])
+    LibMap.map.replaceMapElement ("TRACK.ARTIFACT.NIGHTMARE", data.resourceData['RESOURCE.ARTIFACT'])
     
     -- add custom elements
       
     for key, data in pairs (data.customElements) do
-      EnKai.map.addMapElement (key, data)
+      LibMap.map.addMapElement (key, data)
     end
       
     LibQB.loadPackage("classic")
     LibQB.loadPackage("nt")
     LibQB.loadPackage("sfp")
     LibQB.loadPackage("poa")
-    EnKai.map.init(true)
-    EnKai.map.zoneInit(true)
+    LibMap.map.init(true)
+    LibMap.map.zoneInit(true)
     LibEKL.Inventory.Init()
     LibEKL.Unit.Init()
         
@@ -168,18 +168,18 @@ local function _main(_, addon)
     end
     
 	  Command.Event.Attach(Event.System.Update.Begin, events.SystemUpdate, "nkCartographer.System.Update.Begin")	
-    Command.Event.Attach(EnKai.events["EnKai.map"].add, function (a, mapInfo) internalFunc.UpdateMap(mapInfo, "add", "EinKai.map.add") end, "nkCartographer.EnKai.map.add")
-    Command.Event.Attach(EnKai.events["EnKai.map"].change, function (_, mapInfo)  internalFunc.UpdateMap(mapInfo, "change", "EnKai.map.change Event") end, "nkCartographer.EnKai.map.change")
-    Command.Event.Attach(EnKai.events["EnKai.map"].remove, function (_, mapInfo) internalFunc.UpdateMap(mapInfo, "remove") end, "nkCartographer.EnKai.map.remove")
-    Command.Event.Attach(EnKai.events["EnKai.map"].coord, function (_, mapInfo) internalFunc.UpdateMap(mapInfo, "coord", "EnKai.map.coord Event") end, "nkCartographer.EnKai.map.coord")
-    Command.Event.Attach(EnKai.events["EnKai.map"].zone, function (_, mapInfo) events.ZoneChange (_, mapInfo) end, "nkCartographer.EnKai.map.zone")
-    Command.Event.Attach(EnKai.events["EnKai.map"].shard, function (_, mapInfo) events.ShardChange (_, mapInfo) end, "nkCartographer.EnKai.map.shard")
-    Command.Event.Attach(EnKai.events["EnKai.waypoint"].add, function (_, mapInfo) internalFunc.UpdateMap(mapInfo, "waypoint-add") end, "nkCartographer.EnKai.waypoint.add")
-    Command.Event.Attach(EnKai.events["EnKai.waypoint"].change, function (_, mapInfo) internalFunc.UpdateMap(mapInfo, "waypoint-change") end, "nkCartographer.EnKai.waypoint.change")
-    Command.Event.Attach(EnKai.events["EnKai.waypoint"].remove, function (_, mapInfo) internalFunc.UpdateMap(mapInfo, "waypoint-remove") end, "nkCartographer.EnKai.waypoint.remove")
-    Command.Event.Attach(EnKai.events["EnKai.map"].unitAdd, function (_, mapInfo) internalFunc.UpdateUnit(mapInfo, "add") end, "nkCartographer.EnKai.map.unitAdd")
-    Command.Event.Attach(EnKai.events["EnKai.map"].unitRemove, function (_, mapInfo) internalFunc.UpdateUnit(mapInfo, "remove") end, "nkCartographer.EnKai.map.unitRemove")
-    Command.Event.Attach(EnKai.events["EnKai.map"].unitChange, function (_, mapInfo) internalFunc.UpdateUnit(mapInfo, "change") end, "nkCartographer.EnKai.map.unitChange")
+    Command.Event.Attach(LibMap.events["LibMap.map"].add, function (a, mapInfo) internalFunc.UpdateMap(mapInfo, "add", "EinKai.map.add") end, "nkCartographer.LibMap.map.add")
+    Command.Event.Attach(LibMap.events["LibMap.map"].change, function (_, mapInfo)  internalFunc.UpdateMap(mapInfo, "change", "LibMap.map.change Event") end, "nkCartographer.LibMap.map.change")
+    Command.Event.Attach(LibMap.events["LibMap.map"].remove, function (_, mapInfo) internalFunc.UpdateMap(mapInfo, "remove") end, "nkCartographer.LibMap.map.remove")
+    Command.Event.Attach(LibMap.events["LibMap.map"].coord, function (_, mapInfo) internalFunc.UpdateMap(mapInfo, "coord", "LibMap.map.coord Event") end, "nkCartographer.LibMap.map.coord")
+    Command.Event.Attach(LibMap.events["LibMap.map"].zone, function (_, mapInfo) events.ZoneChange (_, mapInfo) end, "nkCartographer.LibMap.map.zone")
+    Command.Event.Attach(LibMap.events["LibMap.map"].shard, function (_, mapInfo) events.ShardChange (_, mapInfo) end, "nkCartographer.LibMap.map.shard")
+    Command.Event.Attach(LibMap.events["LibMap.waypoint"].add, function (_, mapInfo) internalFunc.UpdateMap(mapInfo, "waypoint-add") end, "nkCartographer.LibMap.waypoint.add")
+    Command.Event.Attach(LibMap.events["LibMap.waypoint"].change, function (_, mapInfo) internalFunc.UpdateMap(mapInfo, "waypoint-change") end, "nkCartographer.LibMap.waypoint.change")
+    Command.Event.Attach(LibMap.events["LibMap.waypoint"].remove, function (_, mapInfo) internalFunc.UpdateMap(mapInfo, "waypoint-remove") end, "nkCartographer.LibMap.waypoint.remove")
+    Command.Event.Attach(LibMap.events["LibMap.map"].unitAdd, function (_, mapInfo) internalFunc.UpdateUnit(mapInfo, "add") end, "nkCartographer.LibMap.map.unitAdd")
+    Command.Event.Attach(LibMap.events["LibMap.map"].unitRemove, function (_, mapInfo) internalFunc.UpdateUnit(mapInfo, "remove") end, "nkCartographer.LibMap.map.unitRemove")
+    Command.Event.Attach(LibMap.events["LibMap.map"].unitChange, function (_, mapInfo) internalFunc.UpdateUnit(mapInfo, "change") end, "nkCartographer.LibMap.map.unitChange")
     
     Command.Event.Attach(LibEKL.Events["LibEKL.InventoryManager"].Update, function (_, thisData)
       if data.collectStart and Inspect.Time.Real() - data.collectStart < 2 then        

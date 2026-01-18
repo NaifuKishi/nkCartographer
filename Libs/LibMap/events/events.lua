@@ -2,10 +2,10 @@ local addonInfo, privateVars = ...
 
 ---------- init namespace ---------
 
-if not EnKai then EnKai = {} end
+if not LibMap then LibMap = {} end
 
-if not EnKai.eventHandlers then EnKai.eventHandlers = {} end
-if not EnKai.events then EnKai.events = {} end
+if not LibMap.eventHandlers then LibMap.eventHandlers = {} end
+if not LibMap.events then LibMap.events = {} end
 
 local internal    = privateVars.internal
 local data        = privateVars.data
@@ -30,7 +30,7 @@ local _lastUpdate1, _lastUpdate2
 local function _fctProcessPeriodic()
 
 	local debugId  
-	if nkDebug then debugId = nkDebug.traceStart (InspectAddonCurrent(), "EnKai _fctProcessPeriodic") end
+	if nkDebug then debugId = nkDebug.traceStart (InspectAddonCurrent(), "LibMap _fctProcessPeriodic") end
 
 	local remainingEvents = false
 
@@ -59,14 +59,14 @@ local function _fctProcessPeriodic()
 
 	if remainingEvents == false then _periodicEvents = {} end
 
-	if nkDebug then nkDebug.traceEnd (InspectAddonCurrent(), "EnKai _fctProcessPeriodic", debugId) end	
+	if nkDebug then nkDebug.traceEnd (InspectAddonCurrent(), "LibMap _fctProcessPeriodic", debugId) end	
 
 end
 
 local function _fctProcessInsecure()
 
 	local debugId  
-	if nkDebug then debugId = nkDebug.traceStart (InspectAddonCurrent(), "EnKai _fctProcessInsecure") end
+	if nkDebug then debugId = nkDebug.traceStart (InspectAddonCurrent(), "LibMap _fctProcessInsecure") end
 
 	if InspectSystemSecure() == true then return end
 
@@ -92,7 +92,7 @@ local function _fctProcessInsecure()
 
 	if remainingEvents == false then _insecureEvents = {} end
 
-	if nkDebug then nkDebug.traceEnd (InspectAddonCurrent(), "EnKai _fctProcessInsecure", debugId) end	
+	if nkDebug then nkDebug.traceEnd (InspectAddonCurrent(), "LibMap _fctProcessInsecure", debugId) end	
 
 end
 
@@ -187,7 +187,7 @@ end
 
 ---------- library public function block ---------
 
-function EnKai.events.addPeriodic(func, period, tries) -- period is in seconds
+function LibMap.events.addPeriodic(func, period, tries) -- period is in seconds
 	
 	local uuid = LibEKL.Tools.UUID ()
 	_periodicEvents[uuid] = {func = func, timer = InspectTimeFrame(), period = (period or 0), tries = (tries or 1), currentTries = 0 }
@@ -196,7 +196,7 @@ function EnKai.events.addPeriodic(func, period, tries) -- period is in seconds
 	
 end
 
-function EnKai.events.addInsecure(func, timer, period)
+function LibMap.events.addInsecure(func, timer, period)
 
   local uuid = LibEKL.Tools.UUID ()
 	_insecureEvents[uuid] = {func = func, timer = timer, period = period }
@@ -204,13 +204,13 @@ function EnKai.events.addInsecure(func, timer, period)
 
 end
 
-function EnKai.events.removeInsecure(id) _insecureEvents[id] = false end
+function LibMap.events.removeInsecure(id) _insecureEvents[id] = false end
 
-function EnKai.internal.checkEvents (name, init) -- radial muss umgebaut werden, dann kann diese function internal gemacht werden
+function LibMap.internal.checkEvents (name, init) -- radial muss umgebaut werden, dann kann diese function internal gemacht werden
 
-	if EnKai.eventHandlers[name] == nil and init ~= false then
-		EnKai.eventHandlers[name] = {}
-		EnKai.events[name] = {}
+	if LibMap.eventHandlers[name] == nil and init ~= false then
+		LibMap.eventHandlers[name] = {}
+		LibMap.events[name] = {}
 	elseif init ~= false then
 		LibEKL.Tools.Error.Display (addonInfo.identifier, stringFormat("Duplicate name '%s' found!", name), 1)
 		return false
@@ -224,13 +224,13 @@ end
 
 function internal.deRegisterEvents (name)
   
-  if EnKai.eventHandlers[name] ~= nil then
-    EnKai.eventHandlers[name] = nil
-    EnKai.events[name] = nil
+  if LibMap.eventHandlers[name] ~= nil then
+    LibMap.eventHandlers[name] = nil
+    LibMap.events[name] = nil
   end
 
 end
 
 -------------------- EVENTS --------------------
 
-Command.Event.Attach(Event.System.Update.Begin, _fctUpdateHandler, "EnKai.system.updateHandler")
+Command.Event.Attach(Event.System.Update.Begin, _fctUpdateHandler, "LibMap.system.updateHandler")
