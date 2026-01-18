@@ -6,7 +6,7 @@ local addonInfo, privateVars = ...
 
 ---------- init language texts ---------
 
-if ( EnKai.tools.lang.getLanguage()  == "German") then
+if ( LibEKL.Tools.Lang.GetLanguage()  == "German") then
 	
 	privateVars.langTexts = {	  
 		tabHeaderSettings    = 'Einstellungen',

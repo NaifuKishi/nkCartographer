@@ -23,7 +23,7 @@ local InspectUnitCastbar        = Inspect.Unit.Castbar
 local InspectAchievementDetail  = Inspect.Achievement.Detail
 
 local LibEKLGetPlayerDetails    = LibEKL.Unit.GetPlayerDetails
-local LibEKLGetGroupStatus      = LibEKL.Unit.getGroupStatus
+local LibEKLGetGroupStatus      = LibEKL.Unit.GetGroupStatus
 local LibEKLMathRound           = LibEKL.Tools.Math.Round
 local LibEKLTableCopy           = LibEKL.Tools.Table.Copy
 local LibEKLTableIsMember       = LibEKL.Tools.Table.IsMember

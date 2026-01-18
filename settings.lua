@@ -228,7 +228,7 @@ end
 
 function settingsUI.checkbox (name, parent, text, active, callBack)
 
-    local thisCheckbox = EnKai.uiCreateFrame("nkCheckbox", name, parent)
+    local thisCheckbox = LibEKL.UICreateFrame("nkCheckbox", name, parent)
     
     thisCheckbox:SetText(text, true)
     thisCheckbox:SetActive(active)
@@ -250,7 +250,7 @@ end
 
 function settingsUI.combobox (name, parent, text, active, callBack)
 
-    local thisCombobox = EnKai.uiCreateFrame("nkCombobox", name, parent)
+    local thisCombobox = LibEKL.UICreateFrame("nkCombobox", name, parent)
     
     thisCombobox:SetText(text, true)
     thisCombobox:SetActive(active)
@@ -274,7 +274,7 @@ end
 
 function settingsUI.slider (name, parent, text, active, callBack)
 
-    local thisSlider = EnKai.uiCreateFrame("nkSlider", name, parent)
+    local thisSlider = LibEKL.UICreateFrame("nkSlider", name, parent)
 
     thisSlider:SetText(text, true)
     thisSlider:SetWidth(350)
@@ -299,7 +299,7 @@ end
 
 function settingsUI.label (name, parent, text)
 
-    local thisText = EnKai.uiCreateFrame("nkText", name, parent)
+    local thisText = LibEKL.UICreateFrame("nkText", name, parent)
 
     thisText:SetText(text, true)
     thisText:SetWidth(350)
@@ -314,7 +314,7 @@ end
 
 function settingsUI.header (name, parent, text)
 
-    local thisHeader = EnKai.uiCreateFrame("nkText", name, parent)
+    local thisHeader = LibEKL.UICreateFrame("nkText", name, parent)
     thisHeader:SetFontSize(16)
     thisHeader:SetText(text)
     thisHeader:SetTextFont(addonInfo.id, "MontserratSemiBold")
@@ -358,7 +358,7 @@ function internalFunc.setupUI ()
         thickness = 2
     })
 
-    local tabPane = EnKai.uiCreateFrame("nkTabPaneMetro", name .. ".tabPane", config:GetContent())
+    local tabPane = LibEKL.UICreateFrame("nkTabPane", name .. ".tabPane", config:GetContent())
     tabPane:SetBorder(false)
     tabPane:SetVertical(true)
     tabPane:SetFont(addonInfo.id, "MontserratSemiBold")
@@ -388,13 +388,13 @@ function internalFunc.setupUI ()
 
     local paneTabUnitFrames = settingsUI.uiConfigTabUnitFrames(name .. ".tab.UnitFrames", tabPane)
 
-    --local EnKaiLogo = EnKai.uiCreateFrame("nkTexture", name .. ".EnKaiLogo", config)
-    --EnKaiLogo:SetTextureAsync(EnKai.art.GetThemeLogo()[1],EnKai.art.GetThemeLogo()[2])
+    --local EnKaiLogo = LibEKL.UICreateFrame("nkTexture", name .. ".EnKaiLogo", config)
+    --EnKaiLogo:SetTextureAsync(LibEKL.Art.GetThemeLogo()[1],LibEKL.Art.GetThemeLogo()[2])
     --EnKaiLogo:SetPoint("BOTTOMLEFT", config:GetContent(), "BOTTOMLEFT", 10, -5)
     ---EnKaiLogo:SetWidth(125)
     --EnKaiLogo:SetHeight(33)
 
-    local versionText = EnKai.uiCreateFrame("nkText", name .. ".versionText", config)
+    local versionText = LibEKL.UICreateFrame("nkText", name .. ".versionText", config)
     versionText:SetFontSize(11)
     versionText:SetText(string.format("Version %s", addonInfo.toc.Version))
     versionText:SetFontColor(data.theme.labelColor.r, data.theme.labelColor.g, data.theme.labelColor.b, data.theme.labelColor.a)
@@ -403,7 +403,7 @@ function internalFunc.setupUI ()
 
     EnKai.ui.setFont(versionText, addonInfo.id, "Montserrat")
 
-    local closeButton = EnKai.uiCreateFrame("nkButtonMetro", name .. ".closeButton", config:GetContent())
+    local closeButton = LibEKL.UICreateFrame("nkButtonMetro", name .. ".closeButton", config:GetContent())
 
     closeButton:SetPoint("BOTTOMRIGHT", config:GetContent(), "BOTTOMRIGHT", -10, -10)
     closeButton:SetText("Close")
@@ -419,7 +419,7 @@ function internalFunc.setupUI ()
         uiElements.settings:SetVisible(false)   
     end, name .. ".closeButton.Clicked")
 
-    local tutorialButton = EnKai.uiCreateFrame("nkButtonMetro", name .. ".tutorialButton", config:GetContent())
+    local tutorialButton = LibEKL.UICreateFrame("nkButtonMetro", name .. ".tutorialButton", config:GetContent())
 
     tutorialButton:SetPoint("CENTERRIGHT", closeButton, "CENTERLEFT", -10, 0)
     tutorialButton:SetText("Tutorial")
@@ -435,7 +435,7 @@ function internalFunc.setupUI ()
         internalFunc.tutorial()
     end, name .. ".tutorialButton.Clicked")
 
-    local moveButton = EnKai.uiCreateFrame("nkButtonMetro", name .. ".moveButton", config:GetContent())
+    local moveButton = LibEKL.UICreateFrame("nkButtonMetro", name .. ".moveButton", config:GetContent())
 
     moveButton:SetPoint("CENTERRIGHT", tutorialButton, "CENTERLEFT", -10, 0)
     moveButton:SetText("Move UI")

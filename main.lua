@@ -122,12 +122,8 @@ local function _main(_, addon)
       return
     end
 
-    EnKai.ui.registerFont (addonInfo.id, "Montserrat", "fonts/Montserrat-Regular.ttf")
-    EnKai.ui.registerFont (addonInfo.id, "MontserratSemiBold", "fonts/Montserrat-SemiBold.ttf")
-    EnKai.ui.registerFont (addonInfo.id, "MontserratBold", "fonts/Montserrat-Bold.ttf")
-
     LibEKL.UI.registerFont (addonInfo.id, "Montserrat", "fonts/Montserrat-Regular.ttf")
-    LibEKL.UI.registerFont (addonInfo.id, "MontserratSemiBold", "fonts/Montserrat-SemiBold.ttf")
+    LibEKL.UI.registerFont (addonInfo.id, "MontserratSemiBold", "fonts/nkC-Montserrat-SemiBold.ttf")
     LibEKL.UI.registerFont (addonInfo.id, "MontserratBold", "fonts/Montserrat-Bold.ttf")
     
     table.insert(Command.Slash.Register("nkCG"), {_commandHandler, "nkCartographer", "ui"}) 

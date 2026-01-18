@@ -1,0 +1,52 @@
+Identifier = "LibMap"
+Name = "NaifuKishi's Map Library"
+Description = "A library for map functionality"
+
+Author = "NaifuKishi"
+Email = "rift@naifukishi.com"
+
+Version = "1.0.0"
+Environment = "4.0"
+
+RunOnStartup = {
+  "main.lua",
+
+  "locales/localizationDE.lua",
+  "locales/localizationFR.lua",
+  "locales/localizationEN.lua",
+  "locales/localizationRU.lua",
+
+  "events/events.lua",
+
+  "fx/fx.lua",
+
+  "map/data.lua",
+  "map/location.lua",
+  "map/map.lua",
+  "map/zone.lua",
+
+  "ui/ui.lua",  
+  
+  "ui/map/map.lua",
+  "ui/map/elementTexture.lua",
+  "ui/map/elementCanvas.lua",
+  
+  "ui/tooltip/infoText.lua",
+  "ui/tooltip/itemTooltip.lua",
+  "ui/tooltip/tooltip.lua",
+}
+
+Embed = {
+  ["Libs/LibAsyncTextures"] = true,
+	["Libs/LibTransform2"] = true,
+	["Libs/LibUnitChange"] = true
+}
+
+Dependencies = {
+	LibEKL = {"required", "before"},
+  LibAsyncTextures = {"required", "before"},
+	LibTransform2 = {"required", "before"},
+	LibUnitChange = {"required", "before"}
+}
+
+SavedVariables = {}
