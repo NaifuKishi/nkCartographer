@@ -39,13 +39,13 @@ local stringSub             = string.sub
 local stringFormat          = string.format
 local stringFind            = string.find
 
-local questQueryByKey       = nkQuestBase.query.byKey
-local questQueryByNPC       = nkQuestBase.query.NPC
-local questGetZoneByQuest	= nkQuestBase.query.getZoneByQuest
-local questGetQuestsByZone	= nkQuestBase.query.getQuestsByZone
-local questNPCByName		= nkQuestBase.query.NPCByName
-local questNPCQuests		= nkQuestBase.query.NPCQuests
-local questIsInit			= nkQuestBase.query.isInit
+local questQueryByKey       = LibQB.query.byKey
+local questQueryByNPC       = LibQB.query.NPC
+local questGetZoneByQuest	= LibQB.query.getZoneByQuest
+local questGetQuestsByZone	= LibQB.query.getQuestsByZone
+local questNPCByName		= LibQB.query.NPCByName
+local questNPCQuests		= LibQB.query.NPCQuests
+local questIsInit			= LibQB.query.isInit
 
 local EnKaiMapGetZoneByName		= EnKai.map.GetZoneByName
 local EnKaiMapGetZoneDetails	= EnKai.map.GetZoneDetails

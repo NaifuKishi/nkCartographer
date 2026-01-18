@@ -24,17 +24,17 @@ RunOnStartup = {
 }
 
 Embed = {	
-  ["Libs/nkQuestBase"] = true,
+  ["Libs/LibQB"] = true,
   ["Libs/EnKai"] = true,
 }
 
 Dependencies = {
-  nkQuestBase = {"required", "before"},
-  EnKai = {"required", "before"},
-  RareTracker = {"optional", "before"},
-  RareDar = {"optional", "before"},
-  nkAdvisor_Loot = {"optional", "before"},
-  nkDebug = {"optional", "before"}
+  LibQB           = {"required", "before"},  
+  EnKai           = {"required", "before"},
+  RareTracker     = {"optional", "before"},
+  RareDar         = {"optional", "before"},
+  nkAdvisor_Loot  = {"optional", "before"},
+  nkDebug         = {"optional", "before"}
 }
 
 

@@ -490,7 +490,7 @@ function internalFunc.UpdateMap (mapInfo, action, debugSource, checkForMinimapQu
 				if stringFind(details.type, "RESOURCE") == 1 and nkCartSetup.trackGathering == true then _trackGathering(details) end
 			elseif details.type == "UNKNOWN" then
 				if data.postponedAdds == nil then data.postponedAdds = {} end
-				if nkQuestBase.query.isInit() == false or nkQuestBase.query.isPackageLoaded('poa') == false or nkQuestBase.query.isPackageLoaded('nt') == false or nkQuestBase.query.isPackageLoaded('classic') == false then
+				if LibQB.query.isInit() == false or LibQB.query.isPackageLoaded('poa') == false or LibQB.query.isPackageLoaded('nt') == false or LibQB.query.isPackageLoaded('classic') == false then
 					data.postponedAdds[key] = details
 				else
 					if inspectSystemWatchdog() < 0.1 then
