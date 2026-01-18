@@ -50,11 +50,11 @@ local questIsInit			= LibQB.query.isInit
 local EnKaiMapGetZoneByName		= EnKai.map.GetZoneByName
 local EnKaiMapGetZoneDetails	= EnKai.map.GetZoneDetails
 
-local EnKaiTableIsMember 		= EnKai.tools.table.isMember
-local EnKaiTableGetTablePos		= EnKai.tools.table.getTablePos
-local EnKaiCoroutinesAdd		= EnKai.coroutines.add
-local EnKaiStringsSplit			= EnKai.strings.split
-local EnKaiEventsAddInsecure	= EnKai.events.addInsecure
+local EnKaiTableIsMember 		= LibEKL.Tools.Table.IsMember
+local EnKaiTableGetTablePos		= LibEKL.Tools.Table.GetTablePos
+local EnKaiCoroutinesAdd		= LibEKL.Coroutines.Add
+local EnKaiStringsSplit			= LibEKL.strings.split
+local EnKaiEventsAddInsecure	= LibEKL.Events.AddInsecure
 
 ---------- local function block ---------
 

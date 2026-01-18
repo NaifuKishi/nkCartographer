@@ -88,13 +88,13 @@ local function _commandHandler (commandline)
 	elseif stringFind(commandline, "show") ~= nil then
 		internalFunc.showHide()
 	elseif stringFind(commandline, "add") ~= nil then
-		local thisCommand = EnKai.strings.split(commandline, " ")
+		local thisCommand = LibEKL.strings.split(commandline, " ")
 		
 		if #thisCommand < 4 then
-			EnKai.tools.error.display (addonInfo.identifier,  privateVars.langTexts.errorAddCommand, 2)
+			LibEKL.Tools.Error.Display (addonInfo.identifier,  privateVars.langTexts.errorAddCommand, 2)
 		else
 			
-			internalFunc.AddCustomPoint(tonumber(thisCommand[2]), tonumber(thisCommand[3]), EnKai.strings.right(commandline, thisCommand[3]))
+			internalFunc.AddCustomPoint(tonumber(thisCommand[2]), tonumber(thisCommand[3]), LibEKL.strings.right(commandline, thisCommand[3]))
 		end
 	elseif stringFind(commandline, "clear") ~= nil then
 		internalFunc.ClearCustomPoints()
@@ -104,7 +104,7 @@ end
 
 local function _languageNotSupported () 
 
-  uiElements.nsDialog = EnKai.uiCreateFrame("nkDialog", "nkCartographer.dialog.notsupported", uiElements.context)
+  uiElements.nsDialog = LibEKL.UICreateFrame("nkDialog", "nkCartographer.dialog.notsupported", uiElements.context)
   uiElements.nsDialog:SetPoint("CENTER", UIParent, "CENTER")
   uiElements.nsDialog:SetType("OK")
   uiElements.nsDialog:SetMessage("nkCartographer relies on pattern recognition of texts provided by the RIFT API.\n\nUnfortunately your client's language is not supported yet.")
@@ -125,6 +125,10 @@ local function _main(_, addon)
     EnKai.ui.registerFont (addonInfo.id, "Montserrat", "fonts/Montserrat-Regular.ttf")
     EnKai.ui.registerFont (addonInfo.id, "MontserratSemiBold", "fonts/Montserrat-SemiBold.ttf")
     EnKai.ui.registerFont (addonInfo.id, "MontserratBold", "fonts/Montserrat-Bold.ttf")
+
+    LibEKL.UI.registerFont (addonInfo.id, "Montserrat", "fonts/Montserrat-Regular.ttf")
+    LibEKL.UI.registerFont (addonInfo.id, "MontserratSemiBold", "fonts/Montserrat-SemiBold.ttf")
+    LibEKL.UI.registerFont (addonInfo.id, "MontserratBold", "fonts/Montserrat-Bold.ttf")
     
     table.insert(Command.Slash.Register("nkCG"), {_commandHandler, "nkCartographer", "ui"}) 
     table.insert(Command.Slash.Register("nkCartographer"), {_commandHandler, "nkCartographer", "ui"})
@@ -160,8 +164,8 @@ local function _main(_, addon)
     LibQB.loadPackage("poa")
     EnKai.map.init(true)
     EnKai.map.zoneInit(true)
-    EnKai.inventory.init()
-    EnKai.unit.init()
+    LibEKL.Inventory.Init()
+    LibEKL.Unit.Init()
         
     for idx = 1, #data.rareMobAchievements, 1 do
       events.achievementUpdate (_, { [data.rareMobAchievements[idx]] = true })
@@ -181,17 +185,17 @@ local function _main(_, addon)
     Command.Event.Attach(EnKai.events["EnKai.map"].unitRemove, function (_, mapInfo) internalFunc.UpdateUnit(mapInfo, "remove") end, "nkCartographer.EnKai.map.unitRemove")
     Command.Event.Attach(EnKai.events["EnKai.map"].unitChange, function (_, mapInfo) internalFunc.UpdateUnit(mapInfo, "change") end, "nkCartographer.EnKai.map.unitChange")
     
-    Command.Event.Attach(EnKai.events["EnKai.InventoryManager"].Update, function (_, thisData)
+    Command.Event.Attach(LibEKL.Events["LibEKL.InventoryManager"].Update, function (_, thisData)
       if data.collectStart and Inspect.Time.Real() - data.collectStart < 2 then        
 		    internalFunc.CollectArtifact(thisData)
 		    data.collectStart = nil
       end      
-    end, "nkCartographer.EnKai.InventoryManager.Update")
+    end, "nkCartographer.LibEKL.InventoryManager.Update")
        
-    Command.Event.Attach(EnKai.events["EnKai.Unit"].GroupStatus, events.GroupStatus, "nkCartographer.EnKai.Unit.GroupStatuss")
-    Command.Event.Attach(EnKai.events["EnKai.Unit"].Change, events.UnitChange, "nkCartographer.EnKai.Unit.Change")
+    Command.Event.Attach(LibEKL.Events["LibEKL.Unit"].GroupStatus, events.GroupStatus, "nkCartographer.LibEKL.Unit.GroupStatuss")
+    Command.Event.Attach(LibEKL.Events["LibEKL.Unit"].Change, events.UnitChange, "nkCartographer.LibEKL.Unit.Change")
     
-    Command.Event.Attach(EnKai.events["EnKai.Unit"].PlayerAvailable, events.playerAvailable, "nkCartographer.EnKai.Unit.PlayerAvailable")
+    Command.Event.Attach(LibEKL.Events["LibEKL.Unit"].PlayerAvailable, events.playerAvailable, "nkCartographer.LibEKL.Unit.PlayerAvailable")
 	
     Command.Event.Attach(Event.Unit.Availability.None, events.UnitUnavailable, "nkCartographer.Unit.Availability.None")
     
@@ -214,16 +218,6 @@ local function _main(_, addon)
     
     Command.Console.Display("general", true, stringFormat(privateVars.langTexts.startUp, addonInfo.toc.Version), true)
     
-    EnKai.version.init(addonInfo.toc.Identifier, addonInfo.toc.Version)
-    
-end
-
-local function _performGatheringTransfer()
-
-end
-
-local function _transferGathering()
-
 end
 
 local function _settingsHandler(_, addon) 
@@ -244,7 +238,7 @@ local function _settingsHandler(_, addon)
 		                  userPOI = {}
                     }
 	  
-	    nkCartSetup.x = EnKai.uiGetBoundRight() - 300
+	    nkCartSetup.x = LibEKL.UI.getBoundRight() - 300
 	  
       nkCartGathering = { gatheringData = {}, artifactsData = {}}
       

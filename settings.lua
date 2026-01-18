@@ -194,15 +194,15 @@ function internalFunc.setupDefaults()
     if nkUISetup == nil or nkUISetup.tutorialVersion == nil or nkUISetup.tutorialVersion < 40 then
         nkUISetup = _defaults
         nkUISetup.modules.actionBars.bars = {}
-        nkUISetup.modules.actionBars.bars[EnKai.unit.getPlayerDetails().name] = { roles = {} }
+        nkUISetup.modules.actionBars.bars[LibEKL.Unit.GetPlayerDetails().name] = { roles = {} }
 
         scaleUI ()
     end
     
     -- check for new char
 
-    if nkUISetup.modules.actionBars.bars[EnKai.unit.getPlayerDetails().name] == nil then
-        nkUISetup.modules.actionBars.bars[EnKai.unit.getPlayerDetails().name] = { roles = {} }
+    if nkUISetup.modules.actionBars.bars[LibEKL.Unit.GetPlayerDetails().name] == nil then
+        nkUISetup.modules.actionBars.bars[LibEKL.Unit.GetPlayerDetails().name] = { roles = {} }
     end
 
     nkUISetup = EnKai.tools.updateSettings (_defaults, nkUISetup)
@@ -329,7 +329,7 @@ function internalFunc.setupUI ()
     
     local name = "nkUI.config"
 
-    local config = EnKai.uiCreateFrame("nkWindowMetro", name, uiElements.contextDialog)
+    local config = LibEKL.UICreateFrame("nkWindow", name, uiElements.contextDialog)
 
     config:SetPoint("CENTER", UIParent, "CENTER")
     config:SetWidth(950)
@@ -341,13 +341,21 @@ function internalFunc.setupUI ()
     config:SetCloseable(true)
     config:SetTitleFontColor(data.theme.labelColor.r, data.theme.labelColor.g, data.theme.labelColor.b, data.theme.labelColor.a)
 
-    config:SetColor(nil, {
+    config:SetColor({
         type = "gradientLinear",
-        transform = Utility.Matrix.Create(2, 2, -(math.pi / 6), 0, 0), -- Negative angle for opposite direction
+        transform = Utility.Matrix.Create(2, 2, math.pi, 0, 0), -- 180 degree angle
         color = {
-            data.theme.windowStartColor,
-            data.theme.windowEndColor
-            }
+            {r = 0.13, g = 0.15, b = 0.20, a = 1, position = 0}, -- Start color
+            {r = 0.10, g = 0.11, b = 0.15, a = 1, position = 1}  -- End color
+        }
+    },  {
+        r = 0x66 / 255,
+        g = 0x56 / 255,
+        b = 0x2e / 255,
+        a = 1,
+        cap = "round",
+        miter = "miter",
+        thickness = 2
     })
 
     local tabPane = EnKai.uiCreateFrame("nkTabPaneMetro", name .. ".tabPane", config:GetContent())

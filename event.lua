@@ -17,18 +17,18 @@ local _unitsMapping = {}
 
 ---------- make global functions local ---------
 
-local inspectUnitDetail         = Inspect.Unit.Detail
-local inspectTimeReal           = Inspect.Time.Real
-local inspectUnitCastbar        = Inspect.Unit.Castbar
-local inspectAchievementDetail  = Inspect.Achievement.Detail
+local InspectUnitDetail         = Inspect.Unit.Detail
+local InspectTimeReal           = Inspect.Time.Real
+local InspectUnitCastbar        = Inspect.Unit.Castbar
+local InspectAchievementDetail  = Inspect.Achievement.Detail
 
-local EnKaiGetPlayerDetails     = EnKai.unit.getPlayerDetails
-local EnKaiGetGroupStatus       = EnKai.unit.getGroupStatus
-local EnKaiMathRound            = EnKai.tools.math.round
-local EnKaiTableCopy            = EnKai.tools.table.copy
-local EnKaiTableIsMember        = EnKai.tools.table.isMember
-local EnKaiTableSerialize       = EnKai.tools.table.serialize
-local EnKaiStringsRight         = EnKai.strings.right
+local LibEKLGetPlayerDetails    = LibEKL.Unit.GetPlayerDetails
+local LibEKLGetGroupStatus      = LibEKL.Unit.getGroupStatus
+local LibEKLMathRound           = LibEKL.Tools.Math.Round
+local LibEKLTableCopy           = LibEKL.Tools.Table.Copy
+local LibEKLTableIsMember       = LibEKL.Tools.Table.IsMember
+local LibEKLTableSerialize      = LibEKL.Tools.Table.Serialize
+local LibEKLStringsRight        = LibEKL.strings.right
 local EnKaiMapGetAll            = EnKai.map.getAll
 
 local stringFind               = string.find
@@ -73,11 +73,11 @@ function events.SystemUpdate ()
 
 	if data.forceUpdate ~= true then
 		if data.lastUpdate == nil then
-			data.lastUpdate = inspectTimeReal()
+			data.lastUpdate = InspectTimeReal()
 			privateVars.forceUpdate = true
 		else
-			local tmpTime = inspectTimeReal()
-			if EnKaiMathRound((tmpTime - data.lastUpdate), 1) > .5 then data.forceUpdate = true end
+			local tmpTime = InspectTimeReal()
+			if LibEKLMathRound((tmpTime - data.lastUpdate), 1) > .5 then data.forceUpdate = true end
 		end
 	end
 
@@ -85,10 +85,10 @@ function events.SystemUpdate ()
 		
 		if data.postponedAdds ~= nil then
 			if LibQB.query.isInit() == true and LibQB.query.isPackageLoaded('poa') == true and LibQB.query.isPackageLoaded('nt') == true and LibQB.query.isPackageLoaded('classic') == true then
-				local temp = EnKaiTableCopy(data.postponedAdds)
+				local temp = LibEKLTableCopy(data.postponedAdds)
 				data.postponedAdds = nil
 				internalFunc.UpdateMap(temp, "add", "events.SystemUpdate")
-				data.lastUpdate = inspectTimeReal() -- diese Abfrage direkt nach data.forceUpdate platzieren wenn andere Funktionen aufgerufen werden
+				data.lastUpdate = InspectTimeReal() -- diese Abfrage direkt nach data.forceUpdate platzieren wenn andere Funktionen aufgerufen werden
 			end
 		end
 		
@@ -102,13 +102,13 @@ function events.broadcastTarget (info)
   if nkCartSetup.syncTarget ~= true then return end
 
   local bType = "party"
-  if EnKaiGetGroupStatus() == 'raid' then
+  if LibEKLGetGroupStatus() == 'raid' then
     bType = "raid" 
-  elseif EnKaiGetGroupStatus() ~= "group" then
+  elseif LibEKLGetGroupStatus() ~= "group" then
     return
   end 
   
-  local thisData = "info=" .. EnKaiTableSerialize (info)
+  local thisData = "info=" .. LibEKLTableSerialize (info)
   
   Command.Message.Broadcast(bType, nil, "nkCartographer.target", thisData)
 
@@ -119,13 +119,13 @@ function events.messageReceive (_, from, type, channel, identifier, data)
   if nkCartSetup.syncTarget ~= true then return end
   if uiElements.mapUI == nil then return end
 
-  local pDetails = EnKaiGetPlayerDetails()
+  local pDetails = LibEKLGetPlayerDetails()
   if pDetails == nil then return end  
   if pDetails.name == from then return end
   
   if stringFind(identifier, "nkCartographer") == nil then return end
   
-  local tempString = EnKaiStringsRight (data, "info=")
+  local tempString = LibEKLStringsRight (data, "info=")
   local dataFunc = loadstring("return {".. tempString .. "}")
   local thisData = dataFunc()
 
@@ -216,11 +216,11 @@ function events.ShardChange (_, info)
   
   internalFunc.SetZone (data.lastZone)  
   
-  local details = inspectUnitDetail('player')
+  local details = InspectUnitDetail('player')
 
   internalFunc.UpdateUnit ({[details.id] = {id = details.id, type = "player", coordX = details.coordX, coordY = details.coordY, coordZ = details.coordZ}}, "add")
   
-  local petDetails = inspectUnitDetail('player.pet')
+  local petDetails = InspectUnitDetail('player.pet')
   if petDetails ~= nil then
     internalFunc.UpdateUnit ({[petDetails.id] = {id = petDetails.id, type = "player.pet", coordX = petDetails.coordX, coordY = petDetails.coordY, coordZ = petDetails.coordZ}}, "add")
   end
@@ -234,7 +234,7 @@ function events.playerAvailable (_, info)
 
 	data.playerUID = info.id
 	internalFunc.initMap()
-	local details = inspectUnitDetail('player.target')
+	local details = InspectUnitDetail('player.target')
   if details ~= nil then _processPlayerTarget(details.id, details) end    
 	
 	internalFunc.UpdateWaypointArrows()
@@ -281,9 +281,9 @@ end
 function events.UnitCastBar (_, info)
   
   if info[data.playerUID] then
-    local details = inspectUnitCastbar(data.playerUID)
+    local details = InspectUnitCastbar(data.playerUID)
     if details and details.abilityNew == "A0000002B72E024A4" then
-      data.collectStart = inspectTimeReal()
+      data.collectStart = InspectTimeReal()
     end
   end
 
@@ -309,7 +309,7 @@ function events.UnitChange (_, unitID, unitType)
       data.playerHostileTargetUID = nil
       data.playerTargetUID = nil
     else
-      local unitDetails = inspectUnitDetail(unitID)
+      local unitDetails = InspectUnitDetail(unitID)
       _processPlayerTarget(unitID, unitDetails)
     end
   elseif stringFind(unitType, "player.target") == nil and stringFind(unitType, "group") == 1 and stringFind(unitType, "group..%.target") == nil then
@@ -331,7 +331,7 @@ function events.UnitChange (_, unitID, unitType)
       
       if hasRemoves then internalFunc.UpdateMap (removes, "remove") end
     else
-      local details = inspectUnitDetail(unitID)
+      local details = InspectUnitDetail(unitID)
       if details ~= nil then _unitsMapping[unitType] = details.name end
     end
   end
@@ -378,7 +378,7 @@ function events.GroupStatus (_, status)
 		return
 	end
 
-	local details = inspectUnitDetail(data.playerHostileTargetUID)
+	local details = InspectUnitDetail(data.playerHostileTargetUID)
 	if details == nil then 
 		if nkDebug then nkDebug.traceEnd (addonInfo.identifier, "events.GroupStatus", debugId) end
 		return 
@@ -397,10 +397,10 @@ function events.achievementUpdate (_, info)
   local refreshNeeded = false
   
   for id, _ in pairs(info) do
-    if EnKaiTableIsMember(data.rareMobAchievements, id) == true then
+    if LibEKLTableIsMember(data.rareMobAchievements, id) == true then
       
       for idx = 1, #data.rareMobAchievements, 1 do
-        achievement = inspectAchievementDetail(data.rareMobAchievements[idx])
+        achievement = InspectAchievementDetail(data.rareMobAchievements[idx])
         
         if achievement ~= nil then
         

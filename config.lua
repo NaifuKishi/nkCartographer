@@ -28,7 +28,7 @@ data.borderDesigns = {
 
 function settingsUI.checkbox (name, parent, text, active, callBack)
 
-    local thisCheckbox = EnKai.uiCreateFrame("nkCheckbox", name, parent)
+    local thisCheckbox = LibEKL.UICreateFrame("nkCheckbox", name, parent)
     
     thisCheckbox:SetText(text, true)
     thisCheckbox:SetActive(active)
@@ -40,7 +40,7 @@ function settingsUI.checkbox (name, parent, text, active, callBack)
     thisCheckbox:SetColorInner(data.theme.formElementColorSub)
     thisCheckbox:SetEffectGlow({strength = 3})
     
-    Command.Event.Attach(EnKai.events[name].CheckboxChanged, function (_, newValue)		
+    Command.Event.Attach(LibEKL.Events[name].CheckboxChanged, function (_, newValue)		
         callBack(newValue)
     end, name .. ".CheckboxChanged")
 
@@ -50,7 +50,7 @@ end
 
 function settingsUI.combobox (name, parent, text, active, callBack)
 
-    local thisCombobox = EnKai.uiCreateFrame("nkCombobox", name, parent)
+    local thisCombobox = LibEKL.UICreateFrame("nkCombobox", name, parent)
     
     thisCombobox:SetText(text, true)
     thisCombobox:SetActive(active)
@@ -64,7 +64,7 @@ function settingsUI.combobox (name, parent, text, active, callBack)
     thisCombobox:SetColorSelected(data.theme.labelColor)
     thisCombobox:SetEffectGlow({strength = 3})
 
-    Command.Event.Attach(EnKai.events[name].ComboChanged, function (_, newValue)		
+    Command.Event.Attach(LibEKL.Events[name].ComboChanged, function (_, newValue)		
         callBack(newValue.value)
     end, name .. ".CheckboxChanged")
 
@@ -74,7 +74,7 @@ end
 
 function settingsUI.slider (name, parent, text, active, callBack)
 
-    local thisSlider = EnKai.uiCreateFrame("nkSlider", name, parent)
+    local thisSlider = LibEKL.UICreateFrame("nkSlider", name, parent)
 
     thisSlider:SetText(text, true)
     thisSlider:SetWidth(350)
@@ -88,7 +88,7 @@ function settingsUI.slider (name, parent, text, active, callBack)
     thisSlider:SetColorHighlight(data.theme.formElementColorMain)    
     thisSlider:SetEffectGlow({strength = 3})
 
-    Command.Event.Attach(EnKai.events[name].SliderChanged, function (_, newValue)
+    Command.Event.Attach(LibEKL.Events[name].SliderChanged, function (_, newValue)
         callBack(newValue)
     end, name .. ".SliderChanged")
 
@@ -99,7 +99,7 @@ end
 
 function settingsUI.label (name, parent, text)
 
-    local thisText = EnKai.uiCreateFrame("nkText", name, parent)
+    local thisText = LibEKL.UICreateFrame("nkText", name, parent)
 
     thisText:SetText(text, true)
     thisText:SetWidth(350)
@@ -114,7 +114,7 @@ end
 
 function settingsUI.header (name, parent, text)
 
-    local thisHeader = EnKai.uiCreateFrame("nkText", name, parent)
+    local thisHeader = LibEKL.UICreateFrame("nkText", name, parent)
     thisHeader:SetFontSize(16)
     thisHeader:SetText(text)
     thisHeader:SetTextFont(addonInfo.id, "MontserratSemiBold")
@@ -129,7 +129,7 @@ local function _configTabSettings(parent)
 
   local name = 'nkCartogrqapher.Config.TabPane.TabSettings'
 
-  local tabPane = UI.CreateFrame ("Frame", name, parent)
+  local tabPane = LibEKL.UICreateFrame ("nkFrame", name, parent)
   local labelGeneric, backgroundSelect, lockedCheckbox, syncTargetCheckbox
   local labelDisplay, poiCheckbox, zoneTitleCheckbox, animationsCheckbox, rareCheckbox, rareCheckboxInfo, labelTrack, gatheringCheckbox, artifactCheckbox, animationsCheckboxheckboxInfo, animationSpeedSlider
   local questCheckbox, unknownCheckbox
@@ -142,7 +142,7 @@ local function _configTabSettings(parent)
     local backgroundList = {}
     
     for k, v in pairs (data.borderDesigns) do
-      table.insert(backgroundList, {label = v[EnKai.tools.lang.getLanguageShort()], value = k})
+      table.insert(backgroundList, {label = v[LibEKL.Tools.Lang.GetLanguageShort()], value = k})
     end
     
     backgroundSelect = settingsUI.combobox(name .. ".backgroundSelect", tabPane, lang.backgroundSelect, true, function(newValue)        
@@ -298,43 +298,43 @@ local function _configTabAbout(parent)
   
   function tabPane:build ()
   
-    nkTexture = EnKai.uiCreateFrame("nkTexture", name .. '.nkTexture', tabPane)
+    nkTexture = LibEKL.UICreateFrame("nkTexture", name .. '.nkTexture', tabPane)
     nkTexture:SetPoint("CENTERTOP", tabPane, "CENTERTOP", 0, 10)
-    nkTexture:SetTextureAsync(EnKai.art.GetThemeLogo()[1],EnKai.art.GetThemeLogo()[2])
-    nkTexture:SetWidth(250)
-    nkTexture:SetHeight(66)
+    nkTexture:SetTextureAsync(LibEKL.Art.GetThemeLogo()[1],LibEKL.Art.GetThemeLogo()[2])
+    nkTexture:SetWidth(100)
+    nkTexture:SetHeight(100)
     
-    thanxLabel = EnKai.uiCreateFrame("nkText", name .. ".thanxLabel", tabPane)
+    thanxLabel = LibEKL.UICreateFrame("nkText", name .. ".thanxLabel", tabPane)
     thanxLabel:SetPoint("CENTERTOP", nkTexture, "CENTERBOTTOM", 0, 20)
     thanxLabel:SetFontSize(16)
     thanxLabel:SetText(lang.thanxLabel)
     thanxLabel:SetEffectGlow({ strength = 3})
     
-    EnKai.ui.setFont(thanxLabel, addonInfo.id, "Montserrat")
+    LibEKL.UI.SetFont(thanxLabel, addonInfo.id, "Montserrat")
     
-    thanxTesting = EnKai.uiCreateFrame("nkText", name .. ".thanxTesting", tabPane)
+    thanxTesting = LibEKL.UICreateFrame("nkText", name .. ".thanxTesting", tabPane)
     thanxTesting:SetPoint("CENTERTOP", thanxLabel, "CENTERBOTTOM", 0, 20)
     thanxTesting:SetFontSize(16)
     thanxTesting:SetText(lang.thanxTesting)
     thanxTesting:SetEffectGlow({ strength = 3})
 
-    EnKai.ui.setFont(thanxTesting, addonInfo.id, "Montserrat")
+    LibEKL.UI.SetFont(thanxTesting, addonInfo.id, "Montserrat")
     
-    thanxTesting2 = EnKai.uiCreateFrame("nkText", name .. ".thanxTesting2", tabPane)
+    thanxTesting2 = LibEKL.UICreateFrame("nkText", name .. ".thanxTesting2", tabPane)
     thanxTesting2:SetPoint("CENTERTOP", thanxTesting, "CENTERBOTTOM")
     thanxTesting2:SetFontSize(16)
     thanxTesting2:SetText(lang.thanxTesting2)
     thanxTesting2:SetEffectGlow({ strength = 3})
 
-    EnKai.ui.setFont(thanxTesting2, addonInfo.id, "Montserrat")
+    LibEKL.UI.SetFont(thanxTesting2, addonInfo.id, "Montserrat")
     
-    thanxLibs = EnKai.uiCreateFrame("nkText", name .. ".thanxLibs", tabPane)
+    thanxLibs = LibEKL.UICreateFrame("nkText", name .. ".thanxLibs", tabPane)
     thanxLibs:SetPoint("CENTERTOP", thanxTesting2, "CENTERBOTTOM", 0, 10)
     thanxLibs:SetFontSize(16)
     thanxLibs:SetText(lang.thanxLibs)
     thanxLibs:SetEffectGlow({ strength = 3})
 
-    EnKai.ui.setFont(thanxLibs, addonInfo.id, "Montserrat")
+    LibEKL.UI.SetFont(thanxLibs, addonInfo.id, "Montserrat")
     
   end
   
@@ -346,7 +346,7 @@ local function _config()
 
   local name = "nkCartographer.config"
 
-  local config = EnKai.uiCreateFrame("nkWindowMetro", name, uiElements.context)
+  local config = LibEKL.UICreateFrame("nkWindow", name, uiElements.context)
   
   config:SetWidth(600)
   config:SetHeight(540)
@@ -359,25 +359,34 @@ local function _config()
   config:SetTitleEffect ( {strength = 3})
   config:SetTitleFontColor(data.theme.labelColor.r, data.theme.labelColor.g, data.theme.labelColor.b, data.theme.labelColor.a)
   
-  config:SetColor(nil, {
-      type = "gradientLinear",
-      transform = Utility.Matrix.Create(2, 2, -(math.pi / 6), 0, 0), -- Negative angle for opposite direction
-      color = {
-          data.theme.windowStartColor,
-          data.theme.windowEndColor
+  config:SetColor({
+          type = "gradientLinear",
+          transform = Utility.Matrix.Create(2, 2, math.pi, 0, 0), -- 180 degree angle
+          color = {
+              {r = 0.13, g = 0.15, b = 0.20, a = 1, position = 0}, -- Start color
+              {r = 0.10, g = 0.11, b = 0.15, a = 1, position = 1}  -- End color
           }
-  })
+      },  {
+          r = 0x66 / 255,
+          g = 0x56 / 255,
+          b = 0x2e / 255,
+          a = 1,
+          cap = "round",
+          miter = "miter",
+          thickness = 2
+      })
+
   
-  local tabPane = EnKai.uiCreateFrame("nkTabPaneMetro", name .. ".tabPane", config:GetContent())
+  local tabPane = LibEKL.UICreateFrame("nkTabPane", name .. ".tabPane", config:GetContent())
   
   local paneTabSettings =  _configTabSettings(tabPane)
   local paneTabAbout =  _configTabAbout(tabPane)
   
-  local EnKaiLogo = EnKai.uiCreateFrame("nkTexture", name .. ".EnKaiLogo", config)
-  EnKaiLogo:SetTextureAsync(EnKai.art.GetThemeLogo()[1],EnKai.art.GetThemeLogo()[2])
-  EnKaiLogo:SetPoint("BOTTOMLEFT", config:GetContent(), "BOTTOMLEFT", 10, -5)
-  EnKaiLogo:SetWidth(150)
-  EnKaiLogo:SetHeight(33)
+  local EnKaiLogo = LibEKL.UICreateFrame("nkTexture", name .. ".EnKaiLogo", config)
+  EnKaiLogo:SetTextureAsync(LibEKL.Art.GetThemeLogo()[1],LibEKL.Art.GetThemeLogo()[2])
+  EnKaiLogo:SetPoint("BOTTOMLEFT", config:GetContent(), "BOTTOMLEFT", 20, -5)
+  EnKaiLogo:SetWidth(40)
+  EnKaiLogo:SetHeight(40)
       
   tabPane:SetBorder(false)
   tabPane:SetPoint("TOPLEFT", config:GetContent(), "TOPLEFT", 10, 10)
@@ -389,25 +398,27 @@ local function _config()
           r = data.theme.windowEndColor.r, g = data.theme.windowEndColor.g, b = data.theme.windowEndColor.b, a = 0
       }, 
       {   type = 'solid', 
-          r = data.theme.windowEndColor.r, g = data.theme.windowEndColor.g, b = data.theme.windowEndColor.b, a = .3},
+          r = data.theme.windowEndColor.r, g = data.theme.windowEndColor.g, b = data.theme.windowEndColor.b, a = 0},
           data.theme.labelColor, data.theme.labelColor)
   
   tabPane:AddPane( { label = lang.tabHeaderSettings, effect = { strength = 3 }, frame = paneTabSettings, initFunc = function() paneTabSettings:build() end}, false)
   tabPane:AddPane( { label = lang.tabHeaderAbout, effect = { strength = 3 }, frame = paneTabAbout, initFunc = function() paneTabAbout:build() end}, true)
   
-  local closeButton = EnKai.uiCreateFrame("nkButtonMetro", name .. ".closeButton", config:GetContent())
-  
+  local closeButton = LibEKL.UICreateFrame("nkButton", name .. ".closeButton", config:GetContent())
+
   closeButton:SetPoint("BOTTOMRIGHT", config:GetContent(), "BOTTOMRIGHT", -10, -10)
   closeButton:SetText(lang.btClose)
   closeButton:SetScale(.8)
   closeButton:SetLayer(9)
   closeButton:SetFont(addonInfo.id, "MontserratSemiBold")
-  closeButton:SetFontColor(data.theme.labelColor)
+  closeButton:SetLabelColor(data.theme.labelColor)
   closeButton:SetEffectGlow ({ strength = 3 })
-  closeButton:SetColor(0, 0, 0, .4)
-  closeButton:SetBorderColor(0, 0, 0, .7)
+  closeButton:SetFillColor({ type = "solid", r = 0, g = 0, b = 0, a = .4})
+  closeButton:SetBorderColor({ r = 0, g = 0, b = 0, a = .7, thickness = 1})
 
-  Command.Event.Attach(EnKai.events[name .. ".closeButton"].Clicked, function (_, newValue) config:SetVisible(false) end, name .. ".closeButton.Clicked")
+  Command.Event.Attach(LibEKL.Events[name .. ".closeButton"].Clicked, function (_, newValue)
+      config:SetVisible(false) 
+  end, name .. ".closeButton.Clicked")
     
   return config
   

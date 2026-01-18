@@ -15,18 +15,18 @@ local _rareData             = {}
 
 ---------- make global functions local ---------
 
-local inspectUnitDetail 	= Inspect.Unit.Detail
-local inspectZoneDetail 	= Inspect.Zone.Detail
-local inspectSystemSecure 	= Inspect.System.Secure
-local inspectSystemWatchdog = Inspect.System.Watchdog
-local inspectItemDetail 	= Inspect.Item.Detail
-local inspectMouse 			= Inspect.Mouse
-local inspectTimeReal 		= Inspect.Time.Real
+local InspectUnitDetail 	= Inspect.Unit.Detail
+local InspectZoneDetail 	= Inspect.Zone.Detail
+local InspectSystemSecure 	= Inspect.System.Secure
+local InspectSystemWatchdog = Inspect.System.Watchdog
+local InspectItemDetail 	= Inspect.Item.Detail
+local InspectMouse 			= Inspect.Mouse
+local InspectTimeReal 		= Inspect.Time.Real
 
-local EnKaiGetLanguage		= EnKai.tools.lang.getLanguage
-local EnKaiGetLanguageShort = EnKai.tools.lang.getLanguageShort
-local EnKaiTableCopy		= EnKai.tools.table.copy
-local EnKaiUUID				= EnKai.tools.uuid
+local LibEKLGetLanguage			= LibEKL.Tools.Lang.GetLanguage
+local LibEKLGetLanguageShort	= LibEKL.Tools.Lang.GetLanguageShort
+local LibEKLTableCopy			= LibEKL.Tools.Table.Copy
+local LibEKLUUID				= LibEKL.Tools.UUID
 
 local stringFind			= string.find
 local stringMatch			= string.match
@@ -58,15 +58,15 @@ local function _getRareDarData ()
   _rareData = {}
   
   for idx = 1, #RareDar.data, 1 do
-    if RareDar.data[idx].zone[EnKaiGetLanguage()] == _zoneDetails.name then
+    if RareDar.data[idx].zone[LibEKLGetLanguage()] == _zoneDetails.name then
       local mobs = RareDar.data[idx].mobs
       
       for idx2 = 1, #mobs, 1 do
-        if data.rareMobKilled[mobs[idx2].achv[EnKaiGetLanguage()]] ~= true then      
+        if data.rareMobKilled[mobs[idx2].achv[LibEKLGetLanguage()]] ~= true then      
           local posList = mobs[idx2].pos
           
           for idx3 = 1, #posList, 1 do
-            _processRareData(mobs[idx2].id, idx3, mobs[idx2].targ[EnKaiGetLanguage()], posList[idx3][1], posList[idx3][2], mobs[idx2].comment[EnKaiGetLanguage()])
+            _processRareData(mobs[idx2].id, idx3, mobs[idx2].targ[LibEKLGetLanguage()], posList[idx3][1], posList[idx3][2], mobs[idx2].comment[LibEKLGetLanguage()])
           end
         end
       end
@@ -88,12 +88,12 @@ local function _getRareTrackerData ()
   
   for idx = 1, #mobs, 1 do
     
-    if data.rareMobKilled[mobs[idx].n[EnKaiGetLanguageShort()]] ~= true then      
+    if data.rareMobKilled[mobs[idx].n[LibEKLGetLanguageShort()]] ~= true then      
   
       local posList = mobs[idx].loc
       
       for idx2 = 1, #posList, 1 do
-        _processRareData(mobs[idx].n[EnKaiGetLanguageShort()], idx2, mobs[idx].n[EnKaiGetLanguageShort()], posList[idx2].x, posList[idx2].z, "")
+        _processRareData(mobs[idx].n[LibEKLGetLanguageShort()], idx2, mobs[idx].n[LibEKLGetLanguageShort()], posList[idx2].x, posList[idx2].z, "")
       end
     end
   end
@@ -109,11 +109,11 @@ local function _trackGathering (details)
 		if data.coordX == details.coordX and data.coordZ == details.coordZ then return end
 	end
 
-	local thisData = EnKaiTableCopy(details)
+	local thisData = LibEKLTableCopy(details)
 	thisData.type = "TRACK" .. stringMatch (thisData.type, "RESOURCE(.+)")
 
 	local thisType = stringMatch(details.type, "RESOURCE%.(.+)") or stringMatch(details.type, "RESOURCE%.(.+)%.")
-	thisData.id = thisType .. "-" .. EnKaiUUID()
+	thisData.id = thisType .. "-" .. LibEKLUUID()
 
 	if thisType == "ARTIFACT" then
 		nkCartGathering.artifactsData[data.lastZone][thisData.id] = thisData
@@ -137,7 +137,7 @@ local function _fctMapUI ()
 	mapUI:ShowHeader(false)
 	mapUI:ShowCoords(false)	
 
-	local texture = EnKai.uiCreateFrame("nkTexture", "nkCartographer.map.texture", uiElements.context)
+	local texture = LibEKL.UICreateFrame("nkTexture", "nkCartographer.map.texture", uiElements.context)
 	texture:SetLayer(1)
 
 	function mapUI:SetBackground(newBG)
@@ -162,30 +162,30 @@ local function _fctMapUI ()
 
 	mapUI:SetBackground(nkCartSetup.background)
 
-	local zoneTitle = EnKai.uiCreateFrame("nkText", "nkCartographer.map.zoneTitle", mapUI:GetMask())
+	local zoneTitle = LibEKL.UICreateFrame("nkText", "nkCartographer.map.zoneTitle", mapUI:GetMask())
 	zoneTitle:SetPoint("CENTERTOP", mapUI:GetContent(), "CENTERTOP")
 	zoneTitle:SetLayer(9999)
 	
-	EnKai.ui.setFont (zoneTitle, addonInfo.id, "MontserratSemiBold")
+	LibEKL.UI.SetFont (zoneTitle, addonInfo.id, "MontserratSemiBold")
 
 	zoneTitle:SetEffectGlow({ colorB = 0, colorA = 1, colorG = 0, colorR = 0, strength = 3, blurX = 3, blurY = 3 })
 
-	local coords = EnKai.uiCreateFrame("nkText", "nkCartographer.map.coords", mapUI)
+	local coords = LibEKL.UICreateFrame("nkText", "nkCartographer.map.coords", mapUI)
 	coords:SetPoint("CENTERBOTTOM", mapUI:GetContent(), "CENTERBOTTOM", 0, 15)
 	coords:SetLayer(9999)
 	coords:SetFontSize(20)
 	coords:SetEffectGlow({ strength = 3})
 	
-	EnKai.ui.setFont (coords, addonInfo.id, "MontserratBold")
+	LibEKL.UI.SetFont (coords, addonInfo.id, "MontserratBold")
 
-	local mouseCoords = EnKai.uiCreateFrame("nkText", "nkCartographer.map.mouseCoords", mapUI)
+	local mouseCoords = LibEKL.UICreateFrame("nkText", "nkCartographer.map.mouseCoords", mapUI)
 	mouseCoords:SetPoint("CENTERBOTTOM", coords, "CENTERTOP", 0, 5)
 	mouseCoords:SetLayer(9999)
 	mouseCoords:SetFontSize(18)
 	mouseCoords:SetFontColor(1, 0.8, 0, 1)
 	mouseCoords:SetEffectGlow({ strength = 3})
 	
-	EnKai.ui.setFont (mouseCoords, addonInfo.id, "MontserratBold")
+	LibEKL.UI.SetFont (mouseCoords, addonInfo.id, "MontserratBold")
 
 	function mapUI:SetCoordsLabel(x, y)
 		coords:SetText(stringFormat("%d / %d", x, y))
@@ -204,22 +204,6 @@ local function _fctMapUI ()
 			zoneTitle:SetText(data.locationName)
 		end
 	end
-
-	--[[local setupIcon = EnKai.uiCreateFrame("nkTexture", "nkCartographer.map.setupIcon",  mapUI:GetHeader())
-	setupIcon:SetPoint("CENTERLEFT", mapUI:GetHeader(), "CENTERLEFT", 5, 0)
-	setupIcon:SetHeight(16)
-	setupIcon:SetWidth(16)
-	setupIcon:SetTextureAsync("EnKai", "gfx/icons/config.png")
-
-	setupIcon:EventAttach(Event.UI.Input.Mouse.Left.Down, function () internalFunc.ShowConfig() end, setupIcon:GetName() .. ".Mouse.Left.Down")
-
-	local waypointIcon = EnKai.uiCreateFrame("nkTexture", "nkCartographer.map.waypointIcon",  mapUI:GetHeader())
-	waypointIcon:SetPoint("CENTERLEFT", setupIcon, "CENTERRIGHT", 5, 0)
-	waypointIcon:SetHeight(16)
-	waypointIcon:SetWidth(16)
-	waypointIcon:SetTextureAsync("EnKai", "gfx/icons/pin.png")
-
-	waypointIcon:EventAttach(Event.UI.Input.Mouse.Left.Down, function () internalFunc.WaypointDialog() end, waypointIcon:GetName() .. ".Mouse.Left.Down")]]
 
 	Command.Event.Attach(EnKai.events["nkCartographer.map"].MouseMoved, function (_, text)
 		mouseCoords:SetText(text)
@@ -280,7 +264,7 @@ function internalFunc.initMap ()
 	uiElements.mapUI:SetWidth(nkCartSetup.width)
 	uiElements.mapUI:SetHeight(nkCartSetup.height)
 
-	local details = inspectUnitDetail(data.playerUID)
+	local details = InspectUnitDetail(data.playerUID)
 	internalFunc.SetZone (details.zone)
 
 	uiElements.mapUI:SetPointMaximized(nkCartSetup.maximizedX, nkCartSetup.maximizedY)  
@@ -303,13 +287,13 @@ function internalFunc.initMap ()
 	Command.Event.Attach(Event.System.Update.Begin, function ()
       
       if data.delayStart ~= nil then
-          local tmpTime = inspectTimeReal()
-          if EnKai.tools.math.round((tmpTime - data.delayStart), 1) > 1 then 
+          local tmpTime = InspectTimeReal()
+          if LibEKL.Tools.Math.Round((tmpTime - data.delayStart), 1) > 1 then 
             uiElements.mapUI:SetPoint("TOPLEFT", UIParent, "TOPLEFT", nkCartSetup.x, nkCartSetup.y)
             Command.Event.Detach(Event.System.Update.Begin, nil, "nkCartographer.resetPosition")	
           end
       else
-        data.delayStart = inspectTimeReal()
+        data.delayStart = InspectTimeReal()
       end
       
     end, "nkCartographer.resetPosition")		
@@ -318,14 +302,15 @@ function internalFunc.initMap ()
 		uiElements.mapUI:ToggleMinMax()
 	end
 
-    EnKai.managerV2.RegisterButton('nkCartographer.config', addonInfo.id, "gfx/minimapIcon.png", internalFunc.ShowConfig)
-	EnKai.managerV2.RegisterButton('nkCartographer.toggle', addonInfo.id, "gfx/minimapIconCloseMap.png", internalFunc.showHide)
-	EnKai.managerV2.RegisterButton('nkCartographer.minmax', addonInfo.id, "gfx/minimapIconResize.png", _toggleMinMax)
+    LibEKL.manager.RegisterButton('nkCartographer.config', addonInfo.id, "gfx/minimapIcon.png", internalFunc.ShowConfig)
+	LibEKL.manager.RegisterButton('nkCartographer.toggle', addonInfo.id, "gfx/minimapIconCloseMap.png", internalFunc.showHide)
+	LibEKL.manager.RegisterButton('nkCartographer.minmax', addonInfo.id, "gfx/minimapIconResize.png", _toggleMinMax)
     
-    local minimapFrame = EnKai.managerV2.GetFrame()
-    if minimapFrame then      
-      minimapFrame:SetPoint("TOPLEFT", uiElements.mapUI, "BOTTOMLEFT")
-	  minimapFrame:SetWidth(uiElements.mapUI:GetWidth())
+    local minimapFrame = LibEKL.manager.GetFrame()
+    if minimapFrame then
+		minimapFrame:ClearPoint("BOTTOMLEFT")
+      	minimapFrame:SetPoint("TOPLEFT", uiElements.mapUI, "BOTTOMLEFT")
+		minimapFrame:SetWidth(uiElements.mapUI:GetWidth())
     end
 
 	if nkDebug then debugId = nkDebug.traceEnd (addonInfo.identifier, "internalFunc.initMap", debugId) end
@@ -346,7 +331,7 @@ function internalFunc.UpdateWaypointArrows ()
     if details.coordX >= mapInfo.x1 and details.coordX <= mapInfo.x2 and details.coordZ >= mapInfo.y1 and details.coordZ <= mapInfo.y2 then 
   
       if details.gfx == nil then
-        details.gfx = EnKai.uiCreateFrame("nkCanvas", "nkCartographer.waypointarrow." .. EnKaiUUID(), uiElements.mapUI:GetMask())
+        details.gfx = LibEKL.UICreateFrame("nkCanvas", "nkCartographer.waypointarrow." .. LibEKLUUID(), uiElements.mapUI:GetMask())
         details.gfx:SetLayer(999)      
       end
       
@@ -421,22 +406,22 @@ function internalFunc.SetZone (newZoneID)
 	data.currentWorld = newWorld
 
 	if data.currentWorld == nil then
-		EnKai.tools.error.display ("nkCartographer", "zone " .. newZoneID .. " not found", 2)
+		LibEKL.Tools.Error.Display ("nkCartographer", "zone " .. newZoneID .. " not found", 2)
 		data.currentWorld = "unknown"
 		--return
 	end
 
 	uiElements.mapUI:SetMap("world", data.currentWorld)
 
-	local details = inspectUnitDetail(data.playerUID)
+	local details = InspectUnitDetail(data.playerUID)
 	data.locationName = details.locationName
 	uiElements.mapUI:SetCoord(details.coordX, details.coordZ)	
 	uiElements.mapUI:SetCoordsLabel(details.coordX, details.coordZ)	
 
-	_zoneDetails = inspectZoneDetail(newZoneID)
+	_zoneDetails = InspectZoneDetail(newZoneID)
 	uiElements.mapUI:SetZoneTitle(nkCartSetup.showZoneTitle)
 
-	if inspectSystemSecure() == false then Command.System.Watchdog.Quiet() end
+	if InspectSystemSecure() == false then Command.System.Watchdog.Quiet() end
 
 	data.lastZone = newZoneID
 	internalFunc.ShowPOI(true)  
@@ -493,7 +478,7 @@ function internalFunc.UpdateMap (mapInfo, action, debugSource, checkForMinimapQu
 				if LibQB.query.isInit() == false or LibQB.query.isPackageLoaded('poa') == false or LibQB.query.isPackageLoaded('nt') == false or LibQB.query.isPackageLoaded('classic') == false then
 					data.postponedAdds[key] = details
 				else
-					if inspectSystemWatchdog() < 0.1 then
+					if InspectSystemWatchdog() < 0.1 then
 						data.postponedAdds[key] = details
 					else
 						if internalFunc.IsKnownMinimapQuest (details.id) == false then
@@ -528,7 +513,7 @@ function internalFunc.UpdateMap (mapInfo, action, debugSource, checkForMinimapQu
 				end
 			end
 		elseif action == "waypoint-add" then
-			local unitDetails = inspectUnitDetail(key)
+			local unitDetails = InspectUnitDetail(key)
 			uiElements.mapUI:AddElement({ id = "wp-" .. key, type = "WAYPOINT", descList = { unitDetails.name }, coordX = details.coordX, coordZ = details.coordZ })
 			data.waypoints[key] = { coordX = details.coordX, coordZ = details.coordZ }
 			if key == data.playerUID then data.waypoints[key].player = true end      
@@ -573,20 +558,20 @@ function internalFunc.UpdateUnit (mapInfo, action)
 		if action == "add" then
 
 			if details.type == "player" then
-				local unitDetails = inspectUnitDetail("player")
+				local unitDetails = InspectUnitDetail("player")
 				details.type = "UNIT.PLAYER"
 				details.title = unitDetails.name
 				details.angle = 0         
 				data.centerElement = key
 				uiElements.mapUI:AddElement(details)
 			elseif details.type == "player.pet" then
-				local unitDetails = inspectUnitDetail("player.pet")
+				local unitDetails = InspectUnitDetail("player.pet")
 				details.type = "UNIT.PLAYERPET"
 				details.title = unitDetails.name         
 				uiElements.mapUI:AddElement(details)
 			elseif stringFind(details.type, "group") ~= nil and stringFind(details.type, "group..%.") == nil then				
 			
-				local unitDetails = inspectUnitDetail(details.type)
+				local unitDetails = InspectUnitDetail(details.type)
 				details.type = "UNIT.GROUPMEMBER"        
 				details.title = unitDetails.name
 				details.smoothCoords = true
@@ -704,7 +689,7 @@ function internalFunc.ShowPOI(flag)
 
   local lastPoi = EnKai.map.GetZonePOI (data.lastZone)
   
-  if flag == true and nkAM_Loot ~= nil and EnKai.unit.getGroupStatus () ~= 'single' then
+  if flag == true and nkAM_Loot ~= nil and LibEKL.Unit.GetGroupStatus () ~= 'single' then
 	local bossInfo = nkAM_Loot.getPOI(data.lastZone)
 	if bossInfo ~= nil then
 		if data.customPOIs[data.lastZone] == nil then data.customPOIs[data.lastZone] = {} end
@@ -728,7 +713,7 @@ function internalFunc.ShowPOI(flag)
         lastPoi[k].title = lang.poiPuzzle
       end
 
-      lastPoi[k].descList = { v[EnKaiGetLanguageShort ()] }
+      lastPoi[k].descList = { v[LibEKLGetLanguageShort ()] }
     end
   end  
   
@@ -778,7 +763,7 @@ function internalFunc.ShowGathering(flag)
 		end
 	)
 
-	EnKai.coroutines.add ({ func = gridCoRoutine, counter = #temp, active = true })
+	LibEKL.Coroutines.Add ({ func = gridCoRoutine, counter = #temp, active = true })
 
 end
 
@@ -798,12 +783,12 @@ function internalFunc.CollectArtifact(itemData)
 
   if nkCartGathering.artifactsData[data.lastZone] == nil then nkCartGathering.artifactsData[data.lastZone] = {} end
 
-  local unitDetails = inspectUnitDetail('player') 
+  local unitDetails = InspectUnitDetail('player') 
   local coordRangeX = {unitDetails.coordX-2, unitDetails.coordX+2}
   local coordRangeZ = {unitDetails.coordZ-2, unitDetails.coordZ+2}      
 
   for key, _ in pairs (itemData) do
-    local details = inspectItemDetail(key)
+    local details = InspectItemDetail(key)
 	
 	--dump(details)
     
@@ -824,7 +809,7 @@ function internalFunc.CollectArtifact(itemData)
       end
       
       if knownPos == false then
-        local thisData = { id = stringMatch(type, "TRACK.(.+)") .. EnKaiUUID(), type = type, descList = {}, coordX = unitDetails.coordX, coordY = unitDetails.coordY, coordZ = unitDetails.coordZ }
+        local thisData = { id = stringMatch(type, "TRACK.(.+)") .. LibEKLUUID(), type = type, descList = {}, coordX = unitDetails.coordX, coordY = unitDetails.coordY, coordZ = unitDetails.coordZ }
         nkCartGathering.artifactsData[data.lastZone][thisData.id] = thisData
       end
     end
@@ -836,13 +821,13 @@ function internalFunc.WaypointDialog()
 
 	local xpos, ypos
 	
-	if inspectSystemSecure() == true then return end
+	if InspectSystemSecure() == true then return end
 
 	if uiElements.waypointDialog == nil then
 		local name = "nkCartographer.waypointDialog"
 		local coordLabel, xposEdit, yposEdit, sepLabel, setButton		
 	
-		uiElements.waypointDialog = EnKai.uiCreateFrame("nkWindowElement", name, uiElements.contextSecure)
+		uiElements.waypointDialog = LibEKL.UICreateFrame("nkWindow", name, uiElements.contextSecure)
 		uiElements.waypointDialog:SetLayer(3)
 		uiElements.waypointDialog:SetWidth(200)
 		uiElements.waypointDialog:SetHeight(140)	
@@ -850,29 +835,29 @@ function internalFunc.WaypointDialog()
 		uiElements.waypointDialog:SetSecureMode('restricted')
 		uiElements.waypointDialog:SetTitleFont(addonInfo.id, "MontserratSemiBold")
 		
-		Command.Event.Attach(EnKai.events[name].Closed, function () 
+		Command.Event.Attach(LibEKL.Events[name].Closed, function () 
 			xposEdit:Leave()
 			yposEdit:Leave()
 		end, name .. ".Closed")
 		
-		coordLabel = EnKai.uiCreateFrame("nkText", name .. ".coordLabel", uiElements.waypointDialog:GetContent())
+		coordLabel = LibEKL.UICreateFrame("nkText", name .. ".coordLabel", uiElements.waypointDialog:GetContent())
 		coordLabel:SetPoint("CENTERTOP", uiElements.waypointDialog:GetContent(), "CENTERTOP", 0, 10)
 		coordLabel:SetFontColor(1, 1, 1, 1)
 		coordLabel:SetFontSize(12)
 		coordLabel:SetText(lang.coordLabel)
 
-		EnKai.ui.setFont(coordLabel, addonInfo.id, "Montserrat")
+		LibEKL.ui.setFont(coordLabel, addonInfo.id, "Montserrat")
 		
-		sepLabel = EnKai.uiCreateFrame("nkText", name .. ".sepLabel", uiElements.waypointDialog:GetContent())
+		sepLabel = LibEKL.UICreateFrame("nkText", name .. ".sepLabel", uiElements.waypointDialog:GetContent())
 		sepLabel:SetPoint("CENTERTOP", coordLabel, "CENTERBOTTOM", 0, 10)
 		sepLabel:SetFontColor(1, 1, 1, 1)
 		sepLabel:SetFontSize(12)
 		sepLabel:SetText("/")
 
-		EnKai.ui.setFont(sepLabel, addonInfo.id, "Montserrat")
+		LibEKL.ui.setFont(sepLabel, addonInfo.id, "Montserrat")
 				
-		xposEdit = EnKai.uiCreateFrame("nkTextField", name .. ".xposEdit", uiElements.waypointDialog:GetContent())
-		yposEdit = EnKai.uiCreateFrame("nkTextField", name .. ".yposEdit", uiElements.waypointDialog:GetContent())
+		xposEdit = LibEKL.UICreateFrame("nkTextField", name .. ".xposEdit", uiElements.waypointDialog:GetContent())
+		yposEdit = LibEKL.UICreateFrame("nkTextField", name .. ".yposEdit", uiElements.waypointDialog:GetContent())
 				
 		xposEdit:SetPoint("CENTERRIGHT", sepLabel, "CENTERLEFT", -5, 0)
 		xposEdit:SetWidth(50)
@@ -881,10 +866,10 @@ function internalFunc.WaypointDialog()
 		local function _setMacro()
 			if xpos == nil or ypos == nil or tonumber(xpos) == nil or tonumber(ypos) == nil then return end
 			
-			EnKai.events.addInsecure(function() setButton:SetMacro(stringFormat("setwaypoint %d %d", xpos, ypos)) end)
+			LibEKL.Events.AddInsecure(function() setButton:SetMacro(stringFormat("setwaypoint %d %d", xpos, ypos)) end)
 		end
 		
-		Command.Event.Attach(EnKai.events[name .. ".xposEdit"].TextfieldChanged, function (_, newValue) 
+		Command.Event.Attach(LibEKL.Events[name .. ".xposEdit"].TextfieldChanged, function (_, newValue) 
 			xpos = newValue
 			_setMacro()
 		end, name .. ".xposEdit.TextfieldChanged")
@@ -893,24 +878,24 @@ function internalFunc.WaypointDialog()
 		yposEdit:SetWidth(50)
 		yposEdit:SetTabTarget(xposEdit)
 		
-		Command.Event.Attach(EnKai.events[name .. ".yposEdit"].TextfieldChanged, function (_, newValue) 
+		Command.Event.Attach(LibEKL.Events[name .. ".yposEdit"].TextfieldChanged, function (_, newValue) 
 			ypos = newValue
 			_setMacro()
 		end, name .. ".yposEdit.TextfieldChanged")
 		
-		setButton = EnKai.uiCreateFrame("nkButtonMetro", name .. ".setButton", uiElements.waypointDialog:GetContent())
+		setButton = LibEKL.UICreateFrame("nkButton", name .. ".setButton", uiElements.waypointDialog:GetContent())
 		setButton:SetPoint("CENTERTOP", sepLabel, "CENTERBOTTOM", 0, 20)
 		setButton:SetText(lang.btSet)
-		setButton:SetIcon("EnKai", "gfx/icons/ok.png")
+		--setButton:SetIcon("EnKai", "gfx/icons/ok.png")
 		setButton:SetScale(.8)
 		setButton:SetLayer(9)
 		setButton:SetFont(addonInfo.id, "MontserratSemiBold")
 
-		Command.Event.Attach(EnKai.events[name .. ".setButton"].Clicked, function () 
+		Command.Event.Attach(LibEKL.Events[name .. ".setButton"].Clicked, function () 
 			xposEdit:Leave()
 			yposEdit:Leave()
 			
-			EnKai.events.addInsecure(function() uiElements.waypointDialog:SetVisible(false) end)			
+			LibEKL.Events.AddInsecure(function() uiElements.waypointDialog:SetVisible(false) end)			
 			
 		end, name .. ".setButton.Clicked")
 
@@ -922,7 +907,7 @@ function internalFunc.WaypointDialog()
 		end		
 	end
 	
-	local mouseData = inspectMouse()
+	local mouseData = InspectMouse()
 	uiElements.waypointDialog:SetPoint("TOPLEFT", UIParent, "TOPLEFT", mouseData.x - uiElements.waypointDialog:GetWidth(), mouseData.y - uiElements.waypointDialog:GetHeight())
 
 end
@@ -937,7 +922,7 @@ function internalFunc.AddCustomPoint(x, y, title)
 
 	if nkCartSetup.userPOI[data.currentWorld] == nil then nkCartSetup.userPOI[data.currentWorld] = {} end
 	
-	local thisID = "CUSTOMPOI" .. EnKaiUUID ()
+	local thisID = "CUSTOMPOI" .. LibEKLUUID ()
 	local thisEntry = {
 		[thisID] = {
 			coordX = x,
@@ -969,21 +954,21 @@ function internalFunc.debugPanel()
 
 	local debugPanel, x1label, x2label, y1label, y2label, x1, x2, y1, y2
 
-	debugPanel = EnKai.uiCreateFrame("nkFrame", name, uiElements.context)
+	debugPanel = LibEKL.UICreateFrame("nkFrame", name, uiElements.context)
 	debugPanel:SetWidth(200)
 	debugPanel:SetHeight(100)
 	debugPanel:SetPoint("TOPRIGHT", uiElements.mapUI, "TOPLEFT")
 	debugPanel:SetBackgroundColor(0,0,0,.5)
 
-	x1label = EnKai.uiCreateFrame("nkText", name .. ".x1label", debugPanel)
-	x2label = EnKai.uiCreateFrame("nkText", name .. ".x2label", debugPanel)
-	y1label = EnKai.uiCreateFrame("nkText", name .. ".y1label", debugPanel)
-	y2label = EnKai.uiCreateFrame("nkText", name .. ".y2label", debugPanel)
+	x1label = LibEKL.UICreateFrame("nkText", name .. ".x1label", debugPanel)
+	x2label = LibEKL.UICreateFrame("nkText", name .. ".x2label", debugPanel)
+	y1label = LibEKL.UICreateFrame("nkText", name .. ".y1label", debugPanel)
+	y2label = LibEKL.UICreateFrame("nkText", name .. ".y2label", debugPanel)
 
-	x1 = EnKai.uiCreateFrame("nkTextfield", name .. ".x1", debugPanel)
-	x2 = EnKai.uiCreateFrame("nkTextfield", name .. ".x2", debugPanel)
-	y1 = EnKai.uiCreateFrame("nkTextfield", name .. ".y1", debugPanel)
-	y2 = EnKai.uiCreateFrame("nkTextfield", name .. ".y2", debugPanel)
+	x1 = LibEKL.UICreateFrame("nkTextfield", name .. ".x1", debugPanel)
+	x2 = LibEKL.UICreateFrame("nkTextfield", name .. ".x2", debugPanel)
+	y1 = LibEKL.UICreateFrame("nkTextfield", name .. ".y1", debugPanel)
+	y2 = LibEKL.UICreateFrame("nkTextfield", name .. ".y2", debugPanel)
 
 	x1label:SetPoint("TOPLEFT", debugPanel, "TOPLEFT", 10, 10)
 	x1label:SetText("x1: ")
@@ -1002,7 +987,7 @@ function internalFunc.debugPanel()
 	x2label:SetText("x2: ")
 	y2label:SetText("y2: ")
 
-	Command.Event.Attach(EnKai.events[name .. ".x1"].TextfieldChanged, function ()
+	Command.Event.Attach(LibEKL.Events[name .. ".x1"].TextfieldChanged, function ()
 
 		local mapInfo = uiElements.mapUI:GetMapInfo()
 		mapInfo.x1 = tonumber(x1:GetText())
@@ -1010,7 +995,7 @@ function internalFunc.debugPanel()
 
 	end, name .. ".x1.TextfieldChanged")
 
-	Command.Event.Attach(EnKai.events[name .. ".x2"].TextfieldChanged, function ()
+	Command.Event.Attach(LibEKL.Events[name .. ".x2"].TextfieldChanged, function ()
 
 		local mapInfo = uiElements.mapUI:GetMapInfo()
 		mapInfo.x2 = tonumber(x2:GetText())
@@ -1018,7 +1003,7 @@ function internalFunc.debugPanel()
 
 	end, name .. ".x2.TextfieldChanged")
 
-	Command.Event.Attach(EnKai.events[name .. ".y1"].TextfieldChanged, function ()
+	Command.Event.Attach(LibEKL.Events[name .. ".y1"].TextfieldChanged, function ()
 
 		local mapInfo = uiElements.mapUI:GetMapInfo()
 		mapInfo.y1 = tonumber(y1:GetText())
@@ -1026,7 +1011,7 @@ function internalFunc.debugPanel()
 
 	end, name .. ".y1.TextfieldChanged")
 
-	Command.Event.Attach(EnKai.events[name .. ".y2"].TextfieldChanged, function ()
+	Command.Event.Attach(LibEKL.Events[name .. ".y2"].TextfieldChanged, function ()
 
 		local mapInfo = uiElements.mapUI:GetMapInfo()
 		mapInfo.y2 = tonumber(y2:GetText())
