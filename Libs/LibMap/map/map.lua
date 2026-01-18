@@ -47,7 +47,7 @@ local _playerDeath = false
 local function _fctCheckForColossus (values)
 
   if _mapColossus == nil then
-    local data = LibMap.zip.uncompress (colossusData)
+    local data = LibEKL.Zip.Uncompress (colossusData)
     local err, func = pcall(loadstring, "return {" .. data .. "}")
     if func ~= nil then _mapColossus = func() end
     
@@ -77,7 +77,7 @@ local function _fctCheckForNPC (values)
 	
 	if _mapNPC [zone] == nil then
 		if NPCData[zone] == nil then return false end
-		local data = LibEKL.zip.uncompress (NPCData[zone])
+		local data = LibEKL.Zip.uncompress (NPCData[zone])
 		local err, func = pcall(loadstring, "return " .. data .. "")
 		if func ~= nil then _mapNPC[zone] = func() end
 
