@@ -326,8 +326,6 @@ function internalFunc.UpdateWaypointArrows ()
 
   for key, details in pairs (data.waypoints) do
   
---	dump (details)
---	dump (mapInfo)
     if details.coordX >= mapInfo.x1 and details.coordX <= mapInfo.x2 and details.coordZ >= mapInfo.y1 and details.coordZ <= mapInfo.y2 then 
   
       if details.gfx == nil then
@@ -340,7 +338,8 @@ function internalFunc.UpdateWaypointArrows ()
       local stroke = { thickness = 3, r = 1, g = 0.8, b = 0.4, a = 1}
       local headX, headY = 0, 0
           
-      if details.player == true then stroke = { thickness = 3, r = 0.463, g = 0.741, b = 0.722, a = 1} end
+      --if details.player == true then stroke = { thickness = 3, r = 0.463, g = 0.741, b = 0.722, a = 1} end
+	  if details.player == true then stroke = { thickness = 3, r = 0.15, g = 0.85, b = 0.79, a = .6} end	  
       
       if details.coordX <= coordX then
       

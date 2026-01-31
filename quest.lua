@@ -115,18 +115,26 @@ local function processObjectives (key, questName, domain, objectiveList, isCompl
 
 						local id = "q-" .. key .. "-o" .. idx1 .. "-i" .. idx2
 
-						--print (id)
-
 						local thisEntry = { id = id, type = "QUEST.POINT", descList = { objectiveList[idx1].description }, 
 											title = questName,
 											coordX = indicators[idx2].x, coordY = indicators[idx2].y, coordZ = indicators[idx2].z }
 
+						local isCarnage = false
+						if stringFind(questName, lang.questCarnage) then							
+							thisEntry.type = "QUEST.CARNAGEPOINT"
+							isCarnage = true
+						end
+
 						if isComplete == true then
 							thisEntry.type = "QUEST.RETURN"	
-						elseif indicators[idx2].radius and indicators[idx2].radius <=30 then 
-							thisEntry.type = "QUEST.POINT"
+						elseif indicators[idx2].radius and indicators[idx2].radius <=30 then
+							if isCarnage then							
+								thisEntry.type = "QUEST.CARNAGEPOINT"
+							else
+								thisEntry.type = "QUEST.POINT"
+							end
 						elseif indicators[idx2].radius and indicators[idx2].radius > 30 then 
-							if stringFind(questName, lang.questCarnage) then							
+							if isCarnage then					
 								thisEntry.type = "QUEST.CARNAGE"
 							else
 								thisEntry.type = "QUEST.AREA"
@@ -201,7 +209,7 @@ local function processQuests (questList, addFlag)
 				end
 				
 				data.currentQuestList[key] = {}
-				
+
 				hasAdd, addInfo = processObjectives (key, details.name, details.domain, objectives, details.complete, hasAdd, addInfo)
 			end -- if
 		end -- for

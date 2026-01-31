@@ -15,16 +15,18 @@ local _roundPath = {	{xProportional = 0.5, yProportional = 0},
 data.resourceData = {
 	["RESOURCE.ORE"]		= { gfxType = "canvas", path = _roundPath, stroke = {r = 0, g = 0, b = 0, a = 1, thickness = 2}, fill = { type = "solid", r = 0.9, g = 0.78, b = 0.26, a = 0.3}, width = 16, height = 16, layer = 2},
 	["RESOURCE.WOOD"]		= { gfxType = "canvas", path = _roundPath, stroke = {r = 0, g = 0, b = 0, a = 1, thickness = 2}, fill = { type = "solid", r = 0.2, g = 0.11, b = 0.06, a = 0.5}, width = 16, height = 16, layer = 2},
-	["RESOURCE.PLANTS"]		= { gfxType = "canvas", path = _roundPath, stroke = {r = 0, g = 0, b = 0, a = 1, thickness = 2}, fill = { type = "solid", r = 0.49, g = 0.78, b = 0.51, a = 0.3}, width = 16, height = 16, layer = 2},
-	["RESOURCE.FISH"]		= { gfxType = "canvas", path = _roundPath, stroke = {r = 0, g = 0, b = 0, a = 1, thickness = 2}, fill = { type = "solid", r = 0, g = 0, b = 1, a = 0.3}, width = 16, height = 16, layer = 2},
-	["RESOURCE.ARTIFACT"]	= { gfxType = "canvas", path = _roundPath, stroke = {r = 0, g = 0, b = 0, a = 1, thickness = 2}, fill = { type = "solid", r = .8, g = .8, b = .8, a = 0.5}, width = 16, height = 16, layer = 2},
-	["RESOURCE.BOAT"]		= { gfxType = "canvas", path = _roundPath, stroke = {r = 0, g = 0, b = 0, a = 1, thickness = 2}, fill = { type = "solid", r = .8, g = .8, b = .8, a = 0.5}, width = 16, height = 16, layer = 2}	
+	["RESOURCE.PLANTS"]		= { gfxType = "canvas", path = _roundPath, stroke = {r = 0, g = 0, b = 0, a = 1, thickness = 2}, fill = { type = "solid", r = 0.49, g = 0.78, b = 0.51, a = 0.3}, width = 16, height = 16, layer = 2},	
+	["RESOURCE.BOAT"]		= { gfxType = "canvas", path = _roundPath, stroke = {r = 0, g = 0, b = 0, a = 1, thickness = 2}, fill = { type = "solid", r = .8, g = .8, b = .8, a = 0.5}, width = 16, height = 16, layer = 2}	,
+  ["RESOURCE.FISH"]     = {addon = "LibMap", path = "gfx/mapIcons/iconFishingGround.png", width = 24, height = 24, layer = 2},
+  ["RESOURCE.ARTIFACT"] = {addon = "LibMap", path = "gfx/mapIcons/iconArtifact.png", width = 24, height = 24, layer = 2},
 }
 
 data.customElements = {
-  ["POI.PUZZLE"]      = {addon = "nkCartographer", path = "gfx/puzzle.png", width = 32, height = 32, minZoom = 1, layer = 81},
-  ["POI.ACHIEVEMENT"] = {path = "icon_menu_achievements.png.dds", width = 32, height = 32, minZoom = 1, layer = 81},
-  ["POI.CAIRN"]       = {addon = "nkCartographer", path = "gfx/cairn.png", width = 32, height = 32, layer = 81},
+  ["POI.PUZZLE"]      = {addon = "LibMap", path = "gfx/mapIcons/iconPuzzle.png", width = 32, height = 32, minZoom = 1, layer = 81},
+  ["POI.CAIRN"]       = {addon = "LibMap", path = "gfx/mapIcons/iconCairn.png", width = 48, height = 48, minZoom = 1, layer = 81},
+
+  ["POI.ACHIEVEMENT"] = {path = "icon_menu_achievements.png.dds", width = 32, height = 32, minZoom = 1, layer = 81},  
+  
 }
 
 data.customPOIs = {

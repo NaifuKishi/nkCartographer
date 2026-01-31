@@ -110,11 +110,14 @@ mapData.mapData = {
 }
 
 mapData.mapElements = {
-  ["UNKNOWN"]               = { path = "NPCDialogIcon_help.png.dds", width = 48, height = 48, layer = 8},
-  ["WAYPOINT"]              = { path = "indicator_waypoint_player.png.dds", width = 16, height = 16, factor = 1.5, minZoom = 0, layer = 100},
+  ["UNKNOWN"]              = { addon = "LibMap", path = "gfx/mapIcons/iconUnknown.png", width = 48, height = 48, layer = 97},  
+  ["WAYPOINT"]              = { addon = "LibMap", path = "gfx/mapIcons/iconWaypoint.png", width = 16, height = 16, factor = 1.5, minZoom = 0, layer = 100},
+
+
   ["CUSTOMPOI"]             = { path = "icon_menu_achievements.png.dds", width = 32, height = 32, factor = 1, minZoom = 0, layer = 98},
   
-  ["UNIT.PLAYER"]           = {fill = {type = "texture", source = "Rift", texture = "indicator_player_mainmap.png.dds"}, width = 64, height = 64, factor = 1, minZoom = 0, layer = 99, gfxType = "canvas", angleCorr = 90},
+  ["UNIT.PLAYER"]           = {fill = {type = "texture", source = "LibMap", texture = "gfx/mapIcons/iconPlayerPosition.png"}, width = 32, height = 32, factor = 1, minZoom = 0, layer = 99, gfxType = "canvas", angleCorr = 280},
+
   ["UNIT.PLAYERPET"]        = {path = "MainMap_I345.dds", width = 24, height = 24, minZoom = 1, layer = 98},
   ["UNIT.GROUPMEMBER"]      = {path = "indicator_group.png.dds", width = 32, height = 32, minZoom = 1, layer = 98},
   ["UNIT.RARE"]             = {path = "target_portrait_LootPinata.png.dds", width = 32, height = 32, factor = 0.7, minZoom = 1, layer = 98},
@@ -154,11 +157,13 @@ mapData.mapElements = {
   ["UNIT.MARK.29"]           = {path = "vfx_ui_mob_tag_tank_mini.png.dds", width = 16, height = 16, layer = 98},  
   ["UNIT.MARK.30"]           = {path = "vfx_ui_mob_tag_clover_mini.png.dds", width = 16, height = 16, layer = 98},
   
-  ["POI.QUESTHUB"]    = {path = "Map_QuestGroup_Icon.png.dds", width = 32, height = 32, layer = 80},
+  ["POI.CAVE"]      = { addon = "LibMap", path = "gfx/mapIcons/iconCave.png", width = 32, height = 32, layer = 99, minZoom = 1, layer = 80},
+  ["POI.PORTAL"]    = { addon = "LibMap", path = "gfx/mapIcons/iconPortal.png", width = 48, height = 48, layer = 99, minZoom = 1, layer = 80},
+  ["POI.QUESTHUB"]  = { addon = "LibMap", path = "gfx/mapIcons/iconQuestHub.png", width = 48, height = 48, layer = 99, minZoom = 1, layer = 80},
+  ["POI.OTHER"]     = { addon = "LibMap", path = "gfx/mapIcons/iconPOIOther.png", width = 32, height = 32, layer = 80},
+
   ["POI.DUNGEON"]     = {path = "Map_Instance_Icon.png.dds", width = 48, height = 48, minZoom = 1, layer = 80},
-  ["POI.OTHER"]       = {path = "Map_POI_Icon.png.dds", width = 32, height = 32, layer = 80},
-  ["POI.CAVE"]        = {path = "Map_Cave_Icon.png.dds", width = 32, height = 32, layer = 80},
-  ["POI.PORTAL"]      = {path = "Map_Travel.png.dds", width = 32, height = 32, minZoom = 1, layer = 81},
+  
   ["POI.PORTALWORLD"] = {path = "map_travel_ep1.png.dds", width = 32, height = 32, minZoom = 1, layer = 81},
   
   ["VENDOR.OTHER"] = { path = "indicator_merchant.png.dds", width = 32, height = 32},
@@ -197,31 +202,34 @@ mapData.mapElements = {
   ["TEACHER.MAGE"] = { path = "indicator_trainerclass.png.dds", width = 32, height = 32},
   ["TEACHER.PRIMALIST"] = { path = "indicator_trainerclass.png.dds", width = 32, height = 32},
   
-  ["QUEST.RETURN"] = { path = "NPCDialogIcon_questcomplete.png.dds", width = 32, height = 32, minZoom = 1, layer = 99},
+  ["QUEST.START"] = { addon = "LibMap", path = "gfx/mapIcons/iconQuestStart.png", width = 32, height = 32, layer = 99, minZoom = 1, layer = 97},
+  ["QUEST.RETURN"] = { addon = "LibMap", path = "gfx/mapIcons/iconQuestReturn.png", width = 32, height = 32, layer = 99, minZoom = 1, layer = 97},
+  ["QUEST.DAILY"] = { addon = "LibMap", path = "gfx/mapIcons/iconQuestRepeatable.png", width = 32, height = 32, layer = 99, minZoom = 1, layer = 97},
+  ["QUEST.MISSING"] = { addon = "LibMap", path = "gfx/mapIcons/iconQuestUnavailable.png", width = 32, height = 32, layer = 99, minZoom = 1, layer = 97},
+  ["QUEST.CARNAGEPOINT"] = { addon = "LibMap", path = "gfx/mapIcons/iconCarnage.png", width = 32, height = 32, layer = 99, minZoom = 1},
+  ["QUEST.POINT"] = { addon = "LibMap", path = "gfx/mapIcons/iconQuestPoint.png", width = 48, height = 48, layer = 99, minZoom = 1},
+
   ["QUEST.PROGRESS"] = { path = "NPCDialogIcon_questprogress.png.dds", width = 32, height = 32, minZoom = 1, layer = 98},
-  ["QUEST.START"] = { path = "indicator_quest_new.png.dds", width = 32, height = 32, layer = 99, minZoom = 1, layer = 97},
   ["QUEST.PVPDAILY"] = { path = "NPCDialogIcon_questrepeat_pvpD.png.dds", width = 32, height = 32, layer = 99, minZoom = 1, layer = 97},
-  ["QUEST.DAILY"] = { path = "indicator_quest_repeatable.png.dds", width = 32, height = 32, layer = 99, minZoom = 1, layer = 97},
-  ["QUEST.MISSING"] = { path = "indicator_quest_highlevel.png.dds", width = 32, height = 32, layer = 98, minZoom = 1, layer = 97},
-  --["QUEST.POINT"]    = {path = "indicator_track.png.dds", width = 32, height = 32, layer = 98},
-  ["QUEST.POINT"] = { fill = {source = "Rift", type = "texture", texture = "indicator_track.png.dds"}, width = 32, height = 32, minZoom = 1, layer = 98, anim = "rotation"},
-  --["QUEST.CARNAGE"] = { path = "indicator_track_carnage.png.dds", width = 32, height = 32, layer = 99},
   ["QUEST.ZONEEVENT"] = { fill = {source = "Rift", type = "texture", texture = "indicator_track_zonequest.png.dds"}, width = 32, height = 32, minZoom = 1, layer = 98, anim = "rotation"},
-  --["QUEST.POINT"] = { addon = "LibMap", path = "gfx/iconQuest.png", width = 18, height = 18, minZoom = 1, layer = 99},
+
+
   ["QUEST.AREA"] = { gfxType = "canvas", stroke = {r = 0.9, g = 0.6, b = 0.2, a = 1, thickness = 2}, fill = { type = "solid", r = 1, g = 0.7, b = 0.3, a = 0.2}, layer = 2},
   ["QUEST.CARNAGE"] = { gfxType = "canvas", stroke = {r = 0.8, g = 0.2, b = 0.2, a = 1, thickness = 2}, fill = { type = "solid", r = 1, g = 0.4, b = 0.4, a = 0.2}, layer = 2},
   
   ["PORTAL"] = {path = "Map_Travel.png.dds", width = 32, height = 32},
-    
-  ["RIFT.POST.FIRE"] = {path = "indicator_foothold_fire.png.dds", width = 48, height = 48, minZoom = 1},
-  ["RIFT.POST.AIR"] = {path = "indicator_foothold_air.png.dds", width = 48, height = 48, minZoom = 1},
-  ["RIFT.POST.DEATH"] = {path = "indicator_foothold_death.png.dds", width = 48, height = 48, minZoom = 1},
-  ["RIFT.POST.LIFE"] = {path = "indicator_foothold_life.png.dds", width = 48, height = 48, minZoom = 1},
-  ["RIFT.POST.WATER"] = {path = "indicator_foothold_water.png.dds", width = 48, height = 48, minZoom = 1},
-  ["RIFT.POST.EARTH"] = {path = "indicator_foothold_earth.png.dds", width = 48, height = 48, minZoom = 1},
-  ["RIFT.POST.NEUTRAL"] = {path = "indicator_foothold_neutral.png.dds", width = 48, height = 48, minZoom = 1},
+  
+  ["RIFT.POST.FIRE"]    = { addon = "LibMap", path = "gfx/mapIcons/iconFootholdFire.png", width = 48, height = 48, minZoom = 1},
+  ["RIFT.POST.AIR"]     = { addon = "LibMap", path = "gfx/mapIcons/iconFootholdAir.png", width = 48, height = 48, minZoom = 1},
+  ["RIFT.POST.DEATH"]   = { addon = "LibMap", path = "gfx/mapIcons/iconFootholdDeath.png", width = 48, height = 48, minZoom = 1},
+  ["RIFT.POST.LIFE"]    = { addon = "LibMap", path = "gfx/mapIcons/iconFootholdLife.png", width = 48, height = 48, minZoom = 1},
+  ["RIFT.POST.WATER"]   = { addon = "LibMap", path = "gfx/mapIcons/iconFootholdWater.png", width = 48, height = 48, minZoom = 1},
+  ["RIFT.POST.EARTH"]   = { addon = "LibMap", path = "gfx/mapIcons/iconFootholdEarth.png", width = 48, height = 48, minZoom = 1},
+  ["RIFT.POST.NEUTRAL"] = { addon = "LibMap", path = "gfx/mapIcons/iconFootholdNeutral.png", width = 48, height = 48, minZoom = 1},  
+
   ["RIFT.POST.GUARDIAN"] = {path = "indicator_foothold_guardian.png.dds", width = 48, height = 48, minZoom = 1},
   ["RIFT.POST.DEFIANT"] = {path = "indicator_foothold_defiant.png.dds", width = 48, height = 48, minZoom = 1},
+
   ["RIFT.INVASION.AIR"] = {path = "indicator_invasion_air.png.dds", width = 32, height = 32, minZoom = 1},
   ["RIFT.INVASION.DEATH"] = {path = "indicator_invasion_death.png.dds", width = 32, height = 32, minZoom = 1},
   ["RIFT.INVASION.LIFE"] = {path = "indicator_invasion_life.png.dds", width = 32, height = 32, minZoom = 1},
@@ -239,13 +247,23 @@ mapData.mapElements = {
   
   ["RIFT.CRAFTING"]				  = {fill = {type = "texture", source = "LibMap", texture = "gfx/riftCrafting.png"}, width = 36, height = 36, minZoom = 1, anim = "rotation"},
   
-  ["RIFT.MINOR.ACTIVE.FIRE"]      = {fill = {type = "texture", source = "LibMap", texture = "gfx/riftFire.png"}, width = 36, height = 36, minZoom = 1, anim = "rotation"},
-  ["RIFT.MINOR.ACTIVE.WATER"]     = {fill = {type = "texture", source = "LibMap", texture = "gfx/riftWater.png"}, width = 36, height = 36, minZoom = 1, anim = "rotation"},
-  ["RIFT.MINOR.ACTIVE.LIFE"]      = {fill = {type = "texture", source = "LibMap", texture = "gfx/riftLife.png"}, width = 36, height = 36, minZoom = 1, anim = "rotation"},
-  ["RIFT.MINOR.ACTIVE.AIR"]       = {fill = {type = "texture", source = "LibMap", texture = "gfx/riftAir.png"}, width = 36, height = 36, minZoom = 1, anim = "rotation"},
-  ["RIFT.MINOR.ACTIVE.EARTH"]     = {fill = {type = "texture", source = "LibMap", texture = "gfx/riftEarth.png"}, width = 36, height = 36, minZoom = 1, anim = "rotation"},
-  ["RIFT.MINOR.ACTIVE.DEATH"]     = {fill = {type = "texture", source = "LibMap", texture = "gfx/riftDeath.png"}, width = 36, height = 36, minZoom = 1, anim = "rotation"},
+  ["RIFT.MINOR.ACTIVE.FIRE"]     = {fill = {type = "texture", source = "LibMap", texture = "gfx/mapIcons/iconRiftFire.png"}, width = 64, height = 64, anim = "rotation", minZoom = 2},
+  ["RIFT.MINOR.ACTIVE.WATER"]     = {fill = {type = "texture", source = "LibMap", texture = "gfx/mapIcons/iconRiftWater.png"}, width = 64, height = 64, anim = "rotation", minZoom = 2},
+  ["RIFT.MINOR.ACTIVE.LIFE"]     = {fill = {type = "texture", source = "LibMap", texture = "gfx/mapIcons/iconRiftLife.png"}, width = 64, height = 64, anim = "rotation", minZoom = 2},
+  ["RIFT.MINOR.ACTIVE.AIR"]     = {fill = {type = "texture", source = "LibMap", texture = "gfx/mapIcons/iconRiftAir.png"}, width = 64, height = 64, anim = "rotation", minZoom = 2},
+  ["RIFT.MINOR.ACTIVE.EARTH"]     = {fill = {type = "texture", source = "LibMap", texture = "gfx/mapIcons/iconRiftDeath.png"}, width = 64, height = 64, anim = "rotation", minZoom = 2},
+  ["RIFT.MINOR.ACTIVE.DEATH"]     = {fill = {type = "texture", source = "LibMap", texture = "gfx/mapIcons/iconRiftEarth.png"}, width = 64, height = 64, anim = "rotation", minZoom = 2},  
+
   ["RIFT.MINOR.ACTIVE.NIGHTMARE"] = {fill = {type = "texture", source = "LibMap", texture = "gfx/riftNightmare.png"}, width = 34, height = 34, minZoom = 1, anim = "rotation"},
+
+  ["RIFT.MAJOR.ACTIVE.FIRE"]     = {fill = {type = "texture", source = "LibMap", texture = "gfx/mapIcons/iconRiftMajorFire.png"}, width = 64, height = 64, anim = "rotation", minZoom = 2},
+  ["RIFT.MAJOR.ACTIVE.WATER"]     = {fill = {type = "texture", source = "LibMap", texture = "gfx/mapIcons/iconRifMajortWater.png"}, width = 64, height = 64, anim = "rotation", minZoom = 2},
+  ["RIFT.MAJOR.ACTIVE.LIFE"]     = {fill = {type = "texture", source = "LibMap", texture = "gfx/mapIcons/iconRiftMajorLife.png"}, width = 64, height = 64, anim = "rotation", minZoom = 2},
+  ["RIFT.MAJOR.ACTIVE.AIR"]     = {fill = {type = "texture", source = "LibMap", texture = "gfx/mapIcons/iconRiftMajorAir.png"}, width = 64, height = 64, anim = "rotation", minZoom = 2},
+  ["RIFT.MAJOR.ACTIVE.EARTH"]     = {fill = {type = "texture", source = "LibMap", texture = "gfx/mapIcons/iconRiftMajorDeath.png"}, width = 64, height = 64, anim = "rotation", minZoom = 2},
+  ["RIFT.MAJOR.ACTIVE.DEATH"]     = {fill = {type = "texture", source = "LibMap", texture = "gfx/mapIcons/iconRiftMajorEarth.png"}, width = 64, height = 64, anim = "rotation", minZoom = 2},  
+
+  ["RIFT.MAJOR.ACTIVE.NIGHTMARE"] = {fill = {type = "texture", source = "LibMap", texture = "gfx/riftNightmare.png"}, width = 34, height = 34, minZoom = 1, anim = "rotation"},  
   
   ["RIFT.MINOR.UNSTABLE.FIRE"]      = {fill = {type = "texture", source = "LibMap", texture = "gfx/riftFire.png"}, width = 36, height = 36, minZoom = 1, anim = "rotation"},
   ["RIFT.MINOR.UNSTABLE.WATER"]     = {fill = {type = "texture", source = "LibMap", texture = "gfx/riftWater.png"}, width = 36, height = 36, minZoom = 1, anim = "rotation"},
@@ -271,14 +289,6 @@ mapData.mapElements = {
   ["RIFT.EXPERT.UNSTABLE.DEATH"]     = {fill = {type = "texture", source = "LibMap", texture = "gfx/riftDeath.png"}, width = 36, height = 36, minZoom = 1, anim = "rotation"},
   ["RIFT.EXPERT.UNSTABLE.NIGHTMARE"] = {fill = {type = "texture", source = "LibMap", texture = "gfx/riftNightmare.png"}, width = 34, height = 34, minZoom = 1, anim = "rotation"},
   
-  ["RIFT.MAJOR.ACTIVE.FIRE"]      = {fill = {type = "texture", source = "LibMap", texture = "gfx/riftFire.png"}, width = 36, height = 36, minZoom = 1, anim = "rotation"},
-  ["RIFT.MAJOR.ACTIVE.WATER"]     = {fill = {type = "texture", source = "LibMap", texture = "gfx/riftWater.png"}, width = 36, height = 36, minZoom = 1, anim = "rotation"},
-  ["RIFT.MAJOR.ACTIVE.LIFE"]      = {fill = {type = "texture", source = "LibMap", texture = "gfx/riftLife.png"}, width = 36, height = 36, minZoom = 1, anim = "rotation"},
-  ["RIFT.MAJOR.ACTIVE.AIR"]       = {fill = {type = "texture", source = "LibMap", texture = "gfx/riftAir.png"}, width = 36, height = 36, minZoom = 1, anim = "rotation"},
-  ["RIFT.MAJOR.ACTIVE.EARTH"]     = {fill = {type = "texture", source = "LibMap", texture = "gfx/riftEarth.png"}, width = 36, height = 36, minZoom = 1, anim = "rotation"},
-  ["RIFT.MAJOR.ACTIVE.DEATH"]     = {fill = {type = "texture", source = "LibMap", texture = "gfx/riftDeath.png"}, width = 36, height = 36, minZoom = 1, anim = "rotation"},
-  ["RIFT.MAJOR.ACTIVE.NIGHTMARE"] = {fill = {type = "texture", source = "LibMap", texture = "gfx/riftNightmare.png"}, width = 34, height = 34, minZoom = 1, anim = "rotation"},
-  
   ["RIFT.MAJOR.UNSTABLE.FIRE"]      = {fill = {type = "texture", source = "LibMap", texture = "gfx/riftFire.png"}, width = 36, height = 36, minZoom = 1, anim = "rotation"},
   ["RIFT.MAJOR.UNSTABLE.WATER"]     = {fill = {type = "texture", source = "LibMap", texture = "gfx/riftWater.png"}, width = 36, height = 36, minZoom = 1, anim = "rotation"},
   ["RIFT.MAJOR.UNSTABLE.LIFE"]      = {fill = {type = "texture", source = "LibMap", texture = "gfx/riftLife.png"}, width = 36, height = 36, minZoom = 1, anim = "rotation"},
@@ -303,8 +313,9 @@ mapData.mapElements = {
   ["RIFT.RAID.UNSTABLE.DEATH"]     = {fill = {type = "texture", source = "LibMap", texture = "gfx/riftDeath.png"}, width = 36, height = 36, minZoom = 1, anim = "rotation"},
   ["RIFT.RAID.UNSTABLE.NIGHTMARE"] = {fill = {type = "texture", source = "LibMap", texture = "gfx/riftNightmare.png"}, width = 34, height = 34, minZoom = 1, anim = "rotation"},
 
-  ["RIFT.MINOR.UNOPENED"] = {path = "RiftTear_BG.png.dds", width = 64, height = 64, factor = 0.5, minZoom = 1},
-  ["RIFT.MAJOR.UNOPENED"] = {path = "RiftTear_BG.png.dds", width = 64, height = 64, factor = 0.5, minZoom = 1},
+  ["RIFT.MINOR.UNOPENED"] = { addon = "LibMap", path = "gfx/mapIcons/iconRiftMinorUnopened.png", width = 64, height = 64, factor = 0.5, minZoom = 1},
+  ["RIFT.MAJOR.UNOPENED"] = { addon = "LibMap", path = "gfx/mapIcons/iconRiftMajorUnopened.png", width = 64, height = 64, factor = 0.5, minZoom = 1},
+
   ["RIFT.RAID.UNOPENED"] = {path = "RiftEpicenter_Yellow.png.dds", width = 64, height = 64, factor = 0.5, minZoom = 1},
   
   ["RIFT.STRONGHOLD.FIRE"] = {path = "indicator_stronghold_fire.png.dds", width = 64, height = 64, minZoom = 1},
@@ -375,11 +386,11 @@ mapData.mapElements = {
   ["RESOURCE.PLANTS.DUSKGLORY"] = {path = "indicator_gathering_plants.png.dds", width = 32, height = 32, minZoom = 1, layer = 10}, 
   ["RESOURCE.PLANTS.RAZORBRUSH"] = {path = "indicator_gathering_plants.png.dds", width = 32, height = 32, minZoom = 1, layer = 10}, 
   ["RESOURCE.PLANTS.FAECAPMUSHROOMS"] = {path = "indicator_gathering_plants.png.dds", width = 32, height = 32, minZoom = 1, layer = 10}, 
-  ["RESOURCE.PLANTS.XARTHIANTENDRIL"] = {path = "indicator_gathering_plants.png.dds", width = 32, height = 32, minZoom = 1, layer = 10}, 
-                            
-  ["RESOURCE.FISH"] = {path = "indicator_gathering_fish.png.dds", width = 32, height = 32, minZoom = 1, layer = 10},
+  ["RESOURCE.PLANTS.XARTHIANTENDRIL"] = {path = "indicator_gathering_plants.png.dds", width = 32, height = 32, minZoom = 1, layer = 10},                             
   
-  ["RESOURCE.ARTIFACT"] = {path = "indicator_tracking.png.dds", width = 16, height = 16, minZoom = 1, layer = 10},
+  ["RESOURCE.ARTIFACT"] = {addon = "LibMap", path = "gfx/map/iconArtefact.png", width = 35, height = 36, minZoom = 10},
+
+  ["RESOURCE.FISH"]     = {addon = "LibMap", path = "gfx/mapIcons/iconFishingGround.png", width = 24, height = 24, layer = 2},
   ["RESOURCE.BOAT"] = {path = "Fish_icon.png.dds", width = 32, height = 32, minZoom = 1, layer = 10},
     
   ["PROFESSION.TEACHER.SURVIVAL"] = { path = "indicator_trainerskill.png.dds", width = 32, height = 32},
