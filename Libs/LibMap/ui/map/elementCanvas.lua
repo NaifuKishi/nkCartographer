@@ -239,6 +239,13 @@ local function _uiMapElementCanvas(name, parent)
 				local scale = 1 / thisMapData.width * mapElement:GetWidth()
 
 				LibMap.fx.register (effectName, mapElement, {id = "rotateCanvas", speed = (thisAnimationSpeed or 0), scale = scale, path = path, fill = fill  })
+			elseif thisMapData.anim == "pulse" then
+				effectName = name .. ".pulse"
+
+				local animZoom = thisMapData.animZoom or 1
+				local scale = 1 / thisMapData.width * mapElement:GetWidth()
+
+				LibMap.fx.register (effectName, mapElement, {id = "pulseCanvas", speed = (thisAnimationSpeed or 0), scale = scale, path = path, fill = fill  })
 			else
 				effectName = nil
 			end

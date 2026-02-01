@@ -106,6 +106,19 @@ function internal.processFX()
 				end    
 			end
 		elseif details.effect.id == "pulseCanvas" then
+			if _fxStore[id].lastUpdate ~= nil then
+				if now - _fxStore[id].lastUpdate > (details.effect.speed or 1) and details.frame:GetVisible() == true then
+					_fxStore[id].lastUpdate = now
+
+					-- Calculate the pulse factor based on the current time
+					local pulseFactor = 1 + (details.effect.amplitude or 0.1) * math.sin(now * (details.effect.frequency or 1))
+
+					local m = LibEKL.Tools.Gfx.Pulse(details.frame, pulseFactor)
+					-- Apply the pulse effect to the frame
+					details.effect.fill.transform = m:Get()    
+					details.frame:SetShape(details.effect.path, details.effect.fill, nil)
+				end
+			end
 		end
 	end
 

@@ -10,6 +10,8 @@ local data        = privateVars.data
 local mapData     = privateVars.mapData
 local colossusData= privateVars.colossusData
 
+local SIZE_CITY = 20 -- all icons which should be visible mostly on the minimap while in town
+
 ---------- set internal data ---------
 
 mapData.mapData = {
@@ -166,7 +168,8 @@ mapData.mapElements = {
   
   ["POI.PORTALWORLD"] = {path = "map_travel_ep1.png.dds", width = 32, height = 32, minZoom = 1, layer = 81},
   
-  ["VENDOR.OTHER"] = { path = "indicator_merchant.png.dds", width = 32, height = 32},
+  ["VENDOR.OTHER"]     = { addon = "LibMap", path = "gfx/mapIcons/iconVendor.png", width = SIZE_CITY, height = SIZE_CITY},
+
   ["VENDOR.MOUNTS"] = { path = "indicator_merchant.png.dds", width = 32, height = 32},
   ["VENDOR.DIMENSIONS"] = { path = "indicator_merchant.png.dds", width = 32, height = 32},
   ["VENDOR.PLANES"] = { path = "indicator_merchant.png.dds", width = 32, height = 32},
@@ -175,16 +178,19 @@ mapData.mapElements = {
   ["VENDOR.PROFESSION"] = { path = "indicator_merchant.png.dds", width = 32, height = 32},
   ["VENDOR.DYES"] = { path = "indicator_merchant.png.dds", width = 32, height = 32},
   
-  ["QUARTERMASTER.PLANES"] = { path = "indicator_merchant.png.dds", width = 32, height = 32},
-  ["QUARTERMASTER.CONSUMABLE"] = { path = "indicator_merchant.png.dds", width = 32, height = 32},
-  ["QUARTERMASTER.PVP"] = { path = "indicator_merchant.png.dds", width = 32, height = 32},
+  ["QUARTERMASTER.PLANES"]      = { addon = "LibMap", path = "gfx/mapIcons/iconQuartermaster.png", width = SIZE_CITY, height = SIZE_CITY},
+  ["QUARTERMASTER.CONSUMABLE"]  = { addon = "LibMap", path = "gfx/mapIcons/iconQuartermaster.png", width = SIZE_CITY, height = SIZE_CITY},
+  ["QUARTERMASTER.PVP"]         = { addon = "LibMap", path = "gfx/mapIcons/iconQuartermaster.png", width = SIZE_CITY, height = SIZE_CITY},
   
-  ["VARIA.LETTERBOX"] = { path = "indicator_mailbox.png.dds", width = 32, height = 32},
+  ["VARIA.LETTERBOX"]     = { addon = "LibMap", path = "gfx/mapIcons/iconMailbox.png", width = 32, height = 32},
+
   ["VARIA.HEALER"] = { path = "NPCDialogIcon_soulmender.png.dds", width = 32, height = 32},
-  ["VARIA.BANK"] = { path = "indicator_banker.png.dds", width = 32, height = 32},
   ["VARIA.GUILDBANK"] = { path = "indicator_banker.png.dds", width = 32, height = 32},
   ["VARIA.GUILDQUESTGIVER"] = { path = "indicator_quest_new.png.dds", width = 32, height = 32},
-  ["VARIA.AUCTIONHOUSE"] = { path = "indicator_auctioneer.png.dds", width = 32, height = 32},
+  
+  ["VARIA.BANK"]     = { addon = "LibMap", path = "gfx/mapIcons/iconBank.png", width = 32, height = 32},
+  ["VARIA.AUCTIONHOUSE"]     = { addon = "LibMap", path = "gfx/mapIcons/iconAuctionHouse.png", width = 32, height = 32},
+
   ["VARIA.STYLIST"] = { path = "indicator_barbershop.png.dds", width = 32, height = 32},
   ["VARIA.PLANEVOUCHERS"] = { path = "indicator_merchant.png.dds", width = 32, height = 32},
   ["VARIA.NPC"] = { path = "MainMap_I337.dds", width = 32, height = 32},
@@ -195,19 +201,21 @@ mapData.mapElements = {
   ["VARIA.NPC.PVP"] = { path = "NPCDialogIcon_warfrontmaster.png.dds", width = 32, height = 32},  
   ["VARIA.NPC.REP"] = { path = "NPCDialog_delivery_quest.png.dds", width = 32, height = 32},  
   
-  
-  ["TEACHER.ROGUE"] = { path = "indicator_trainerclass.png.dds", width = 32, height = 32},
-  ["TEACHER.CLERIC"] = { path = "indicator_trainerclass.png.dds", width = 32, height = 32},
-  ["TEACHER.WARRIOR"] = { path = "indicator_trainerclass.png.dds", width = 32, height = 32},
-  ["TEACHER.MAGE"] = { path = "indicator_trainerclass.png.dds", width = 32, height = 32},
-  ["TEACHER.PRIMALIST"] = { path = "indicator_trainerclass.png.dds", width = 32, height = 32},
-  
-  ["QUEST.START"] = { addon = "LibMap", path = "gfx/mapIcons/iconQuestStart.png", width = 32, height = 32, layer = 99, minZoom = 1, layer = 97},
-  ["QUEST.RETURN"] = { addon = "LibMap", path = "gfx/mapIcons/iconQuestReturn.png", width = 32, height = 32, layer = 99, minZoom = 1, layer = 97},
-  ["QUEST.DAILY"] = { addon = "LibMap", path = "gfx/mapIcons/iconQuestRepeatable.png", width = 32, height = 32, layer = 99, minZoom = 1, layer = 97},
-  ["QUEST.MISSING"] = { addon = "LibMap", path = "gfx/mapIcons/iconQuestUnavailable.png", width = 32, height = 32, layer = 99, minZoom = 1, layer = 97},
-  ["QUEST.CARNAGEPOINT"] = { addon = "LibMap", path = "gfx/mapIcons/iconCarnage.png", width = 32, height = 32, layer = 99, minZoom = 1},
-  ["QUEST.POINT"] = { addon = "LibMap", path = "gfx/mapIcons/iconQuestPoint.png", width = 48, height = 48, layer = 99, minZoom = 1},
+  ["TEACHER.ROGUE"]     = { addon = "LibMap", path = "gfx/mapIcons/iconTrainer.png", width = SIZE_CITY, height = SIZE_CITY},
+  ["TEACHER.CLERIC"]     = { addon = "LibMap", path = "gfx/mapIcons/iconTrainer.png", width = SIZE_CITY, height = SIZE_CITY},
+  ["TEACHER.WARRIOR"]     = { addon = "LibMap", path = "gfx/mapIcons/iconTrainer.png", width = SIZE_CITY, height = SIZE_CITY},
+  ["TEACHER.MAGE"]     = { addon = "LibMap", path = "gfx/mapIcons/iconTrainer.png", width = SIZE_CITY, height = SIZE_CITY},
+  ["TEACHER.PRIMALIST"]     = { addon = "LibMap", path = "gfx/mapIcons/iconTrainer.png", width = SIZE_CITY, height = SIZE_CITY},
+
+  ["QUEST.START"] = { addon = "LibMap", path = "gfx/mapIcons/iconQuestStart.png", width = 48, height = 48, layer = 99, minZoom = 1, layer = 97},
+  ["QUEST.RETURN"] = { addon = "LibMap", path = "gfx/mapIcons/iconQuestReturn.png", width = 48, height = 48, layer = 99, minZoom = 1, layer = 97},
+  ["QUEST.DAILY"] = { addon = "LibMap", path = "gfx/mapIcons/iconQuestRepeatable.png", width = 48, height = 48, layer = 99, minZoom = 1, layer = 97},
+  ["QUEST.MISSING"] = { addon = "LibMap", path = "gfx/mapIcons/iconQuestUnavailable.png", width = 48, height = 48, layer = 99, minZoom = 1, layer = 97},
+  --["QUEST.CARNAGEPOINT"] = { addon = "LibMap", path = "gfx/mapIcons/iconCarnage.png", width = 48, height = 48, layer = 99, minZoom = 1},
+  --["QUEST.POINT"] = { addon = "LibMap", path = "gfx/mapIcons/iconQuestPoint.png", width = 48, height = 48, layer = 99, minZoom = 1, anim = "pulse"},
+
+  ["QUEST.POINT"] = {fill = {type = "texture", source = "LibMap", texture = "gfx/mapIcons/iconQuestPoint.png"}, width = 48, height = 48, anim="pulse", minZoom = 1},
+  ["QUEST.CARNAGEPOINT"] = {fill = {type = "texture", source = "LibMap", texture = "gfx/mapIcons/iconCarnage.png"}, width = 48, height = 48, anim="pulse", minZoom = 1},
 
   ["QUEST.PROGRESS"] = { path = "NPCDialogIcon_questprogress.png.dds", width = 32, height = 32, minZoom = 1, layer = 98},
   ["QUEST.PVPDAILY"] = { path = "NPCDialogIcon_questrepeat_pvpD.png.dds", width = 32, height = 32, layer = 99, minZoom = 1, layer = 97},
@@ -219,13 +227,13 @@ mapData.mapElements = {
   
   ["PORTAL"] = {path = "Map_Travel.png.dds", width = 32, height = 32},
   
-  ["RIFT.POST.FIRE"]    = { addon = "LibMap", path = "gfx/mapIcons/iconFootholdFire.png", width = 48, height = 48, minZoom = 1},
-  ["RIFT.POST.AIR"]     = { addon = "LibMap", path = "gfx/mapIcons/iconFootholdAir.png", width = 48, height = 48, minZoom = 1},
-  ["RIFT.POST.DEATH"]   = { addon = "LibMap", path = "gfx/mapIcons/iconFootholdDeath.png", width = 48, height = 48, minZoom = 1},
-  ["RIFT.POST.LIFE"]    = { addon = "LibMap", path = "gfx/mapIcons/iconFootholdLife.png", width = 48, height = 48, minZoom = 1},
-  ["RIFT.POST.WATER"]   = { addon = "LibMap", path = "gfx/mapIcons/iconFootholdWater.png", width = 48, height = 48, minZoom = 1},
-  ["RIFT.POST.EARTH"]   = { addon = "LibMap", path = "gfx/mapIcons/iconFootholdEarth.png", width = 48, height = 48, minZoom = 1},
-  ["RIFT.POST.NEUTRAL"] = { addon = "LibMap", path = "gfx/mapIcons/iconFootholdNeutral.png", width = 48, height = 48, minZoom = 1},  
+  ["RIFT.POST.FIRE"]    = { addon = "LibMap", path = "gfx/mapIcons/iconFootholdFire.png", width = 32, height = 32, minZoom = 1},
+  ["RIFT.POST.AIR"]     = { addon = "LibMap", path = "gfx/mapIcons/iconFootholdAir.png", width = 32, height = 32, minZoom = 1},
+  ["RIFT.POST.DEATH"]   = { addon = "LibMap", path = "gfx/mapIcons/iconFootholdDeath.png", width = 32, height = 32, minZoom = 1},
+  ["RIFT.POST.LIFE"]    = { addon = "LibMap", path = "gfx/mapIcons/iconFootholdLife.png", width = 32, height = 32, minZoom = 1},
+  ["RIFT.POST.WATER"]   = { addon = "LibMap", path = "gfx/mapIcons/iconFootholdWater.png", width = 32, height = 32, minZoom = 1},
+  ["RIFT.POST.EARTH"]   = { addon = "LibMap", path = "gfx/mapIcons/iconFootholdEarth.png", width = 32, height = 32, minZoom = 1},
+  ["RIFT.POST.NEUTRAL"] = { addon = "LibMap", path = "gfx/mapIcons/iconFootholdNeutral.png", width = 32, height = 32, minZoom = 1},  
 
   ["RIFT.POST.GUARDIAN"] = {path = "indicator_foothold_guardian.png.dds", width = 48, height = 48, minZoom = 1},
   ["RIFT.POST.DEFIANT"] = {path = "indicator_foothold_defiant.png.dds", width = 48, height = 48, minZoom = 1},
@@ -392,30 +400,31 @@ mapData.mapElements = {
 
   ["RESOURCE.FISH"]     = {addon = "LibMap", path = "gfx/mapIcons/iconFishingGround.png", width = 24, height = 24, layer = 2},
   ["RESOURCE.BOAT"] = {path = "Fish_icon.png.dds", width = 32, height = 32, minZoom = 1, layer = 10},
-    
-  ["PROFESSION.TEACHER.SURVIVAL"] = { path = "indicator_trainerskill.png.dds", width = 32, height = 32},
-  ["PROFESSION.TEACHER.ARMORSMITH"] = { path = "indicator_trainerskill.png.dds", width = 32, height = 32},
-  ["PROFESSION.TEACHER.WEAPONSMITH"] = { path = "indicator_trainerskill.png.dds", width = 32, height = 32},
-  ["PROFESSION.TEACHER.BUTCHERING"] = { path = "indicator_trainerskill.png.dds", width = 32, height = 32},
-  ["PROFESSION.TEACHER.RUNECRAFTER"] = { path = "indicator_trainerskill.png.dds", width = 32, height = 32},
-  ["PROFESSION.TEACHER.FISHING"] = { path = "indicator_trainerskill.png.dds", width = 32, height = 32},
-  ["PROFESSION.TEACHER.OUTFITTER"] = { path = "indicator_trainerskill.png.dds", width = 32, height = 32},
-  ["PROFESSION.TEACHER.MINING"] = { path = "indicator_trainerskill.png.dds", width = 32, height = 32},
-  ["PROFESSION.TEACHER.ALPOTHECARY"] = { path = "indicator_trainerskill.png.dds", width = 32, height = 32},
-  ["PROFESSION.TEACHER.FORAGING"] = { path = "indicator_trainerskill.png.dds", width = 32, height = 32},
-  ["PROFESSION.TEACHER.ARTIFICER"] = { path = "indicator_trainerskill.png.dds", width = 32, height = 32},
-  ["PROFESSION.TEACHER.DREAMWEAVER"] = { path = "indicator_trainerskill.png.dds", width = 32, height = 32},
-  
-  ["PROFESSION.RECIPESELLER.GENERIC"] = { path = "indicator_merchant.png.dds", width = 32, height = 32},
-  ["PROFESSION.RECIPESELLER.DREAMWEAVER"] = { path = "indicator_merchant.png.dds", width = 32, height = 32},
-  ["PROFESSION.RECIPESELLER.RUNECRAFTER"] = { path = "indicator_merchant.png.dds", width = 32, height = 32},
-  ["PROFESSION.RECIPESELLER.OTHER"] = { path = "indicator_merchant.png.dds", width = 32, height = 32},
-  ["PROFESSION.RECIPESELLER.WEAPONSMITH"] = { path = "indicator_merchant.png.dds", width = 32, height = 32},
-  ["PROFESSION.RECIPESELLER.ARTIFICER"] = { path = "indicator_merchant.png.dds", width = 32, height = 32},
-  ["PROFESSION.RECIPESELLER.ALPOTHECARY"] = { path = "indicator_merchant.png.dds", width = 32, height = 32},
-  ["PROFESSION.RECIPESELLER.OUTFITTER"] = { path = "indicator_merchant.png.dds", width = 32, height = 32},
-  ["PROFESSION.RECIPESELLER.ARMORSMITH"] = { path = "indicator_merchant.png.dds", width = 32, height = 32},
-  ["PROFESSION.RECIPESELLER.FISHING"] = { path = "indicator_merchant.png.dds", width = 32, height = 32},
+
+  ["PROFESSION.TEACHER.SURVIVAL"]     = {addon = "LibMap", path = "gfx/mapIcons/iconCrafting.png", width = SIZE_CITY, height = SIZE_CITY},
+  ["PROFESSION.TEACHER.ARMORSMITH"]   = {addon = "LibMap", path = "gfx/mapIcons/iconCrafting.png", width = SIZE_CITY, height = SIZE_CITY},
+  ["PROFESSION.TEACHER.WEAPONSMITH"]  = {addon = "LibMap", path = "gfx/mapIcons/iconCrafting.png", width = SIZE_CITY, height = SIZE_CITY},
+  ["PROFESSION.TEACHER.BUTCHERING"]   = {addon = "LibMap", path = "gfx/mapIcons/iconCrafting.png", width = SIZE_CITY, height = SIZE_CITY},
+  ["PROFESSION.TEACHER.RUNECRAFTER"]  = {addon = "LibMap", path = "gfx/mapIcons/iconCrafting.png", width = SIZE_CITY, height = SIZE_CITY},
+  ["PROFESSION.TEACHER.FISHING"]      = {addon = "LibMap", path = "gfx/mapIcons/iconCrafting.png", width = SIZE_CITY, height = SIZE_CITY},
+  ["PROFESSION.TEACHER.OUTFITTER"]    = {addon = "LibMap", path = "gfx/mapIcons/iconCrafting.png", width = SIZE_CITY, height = SIZE_CITY},
+  ["PROFESSION.TEACHER.MINING"]       = {addon = "LibMap", path = "gfx/mapIcons/iconCrafting.png", width = SIZE_CITY, height = SIZE_CITY},
+  ["PROFESSION.TEACHER.APOTHECARY"]   = {addon = "LibMap", path = "gfx/mapIcons/iconCrafting.png", width = SIZE_CITY, height = SIZE_CITY},
+  ["PROFESSION.TEACHER.FORAGING"]     = {addon = "LibMap", path = "gfx/mapIcons/iconCrafting.png", width = SIZE_CITY, height = SIZE_CITY},
+  ["PROFESSION.TEACHER.ARTIFICER"]    = {addon = "LibMap", path = "gfx/mapIcons/iconCrafting.png", width = SIZE_CITY, height = SIZE_CITY},
+  ["PROFESSION.TEACHER.DREAMWEAVER"]  = {addon = "LibMap", path = "gfx/mapIcons/iconCrafting.png", width = SIZE_CITY, height = SIZE_CITY},
+
+  ["PROFESSION.RECIPESELLER.GENERIC"]     = {addon = "LibMap", path = "gfx/mapIcons/iconCraftingRecipe.png", width = SIZE_CITY, height = SIZE_CITY},
+  ["PROFESSION.RECIPESELLER.DREAMWEAVER"] = {addon = "LibMap", path = "gfx/mapIcons/iconCraftingRecipe.png", width = SIZE_CITY, height = SIZE_CITY},
+  ["PROFESSION.RECIPESELLER.RUNECRAFTER"] = {addon = "LibMap", path = "gfx/mapIcons/iconCraftingRecipe.png", width = SIZE_CITY, height = SIZE_CITY},
+  ["PROFESSION.RECIPESELLER.OTHER"]       = {addon = "LibMap", path = "gfx/mapIcons/iconCraftingRecipe.png", width = SIZE_CITY, height = SIZE_CITY},
+  ["PROFESSION.RECIPESELLER.ARMORSMITH"]  = {addon = "LibMap", path = "gfx/mapIcons/iconCraftingRecipe.png", width = SIZE_CITY, height = SIZE_CITY},
+  ["PROFESSION.RECIPESELLER.WEAPONSMITH"] = {addon = "LibMap", path = "gfx/mapIcons/iconCraftingRecipe.png", width = SIZE_CITY, height = SIZE_CITY},
+  ["PROFESSION.RECIPESELLER.GENERIC"]     = {addon = "LibMap", path = "gfx/mapIcons/iconCraftingRecipe.png", width = SIZE_CITY, height = SIZE_CITY},
+  ["PROFESSION.RECIPESELLER.ARTIFICER"]   = {addon = "LibMap", path = "gfx/mapIcons/iconCraftingRecipe.png", width = SIZE_CITY, height = SIZE_CITY},
+  ["PROFESSION.RECIPESELLER.APOTHECARY"]  = {addon = "LibMap", path = "gfx/mapIcons/iconCraftingRecipe.png", width = SIZE_CITY, height = SIZE_CITY},
+  ["PROFESSION.RECIPESELLER.OUTFITTER"]   = {addon = "LibMap", path = "gfx/mapIcons/iconCraftingRecipe.png", width = SIZE_CITY, height = SIZE_CITY},
+  ["PROFESSION.RECIPESELLER.FISHING"]     = {addon = "LibMap", path = "gfx/mapIcons/iconCraftingRecipe.png", width = SIZE_CITY, height = SIZE_CITY},
   
   ["PVP.CONQUEST.EXTRACTOR.NEUTRAL"]  = {path = "MainMap_ICA.dds", width = 64, height = 64, layer = 85, minZoom = 2},
   ["PVP.CONQUEST.EXTRACTOR.FIGHT"]  = {path = "MainMap_IDA.dds", width = 64, height = 64, layer = 85, minZoom = 2},

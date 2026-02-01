@@ -66,7 +66,7 @@ local function _uiMapElementTexture(name, parent)
     thisMapData = mapData.mapElements[elementType]
     local addon = "Rift"
     if thisMapData.addon ~= nil then addon = thisMapData.addon end
-    mapElement:SetTextureAsync (addon, thisMapData.path)
+    mapElement:SetTextureAsync (addon, thisMapData.path)   
     
     if thisMapData.layer ~= nil then mapElement:SetLayer(thisMapData.layer) end
         

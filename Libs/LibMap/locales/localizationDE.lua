@@ -195,7 +195,7 @@ if ( Inspect.System.Language() == "German"  ) then
     PROFESSIONS = { Runenfertigungs = "RUNECRAFTER", Runenfertiger = "RUNECRAFTER", Ausstatter = "OUTFITTER", ["Rüstungsschmiede?"] = "ARMORSMITH", Waffenschmied = "WEAPONSMITH", 
                     Kunsthandwerk = "ARTIFICER", Handwerker = "ARTIFICER", 
                     Schlachter = "BUTCHERING", Metzger = "BUTCHERING", 
-                    Angel = "FISHING", Fischer = "FISHING", Minenarbeiter = "MINING", Bergbau = "MINING", Bergarbeiter = "MINING", Sammelkunde = "FORAGING", Sammler = "FORAGING", Apotheker = "ALPOTHECARY", Traumweber = "DREAMWEAVER",
+                    Angel = "FISHING", Fischer = "FISHING", Minenarbeiter = "MINING", Bergbau = "MINING", Bergarbeiter = "MINING", Sammelkunde = "FORAGING", Sammler = "FORAGING", Apotheker = "APOTHECARY", Traumweber = "DREAMWEAVER",
                     ["Überlebenskünstler"] = "SURVIVAL", ["Überlebenskunst"] = "SURVIVAL"},
     RESOURCEORE = { Platin = "PLATINUM", Gantimit = "GANTIMITE", Orichalcum = "ORICHALCUM", Gold = "GOLD", Silber="SILVER", Eisen = "IRON", Kobalt = "COBALT", Chromit = "CHROMITE", Zinn = "TIN", Kupfer = "COPPER", Thalasit = "THALASIT", Rhenium = "RHENIUM", Tuthony = "KARTHITE", Carmintium = "CARMINTIUM", Titan = "TITANIUM", Atramentium = "ATRAMENTIUM", Bolidium = "BOLIDIUM" },
     RESOURCEWOOD = { Linden = "LINDEN", Ulmen = "ELM", Birke = "BIRCH", Eichen = "OAK", Mahagoni = "MAHOGANY", Eschenholz = "ASHWOOD", ["Königsholz"] = "KINGSWOOD", Eiben = "YEWLOG", Salbei = "SAGEBRUSH", Runenbirken = "RUNEBIRCH", Madros = "MADROSA", Schattendorn = "SHADETHORN"},

@@ -197,7 +197,7 @@ if Inspect.System.Language() == "English" then
     PROFESSIONS = { Runecrafting = "RUNECRAFTER", Runecrafter = "RUNECRAFTER", Outfitter = "OUTFITTER", Armorsmith = "ARMORSMITH", Weaponsmith = "WEAPONSMITH", 
                     Artificer = "ARTIFICER", Handwerker = "ARTIFICER", 
                     Butcher = "BUTCHERING", Metzger = "BUTCHERING", 
-                    Fisher = "FISHING", Miner = "MINING", Forager = "FORAGING", Apothecary = "ALPOTHECARY", ["Dream Weaver"] = "DREAMWEAVER",
+                    Fisher = "FISHING", Miner = "MINING", Forager = "FORAGING", Apothecary = "APOTHECARY", ["Dream Weaver"] = "DREAMWEAVER",
                     Survivalist = "SURVIVAL", ["Überlebenskunst"] = "SURVIVAL"},
     RESOURCEORE = { Platinum = "PLATINUM", Gantimit = "GANTIMITE", Gold = "GOLD", Silver ="SILVER", Iron = "IRON", Cobalt = "COBALT", Chromit = "CHROMITE", Tin = "TIN", Copper = "COPPER", Thalasit = "THALASIT", Rhenium = "RHENIUM", Karthite = "KARTHITE", Carmintium = "CARMINTIUM", Titanium = "TITANIUM", Atramentium = "ATRAMENTIUM", Bolidium = "BOLIDIUM" },
     RESOURCEWOOD = { Linden = "LINDEN", Elm = "ELM", Birke = "BIRCH", Oak = "OAK", Mahogany = "MAHOGANY", Ashwood = "ASHWOOD", Kingswood = "KINGSWOOD", Yew = "YEWLOG", Sagebrush = "SAGEBRUSH", Runebirch = "RUNEBIRCH", Madros = "MADROSA", Shadethorn = "SHADETHORN"},
