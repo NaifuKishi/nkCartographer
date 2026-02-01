@@ -4,3 +4,6 @@
 [submodule "Libs/LibEKL"]
 	path = Libs/LibEKL
 	url = https://github.com/NaifuKishi/LibEKL.git
+[submodule "Libs/LibMap"]
+	path = Libs/LibMap
+	url = https://github.com/NaifuKishi/LibMap.git
