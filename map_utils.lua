@@ -1,3 +1,10 @@
+-- map_utils.lua
+-- Hilfsmodul für nkCartographer.
+-- Enthält Utility-Funktionen für die Karte.
+--
+-- @module map_utils
+-- @author NaifuKishi
+
 local addonInfo, privateVars = ...
 
 ---------- init namespace ---------
@@ -12,10 +19,14 @@ local lang                  = privateVars.langTexts
 local InspectUnitDetail 	= Inspect.Unit.Detail
 local InspectItemDetail 	= Inspect.Item.Detail
 
----------- local function block ---------
+-- @section Public Functions
 
+-- Sammelt Artefakte und fügt sie der Karte hinzu.
+--
+-- @function internalFunc.CollectArtifact
+-- @tparam table itemData Die Daten der Artefakte.
 function internalFunc.CollectArtifact(itemData)
-    if nkCartGathering.artifactsData[data.lastZone] == nil then nkCartGathering.artifactsData[data.lastZone] = {} end
+    if not nkCartGathering.artifactsData[data.lastZone] then nkCartGathering.artifactsData[data.lastZone] = {} end
     
     local unitDetails = InspectUnitDetail('player') 
     local coordRangeX = {unitDetails.coordX-2, unitDetails.coordX+2}
@@ -37,14 +48,14 @@ function internalFunc.CollectArtifact(itemData)
                 end
             end
             
-            if knownPos == false then
-                local thisData = { 
-                    id = string.match(type, "TRACK.(.+)") .. LibEKL.Tools.UUID(), 
-                    type = type, 
-                    descList = {}, 
-                    coordX = unitDetails.coordX, 
-                    coordY = unitDetails.coordY, 
-                    coordZ = unitDetails.coordZ 
+            if not knownPos then
+                local thisData = {
+                    id = string.match(type, "TRACK.(.+)") .. LibEKL.Tools.UUID(),
+                    type = type,
+                    descList = {},
+                    coordX = unitDetails.coordX,
+                    coordY = unitDetails.coordY,
+                    coordZ = unitDetails.coordZ
                 }
                 nkCartGathering.artifactsData[data.lastZone][thisData.id] = thisData
             end

@@ -1,3 +1,10 @@
+-- map_elements.lua
+-- Modul für die Verwaltung dynamischer Kartenelemente in nkCartographer.
+-- Verantwortlich für POIs, seltene Mobs, Sammelressourcen und Wegpunkte.
+--
+-- @module map_elements
+-- @author NaifuKishi
+
 local addonInfo, privateVars = ...
 
 ---------- init namespace ---------
@@ -14,8 +21,17 @@ local LibEKLGetLanguageShort = LibEKL.Tools.Lang.GetLanguageShort
 local LibEKLTableCopy       = LibEKL.Tools.Table.Copy
 local LibEKLUUID            = LibEKL.Tools.UUID
 
----------- local function block ---------
+-- @section Local Functions
 
+-- Verarbeitet die Daten eines seltenen Mobs und fügt ihn der Karte hinzu.
+--
+-- @function _processRareData
+-- @tparam string id Die ID des seltenen Mobs.
+-- @tparam number counter Der Zähler für die Position des Mobs.
+-- @tparam string name Der Name des Mobs.
+-- @tparam number x Die X-Koordinate.
+-- @tparam number z Die Z-Koordinate.
+-- @tparam string comment Ein optionaler Kommentar.
 local function _processRareData(id, counter, name, x, z, comment)
     local thisId = "rare-" .. id .. "-" .. counter
     local thisData = { id = thisId, type = "UNIT.RARE", descList = {name}, coordX = x, coordZ = z }
@@ -25,14 +41,17 @@ local function _processRareData(id, counter, name, x, z, comment)
     data._rareData[thisId] = thisData
 end
 
+-- Lädt die Daten seltener Mobs aus RareDar.
+--
+-- @function _getRareDarData
 local function _getRareDarData()
-    if data._zoneDetails == nil then return end
+    if not data._zoneDetails then return end
     data._rareData = {}
     for idx = 1, #RareDar.data, 1 do
         if RareDar.data[idx].zone[LibEKLGetLanguage()] == data._zoneDetails.name then
             local mobs = RareDar.data[idx].mobs
             for idx2 = 1, #mobs, 1 do
-                if data.rareMobKilled[mobs[idx2].achv[LibEKLGetLanguage()]] ~= true then
+                if not data.rareMobKilled[mobs[idx2].achv[LibEKLGetLanguage()]] then
                     local posList = mobs[idx2].pos
                     for idx3 = 1, #posList, 1 do
                         _processRareData(mobs[idx2].id, idx3, mobs[idx2].targ[LibEKLGetLanguage()], posList[idx3][1], posList[idx3][2], mobs[idx2].comment[LibEKLGetLanguage()])
@@ -43,13 +62,16 @@ local function _getRareDarData()
     end
 end
 
+-- Lädt die Daten seltener Mobs aus RareTracker.
+--
+-- @function _getRareTrackerData
 local function _getRareTrackerData()
     local zoneData = Inspect.Addon.Detail('RareTracker').data.moblocs[data.lastZone]
-    if zoneData == nil then return end
+    if not zoneData then return end
     local mobs = zoneData.mobs
     data._rareData = {}
     for idx = 1, #mobs, 1 do
-        if data.rareMobKilled[mobs[idx].n[LibEKLGetLanguageShort()]] ~= true then
+        if not data.rareMobKilled[mobs[idx].n[LibEKLGetLanguageShort()]] then
             local posList = mobs[idx].loc
             for idx2 = 1, #posList, 1 do
                 _processRareData(mobs[idx].n[LibEKLGetLanguageShort()], idx2, mobs[idx].n[LibEKLGetLanguageShort()], posList[idx2].x, posList[idx2].z, "")
@@ -58,12 +80,16 @@ local function _getRareTrackerData()
     end
 end
 
+-- Verfolgt Sammelressourcen und fügt sie der entsprechenden Liste hinzu.
+--
+-- @function _trackGathering
+-- @tparam table details Die Details der Ressource.
 local function _trackGathering(details)
-    if nkCartGathering.gatheringData[data.lastZone] == nil then nkCartGathering.gatheringData[data.lastZone] = {} end
-    if nkCartGathering.artifactsData[data.lastZone] == nil then nkCartGathering.artifactsData[data.lastZone] = {} end
+    if not nkCartGathering.gatheringData[data.lastZone] then nkCartGathering.gatheringData[data.lastZone] = {} end
+    if not nkCartGathering.artifactsData[data.lastZone] then nkCartGathering.artifactsData[data.lastZone] = {} end
     
-    for key, data in pairs(nkCartGathering.gatheringData[data.lastZone]) do
-        if data.coordX == details.coordX and data.coordZ == details.coordZ then return end
+    for key, existingData in pairs(nkCartGathering.gatheringData[data.lastZone]) do
+        if existingData.coordX == details.coordX and existingData.coordZ == details.coordZ then return end
     end
 
     local thisData = LibEKLTableCopy(details)
@@ -78,14 +104,18 @@ local function _trackGathering(details)
     end
 end
 
----------- addon internal function block ---------
+-- @section Public Functions
 
+-- Zeigt Points of Interest (POIs) auf der Karte an oder versteckt sie.
+--
+-- @function internalFunc.ShowPOI
+-- @tparam boolean flag Ob die POIs angezeigt werden sollen.
 function internalFunc.ShowPOI(flag)
     local lastPoi = LibMap.map.GetZonePOI(data.lastZone)
-    if flag == true and nkAM_Loot ~= nil and LibEKL.Unit.GetGroupStatus() ~= 'single' then
+    if flag and nkAM_Loot and LibEKL.Unit.GetGroupStatus() ~= 'single' then
         local bossInfo = nkAM_Loot.getPOI(data.lastZone)
-        if bossInfo ~= nil then
-            if data.customPOIs[data.lastZone] == nil then data.customPOIs[data.lastZone] = {} end
+        if bossInfo then
+            if not data.customPOIs[data.lastZone] then data.customPOIs[data.lastZone] = {} end
             for k, v in pairs(bossInfo) do
                 data.customPOIs[data.lastZone][k] = v
             end
@@ -93,8 +123,8 @@ function internalFunc.ShowPOI(flag)
     end
     
     local customPoi = data.customPOIs[data.lastZone]
-    if customPoi ~= nil then
-        if lastPoi == nil then lastPoi = {} end
+    if customPoi then
+        if not lastPoi then lastPoi = {} end
         for k, v in pairs(customPoi) do
             lastPoi[k] = v
             lastPoi[k].id = k
@@ -107,19 +137,23 @@ function internalFunc.ShowPOI(flag)
         end
     end
     
-    if lastPoi == nil then return end
-    if flag == true and nkCartSetup.showPOI == true then
+    if not lastPoi then return end
+    if flag and nkCartSetup.showPOI then
         internalFunc.UpdateMap(lastPoi, "add", "internalFunc.ShowPOI")
     else
         internalFunc.UpdateMap(lastPoi, "remove")
     end
 end
 
+-- Zeigt seltene Mobs auf der Karte an oder versteckt sie.
+--
+-- @function internalFunc.ShowRareMobs
+-- @tparam boolean flag Ob die seltenen Mobs angezeigt werden sollen.
 function internalFunc.ShowRareMobs(flag)
-    if flag == true then
-        if Inspect.Addon.Detail('RareDar') ~= nil then
+    if flag then
+        if Inspect.Addon.Detail('RareDar') then
             _getRareDarData()
-        elseif Inspect.Addon.Detail('RareTracker') ~= nil then
+        elseif Inspect.Addon.Detail('RareTracker') then
             _getRareTrackerData()
         end
     else
@@ -127,10 +161,14 @@ function internalFunc.ShowRareMobs(flag)
     end
 end
 
+-- Zeigt Sammelressourcen auf der Karte an oder versteckt sie.
+--
+-- @function internalFunc.ShowGathering
+-- @tparam boolean flag Ob die Sammelressourcen angezeigt werden sollen.
 function internalFunc.ShowGathering(flag)
-    if nkCartGathering.gatheringData[data.lastZone] == nil then return end
+    if not nkCartGathering.gatheringData[data.lastZone] then return end
     local action = "add"
-    if flag == false then action = "remove" end
+    if not flag then action = "remove" end
     
     local temp = {}
     for k, v in pairs(nkCartGathering.gatheringData[data.lastZone]) do
@@ -148,17 +186,24 @@ function internalFunc.ShowGathering(flag)
     LibEKL.Coroutines.Add({ func = gridCoRoutine, counter = #temp, active = true })
 end
 
+-- Zeigt Artefakte auf der Karte an oder versteckt sie.
+--
+-- @function internalFunc.ShowArtifacts
+-- @tparam boolean flag Ob die Artefakte angezeigt werden sollen.
 function internalFunc.ShowArtifacts(flag)
-    if nkCartGathering.artifactsData[data.lastZone] == nil then return end
-    if flag == true then
+    if not nkCartGathering.artifactsData[data.lastZone] then return end
+    if flag then
         internalFunc.UpdateMap(nkCartGathering.artifactsData[data.lastZone], "add")
     else
         internalFunc.UpdateMap(nkCartGathering.artifactsData[data.lastZone], "remove")
     end
 end
 
+-- Aktualisiert die Wegpunkt-Pfeile auf der Karte.
+--
+-- @function internalFunc.UpdateWaypointArrows
 function internalFunc.UpdateWaypointArrows()
-    if uiElements.mapUI == nil or data.centerElement == nil then return end
+    if not uiElements.mapUI or not data.centerElement then return end
     local map = uiElements.mapUI:GetMap()
     local mapInfo = uiElements.mapUI:GetMapInfo()
     local coordX, coordZ = uiElements.mapUI:GetElement(data.centerElement):GetCoord()
@@ -167,13 +212,13 @@ function internalFunc.UpdateWaypointArrows()
     
     for key, details in pairs(data.waypoints) do
         if details.coordX >= mapInfo.x1 and details.coordX <= mapInfo.x2 and details.coordZ >= mapInfo.y1 and details.coordZ <= mapInfo.y2 then
-            if details.gfx == nil then
+            if not details.gfx then
                 details.gfx = LibEKL.UICreateFrame("nkCanvas", "nkUI.waypointarrow." .. LibEKLUUID(), mask)
                 details.gfx:SetLayer(999)
             end
             
             local stroke = { thickness = 3, r = 1, g = 0.8, b = 0.4, a = 1 }
-            if details.player == true then stroke = { thickness = 3, r = 0.463, g = 0.741, b = 0.722, a = 1 } end
+            if details.player then stroke = { thickness = 3, r = 0.463, g = 0.741, b = 0.722, a = 1 } end
             
             local width, height, xmod, zmod, headX, headY = 0, 0, 0, 0, 0, 0
             local canvas
@@ -214,11 +259,14 @@ function internalFunc.UpdateWaypointArrows()
     end
 end
 
+-- Zeigt den Wegpunkt-Dialog an.
+--
+-- @function internalFunc.WaypointDialog
 function internalFunc.WaypointDialog()
     local xpos, ypos
-    if InspectSystemSecure() == true then return end
+    if InspectSystemSecure() then return end
     
-    if uiElements.waypointDialog == nil then
+    if not uiElements.waypointDialog then
         local name = "nkCartographer.waypointDialog"
         local coordLabel, xposEdit, yposEdit, sepLabel, setButton
         uiElements.waypointDialog = LibEKL.UICreateFrame("nkWindow", name, uiElements.contextSecure)
@@ -256,7 +304,7 @@ function internalFunc.WaypointDialog()
         xposEdit:SetTabTarget(yposEdit)
         
         local function _setMacro()
-            if xpos == nil or ypos == nil or tonumber(xpos) == nil or tonumber(ypos) == nil then return end
+            if not xpos or not ypos or not tonumber(xpos) or not tonumber(ypos) then return end
             LibEKL.Events.AddInsecure(function() setButton:SetMacro(string.format("setwaypoint %d %d", xpos, ypos)) end)
         end
         
@@ -287,7 +335,7 @@ function internalFunc.WaypointDialog()
             LibEKL.Events.AddInsecure(function() uiElements.waypointDialog:SetVisible(false) end)
         end, name .. ".setButton.Clicked")
     else
-        if uiElements.waypointDialog:GetVisible() == true then
+        if uiElements.waypointDialog:GetVisible() then
             uiElements.waypointDialog:SetVisible(false)
         else
             uiElements.waypointDialog:SetVisible(true)
@@ -298,6 +346,9 @@ function internalFunc.WaypointDialog()
     uiElements.waypointDialog:SetPoint("TOPLEFT", UIParent, "TOPLEFT", mouseData.x - uiElements.waypointDialog:GetWidth(), mouseData.y - uiElements.waypointDialog:GetHeight())
 end
 
+-- Zeigt benutzerdefinierte Punkte auf der Karte an.
+--
+-- @function internalFunc.ShowCustomPoints
 function internalFunc.ShowCustomPoints()
-    if nkCartSetup.userPOI[data.currentWorld] ~= nil then internalFunc.UpdateMap(nkCartSetup.userPOI[data.currentWorld], "add") end
+    if nkCartSetup.userPOI[data.currentWorld] then internalFunc.UpdateMap(nkCartSetup.userPOI[data.currentWorld], "add") end
 end
