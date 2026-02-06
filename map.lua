@@ -323,23 +323,26 @@ function internalFunc.UpdateWaypointArrows ()
   
   local map = uiElements.mapUI:GetMap()
   local mapInfo = uiElements.mapUI:GetMapInfo()
+  
+  local coordX, coordZ = uiElements.mapUI:GetElement(data.centerElement):GetCoord() 
+  local mask = uiElements.mapUI:GetMask()
 
+  local mapWidth, mapHeight = map:GetWidth(), map:GetHeight()
+  
   for key, details in pairs (data.waypoints) do
   
     if details.coordX >= mapInfo.x1 and details.coordX <= mapInfo.x2 and details.coordZ >= mapInfo.y1 and details.coordZ <= mapInfo.y2 then 
   
       if details.gfx == nil then
-        details.gfx = LibEKL.UICreateFrame("nkCanvas", "nkCartographer.waypointarrow." .. LibEKLUUID(), uiElements.mapUI:GetMask())
+        details.gfx = LibEKL.UICreateFrame("nkCanvas", "nkUI.waypointarrow." .. LibEKLUUID(), mask)
         details.gfx:SetLayer(999)      
       end
       
-      local canvas, width, height, xmod, zmod
-      local coordX, coordZ = uiElements.mapUI:GetElement(data.centerElement):GetCoord()    
-      local stroke = { thickness = 3, r = 1, g = 0.8, b = 0.4, a = 1}
+      local canvas, width, height, xmod, zmod               
       local headX, headY = 0, 0
           
-      --if details.player == true then stroke = { thickness = 3, r = 0.463, g = 0.741, b = 0.722, a = 1} end
-	  if details.player == true then stroke = { thickness = 3, r = 0.15, g = 0.85, b = 0.79, a = .6} end	  
+	  local stroke = { thickness = 3, r = 1, g = 0.8, b = 0.4, a = 1}
+      if details.player == true then stroke = { thickness = 3, r = 0.463, g = 0.741, b = 0.722, a = 1} end
       
       if details.coordX <= coordX then
       
@@ -364,14 +367,14 @@ function internalFunc.UpdateWaypointArrows ()
         end
       end
           
-      local newWidth = map:GetWidth() / (mapInfo.x2 - mapInfo.x1) * width
-      local newHeight = map:GetHeight() / (mapInfo.y2 - mapInfo.y1) * height
+      local newWidth = mapWidth / (mapInfo.x2 - mapInfo.x1) * width
+      local newHeight = mapHeight / (mapInfo.y2 - mapInfo.y1) * height
       
       local xP = 1 / (mapInfo.x2 - mapInfo.x1) * (coordX - mapInfo.x1)
       local yP = 1 /  (mapInfo.y2 - mapInfo.y1) * (coordZ - mapInfo.y1) 
       
-      local thisX = (map:GetWidth() * xP) 
-      local thisY = (map:GetHeight() * yP)
+      local thisX = (mapWidth * xP) 
+      local thisY = (mapHeight * yP)
   
       details.gfx:ClearAll()    
       details.gfx:SetWidth(newWidth)
@@ -482,8 +485,10 @@ function internalFunc.UpdateMap (mapInfo, action, debugSource, checkForMinimapQu
 					else
 						if internalFunc.IsKnownMinimapQuest (details.id) == false then
 							if nkCartSetup.showUnknown == true then
-								err, retValue = pcall(internalFunc.CheckUnknownForQuest, details)
-								if err and not retValue then uiElements.mapUI:AddElement(details) end
+								--err, retValue = pcall(internalFunc.CheckUnknownForQuest, details)
+								--if err and not retValue then uiElements.mapUI:AddElement(details) end
+								local retValue = internalFunc.CheckUnknownForQuest(details)
+								if not retValue then uiElements.mapUI:AddElement(details) end
 							end
 						else
 							uiElements.mapUI:AddElement(data.minimapIdToQuest[details.id])

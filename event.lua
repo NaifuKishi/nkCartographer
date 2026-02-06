@@ -29,7 +29,7 @@ local LibEKLTableCopy           = LibEKL.Tools.Table.Copy
 local LibEKLTableIsMember       = LibEKL.Tools.Table.IsMember
 local LibEKLTableSerialize      = LibEKL.Tools.Table.Serialize
 local LibEKLStringsRight        = LibEKL.strings.right
-local LibMapMapGetAll            = LibMap.map.getAll
+local LibMapMapGetAll           = LibMap.map.getAll
 
 local stringFind               = string.find
 
@@ -71,13 +71,16 @@ end
 
 function events.SystemUpdate ()
 
+  local now = InspectTimeReal()
+
 	if data.forceUpdate ~= true then
 		if data.lastUpdate == nil then
-			data.lastUpdate = InspectTimeReal()
+			data.lastUpdate = now
 			privateVars.forceUpdate = true
 		else
-			local tmpTime = InspectTimeReal()
-			if LibEKLMathRound((tmpTime - data.lastUpdate), 1) > .5 then data.forceUpdate = true end
+			local tmpTime = now
+			--if LibEKLMathRound((tmpTime - data.lastUpdate), 1) > .5 then data.forceUpdate = true end
+      if now - data.lastUpdate > .5 then data.forceUpdate = true end
 		end
 	end
 
@@ -88,7 +91,7 @@ function events.SystemUpdate ()
 				local temp = LibEKLTableCopy(data.postponedAdds)
 				data.postponedAdds = nil
 				internalFunc.UpdateMap(temp, "add", "events.SystemUpdate")
-				data.lastUpdate = InspectTimeReal() -- diese Abfrage direkt nach data.forceUpdate platzieren wenn andere Funktionen aufgerufen werden
+				data.lastUpdate = now -- diese Abfrage direkt nach data.forceUpdate platzieren wenn andere Funktionen aufgerufen werden
 			end
 		end
 		
