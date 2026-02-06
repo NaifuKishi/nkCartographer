@@ -457,6 +457,16 @@ function internalFunc.UpdateMap (mapInfo, action, debugSource, checkForMinimapQu
 	
 	if nkDebug then nkDebug.logEntry (addonInfo.identifier, "internalFunc.UpdateMap", stringFormat("%s - %s", action, debugSource), mapInfo) end
 	
+	local RESOURCE_TYPE_MAP = {
+        ["RESOURCE.MINE"] = "MINE",
+        ["RESOURCE.HERB"] = "HERB",
+        ["RESOURCE.WOOD"] = "WOOD",
+        ["RESOURCE.FISH"] = "FISH",
+        ["RESOURCE.ARTIFACT"] = "ARTIFACT",
+        ["RESOURCE.ARTIFACT.FAEYULE"] = "FAEYULE",
+        -- Weitere bekannte Typen hier hinzufügen
+    }
+
 	for key, details in pairs (mapInfo) do
 		if action == "remove" then
 			--dump (mapInfo)
@@ -474,7 +484,9 @@ function internalFunc.UpdateMap (mapInfo, action, debugSource, checkForMinimapQu
 			elseif details.type ~= "UNKNOWN" and details.type ~= "PORTAL" then -- filter minimap portal and use poi portal instead
 				--if debugSource == "processQuests" then dump (details) end
 				uiElements.mapUI:AddElement(details)
-				if stringFind(details.type, "RESOURCE") == 1 and nkCartSetup.trackGathering == true then _trackGathering(details) end
+				--if stringFind(details.type, "RESOURCE") == 1 and nkCartSetup.trackGathering == true then _trackGathering(details) end
+				local thisType = RESOURCE_TYPE_MAP[details.type] or stringMatch(details.type, "RESOURCE%.(.+)")
+				if thisType and nkCartSetup.trackGathering == true then _trackGathering(details, thisType) end
 			elseif details.type == "UNKNOWN" then
 				if data.postponedAdds == nil then data.postponedAdds = {} end
 				if LibQB.query.isInit() == false or LibQB.query.isPackageLoaded('poa') == false or LibQB.query.isPackageLoaded('nt') == false or LibQB.query.isPackageLoaded('classic') == false then
@@ -776,7 +788,7 @@ function internalFunc.ShowArtifacts(flag)
   if nkCartGathering.artifactsData[data.lastZone] == nil then return end
 
   if flag == true then
-     internalFunc.UpdateMap (nkCartGathering.artifactsData[data.lastZone], "add")
+    internalFunc.UpdateMap (nkCartGathering.artifactsData[data.lastZone], "add")
   else
     internalFunc.UpdateMap (nkCartGathering.artifactsData[data.lastZone], "remove")
   end
