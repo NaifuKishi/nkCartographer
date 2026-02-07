@@ -178,6 +178,7 @@ local function mapRemove (key, checkForMinimapQuest)
 end
 
 local function _trackGathering(details)
+
     if nkCartGathering.gatheringData[data.lastZone] == nil then nkCartGathering.gatheringData[data.lastZone] = {} end
     if nkCartGathering.artifactsData[data.lastZone] == nil then nkCartGathering.artifactsData[data.lastZone] = {} end
     
@@ -212,7 +213,7 @@ local function mapAdd (key, details)
 		if nkDebug then
 			nkDebug.logEntry (addonInfo.identifier, "internalFunc.UpdateMap add", "details.type == nil", details)
 		end
-	elseif details.type ~= "UNKNOWN" and details.type ~= "PORTAL" then
+	elseif details.type ~= "UNKNOWN" and details.type ~= "PORTAL" then		
 		uiElements.mapUI:AddElement(details)
 		local thisType = RESOURCE_TYPE_MAP[details.type] or stringMatch(details.type, "RESOURCE%.(.+)")
 		if thisType and nkCartSetup.trackGathering == true then _trackGathering(details, thisType) end

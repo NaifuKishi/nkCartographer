@@ -391,10 +391,12 @@ function internalFunc.GetQuests()
 	--print ("get quests")
 	processQuests (inspectQuestList()) 
 end
+
 function events.QuestAccept (_, data) 
 	--print ("quest accept")
 	processQuests (data, true) 
 end
+
 function events.QuestChange (_, data) 
 	--print ("change quests")
 	processQuests (data, false) 

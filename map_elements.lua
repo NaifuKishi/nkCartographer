@@ -109,11 +109,14 @@ function internalFunc.ShowRareMobs(flag)
 end
 
 function internalFunc.ShowGathering(flag)
+
     if nkCartGathering.gatheringData[data.lastZone] == nil then return end
+
     local action = "add"
     if flag == false then action = "remove" end
     
     local temp = {}
+
     for k, v in pairs(nkCartGathering.gatheringData[data.lastZone]) do
         table.insert(temp, {[k] = v})
     end

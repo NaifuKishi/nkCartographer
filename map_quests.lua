@@ -9,6 +9,7 @@ local internalFunc          = privateVars.internalFunc
 ---------- addon internal function block ---------
 
 function internalFunc.ShowQuest(flag)
+    
     if flag == true and nkCartSetup.showQuest == true then
         internalFunc.GetQuests()
     else
