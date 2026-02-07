@@ -177,6 +177,26 @@ local function mapRemove (key, checkForMinimapQuest)
 
 end
 
+local function _trackGathering(details)
+    if nkCartGathering.gatheringData[data.lastZone] == nil then nkCartGathering.gatheringData[data.lastZone] = {} end
+    if nkCartGathering.artifactsData[data.lastZone] == nil then nkCartGathering.artifactsData[data.lastZone] = {} end
+    
+    for key, data in pairs(nkCartGathering.gatheringData[data.lastZone]) do
+        if data.coordX == details.coordX and data.coordZ == details.coordZ then return end
+    end
+
+    local thisData = LibEKLTableCopy(details)
+    thisData.type = "TRACK" .. string.match(thisData.type, "RESOURCE(.+)")
+    local thisType = string.match(details.type, "RESOURCE%.(.+)") or string.match(details.type, "RESOURCE%.(.+)%.")
+    thisData.id = thisType .. "-" .. LibEKLUUID()
+
+    if thisType == "ARTIFACT" then
+        nkCartGathering.artifactsData[data.lastZone][thisData.id] = thisData
+    else
+        nkCartGathering.gatheringData[data.lastZone][thisData.id] = thisData
+    end
+end
+
 local function mapAdd (key, details)
 
 	local RESOURCE_TYPE_MAP = {
