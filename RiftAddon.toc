@@ -37,6 +37,7 @@ Dependencies = {
   LibQB           = {"required", "before"},  
   LibEKL          = {"required", "before"},
   LibMap          = {"required", "before"},
+  nkUI            = {"optional", "before"},
   RareTracker     = {"optional", "before"},
   RareDar         = {"optional", "before"},
   nkAdvisor_Loot  = {"optional", "before"},

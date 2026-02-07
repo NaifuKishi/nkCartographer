@@ -101,6 +101,7 @@ function internalFunc.initMap ()
 		minimapFrame:ClearPoint("BOTTOMLEFT")
       	minimapFrame:SetPoint("TOPLEFT", uiElements.mapUI, "BOTTOMLEFT")
 		minimapFrame:SetWidth(uiElements.mapUI:GetWidth())
+		LibEKL.manager.UpdateFrame(uiElements.mapUI)
     end
 
 	mapInit = true
