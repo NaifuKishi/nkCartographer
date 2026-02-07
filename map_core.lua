@@ -12,6 +12,7 @@ local lang        			= privateVars.langTexts
 
 local _zoneDetails          = nil
 local _rareData             = {}
+local mapInit				= false
 
 ---------- make global functions local ---------
 
@@ -36,142 +37,16 @@ local stringUpper			= string.upper
 local mathDeg				= math.deg
 local mathAtan2				= math.atan2
 
----------- local function block ---------
-
-local function _fctMapUI ()
-
-	local mapUI = LibMap.uiCreateFrame("nkMap", "nkCartographer.map", uiElements.context)
-
-	local locked
-	if nkCartSetup.locked == true then locked = false else locked = true end
-	
-	mapUI:SetResizable(locked)
-	mapUI:SetDragable(locked)
-	mapUI:SetLayer(2)
-
-	mapUI:ShowHeader(false)
-	mapUI:ShowCoords(false)	
-
-	local texture = LibEKL.UICreateFrame("nkTexture", "nkCartographer.map.texture", uiElements.context)
-	texture:SetLayer(1)
-
-	function mapUI:SetBackground(newBG)
-		if nkCartSetup.background == nil then return end
-
-		if data.borderDesigns[nkCartSetup.background].addon == nil then
-			texture:SetVisible(false)
-		else
-			texture:SetVisible(true)    
-			texture:SetPoint("TOPLEFT", mapUI, "TOPLEFT", -data.borderDesigns[nkCartSetup.background].offset, -data.borderDesigns[nkCartSetup.background].offset)
-			texture:SetPoint("BOTTOMRIGHT", mapUI, "BOTTOMRIGHT", data.borderDesigns[nkCartSetup.background].offset, data.borderDesigns[nkCartSetup.background].offset)
-			texture:SetTextureAsync(data.borderDesigns[nkCartSetup.background].addon, data.borderDesigns[nkCartSetup.background].path)
-		end
-	end
-
-	local oSetVisible = mapUI.SetVisible
-
-	function mapUI:SetVisible(flag)
-		oSetVisible(self, flag)
-		texture:SetVisible(flag)
-	end
-
-	mapUI:SetBackground(nkCartSetup.background)
-
-	local zoneTitle = LibEKL.UICreateFrame("nkText", "nkCartographer.map.zoneTitle", mapUI:GetMask())
-	zoneTitle:SetPoint("CENTERTOP", mapUI:GetContent(), "CENTERTOP")
-	zoneTitle:SetLayer(9999)
-	
-	LibEKL.UI.SetFont (zoneTitle, addonInfo.id, "MontserratSemiBold")
-
-	zoneTitle:SetEffectGlow({ colorB = 0, colorA = 1, colorG = 0, colorR = 0, strength = 3, blurX = 3, blurY = 3 })
-
-	local coords = LibEKL.UICreateFrame("nkText", "nkCartographer.map.coords", mapUI)
-	coords:SetPoint("CENTERBOTTOM", mapUI:GetContent(), "CENTERBOTTOM", 0, 15)
-	coords:SetLayer(9999)
-	coords:SetFontSize(20)
-	coords:SetEffectGlow({ strength = 3})
-	
-	LibEKL.UI.SetFont (coords, addonInfo.id, "MontserratBold")
-
-	local mouseCoords = LibEKL.UICreateFrame("nkText", "nkCartographer.map.mouseCoords", mapUI)
-	mouseCoords:SetPoint("CENTERBOTTOM", coords, "CENTERTOP", 0, 5)
-	mouseCoords:SetLayer(9999)
-	mouseCoords:SetFontSize(18)
-	mouseCoords:SetFontColor(1, 0.8, 0, 1)
-	mouseCoords:SetEffectGlow({ strength = 3})
-	
-	LibEKL.UI.SetFont (mouseCoords, addonInfo.id, "MontserratBold")
-
-	function mapUI:SetCoordsLabel(x, y)
-		coords:SetText(stringFormat("%d / %d", x, y))
-	end
-
-	function mapUI:SetZoneTitle(flag)
-
-		if flag == false then
-			zoneTitle:SetVisible(false)
-		else
-			zoneTitle:SetVisible(true)
-			local scale = 1 / 300 * mapUI:GetWidth()
-			local fontsize = 20 * scale
-			if fontsize > 30 then fontsize = 30 end
-			zoneTitle:SetFontSize(fontsize)
-			zoneTitle:SetText(data.locationName)
-		end
-	end
-
-	Command.Event.Attach(LibMap.events["nkCartographer.map"].MouseMoved, function (_, text)
-		mouseCoords:SetText(text)
-	end, "nkCartographer.map.MouseMoved")  
-
-	Command.Event.Attach(LibMap.events["nkCartographer.map"].Moved, function (_, x, y, maximized)
-
-		if maximized == true then
-			nkCartSetup.maximizedX, nkCartSetup.maximizedY = x, y 
-		else
-			nkCartSetup.x, nkCartSetup.y = x, y
-		end
-
-	end, "nkCartographer.map.Moved")    
-
-	Command.Event.Attach(LibMap.events["nkCartographer.map"].Resized, function (_, newWidth, newHeight, maximized)
-
-		if maximized == true then
-			nkCartSetup.maximizedWidth, nkCartSetup.maximizedHeight = newWidth, newHeight 
-		else
-			nkCartSetup.width, nkCartSetup.height = newWidth, newHeight
-		end
-
-	end, "nkCartographer.map.Moved")
-
-	Command.Event.Attach(LibMap.events["nkCartographer.map"].Zoomed, function (_, newScale, maximized)
-		if maximized == true then
-			nkCartSetup.maximizedScale = newScale
-		else
-			nkCartSetup.scale = newScale
-		end
-
-	internalFunc.UpdateWaypointArrows ()
-
-	end, "nkCartographer.map.Zoomed")
-
-	Command.Event.Attach(LibMap.events["nkCartographer.map"].Toggled, function (_, newScale, maximized)
-		internalFunc.UpdateWaypointArrows ()
-		mapUI:SetZoneTitle(nkCartSetup.showZoneTitle)
-	end, "nkCartographer.map.Toggled")
-
-	return mapUI
-	
-end
-
 ---------- addon internal function block ---------
 
 function internalFunc.initMap ()
 
+	if mapInit then return end
+
 	local debugId 
 	if nkDebug then debugId = nkDebug.traceStart (addonInfo.identifier, "internalFunc.initMap") end
 
-	if uiElements.mapUI == nil then uiElements.mapUI = _fctMapUI() end
+	if uiElements.mapUI == nil then uiElements.mapUI = internalFunc.createMapUI() end
 
 	uiElements.mapUI:SetAnimated(nkCartSetup.animations, nkCartSetup.animationSpeed)
 	uiElements.mapUI:SetSmoothScroll(nkCartSetup.smoothScroll)
@@ -179,7 +54,7 @@ function internalFunc.initMap ()
 	uiElements.mapUI:SetWidth(nkCartSetup.width)
 	uiElements.mapUI:SetHeight(nkCartSetup.height)
 
-	local details = InspectUnitDetail(data.playerUID)
+	local details = LibEKL.Unit.GetPlayerDetails()		
 	internalFunc.SetZone (details.zone)
 
 	uiElements.mapUI:SetPointMaximized(nkCartSetup.maximizedX, nkCartSetup.maximizedY)  
@@ -228,6 +103,8 @@ function internalFunc.initMap ()
 		minimapFrame:SetWidth(uiElements.mapUI:GetWidth())
     end
 
+	mapInit = true
+
 	if nkDebug then debugId = nkDebug.traceEnd (addonInfo.identifier, "internalFunc.initMap", debugId) end
   
 end
@@ -260,7 +137,7 @@ function internalFunc.SetZone (newZoneID)
 
 	uiElements.mapUI:SetMap("world", data.currentWorld)
 
-	local details = InspectUnitDetail(data.playerUID)
+	local details = LibEKL.Unit.GetPlayerDetails()
 	data.locationName = details.locationName
 	uiElements.mapUI:SetCoord(details.coordX, details.coordZ)	
 	uiElements.mapUI:SetCoordsLabel(details.coordX, details.coordZ)	
@@ -290,6 +167,113 @@ function internalFunc.SetZone (newZoneID)
 
 end
 
+local function mapRemove (key, checkForMinimapQuest)
+
+	if checkForMinimapQuest == true or checkForMinimapQuest == nil then
+		if internalFunc.IsKnownMinimapQuest (key) == false then uiElements.mapUI:RemoveElement(key) end
+	else
+		uiElements.mapUI:RemoveElement(key)
+	end
+
+end
+
+local function mapAdd (key, details)
+
+	local RESOURCE_TYPE_MAP = {
+        ["RESOURCE.MINE"] = "MINE",
+        ["RESOURCE.HERB"] = "HERB",
+        ["RESOURCE.WOOD"] = "WOOD",
+        ["RESOURCE.FISH"] = "FISH",
+        ["RESOURCE.ARTIFACT"] = "ARTIFACT",
+        ["RESOURCE.ARTIFACT.FAEYULE"] = "FAEYULE",
+    }
+
+	if details["type"] == nil then
+		if nkDebug then
+			nkDebug.logEntry (addonInfo.identifier, "internalFunc.UpdateMap add", "details.type == nil", details)
+		end
+	elseif details.type ~= "UNKNOWN" and details.type ~= "PORTAL" then
+		uiElements.mapUI:AddElement(details)
+		local thisType = RESOURCE_TYPE_MAP[details.type] or stringMatch(details.type, "RESOURCE%.(.+)")
+		if thisType and nkCartSetup.trackGathering == true then _trackGathering(details, thisType) end
+	elseif details.type == "UNKNOWN" then
+		if data.postponedAdds == nil then data.postponedAdds = {} end
+		if LibQB.query.isInit() == false or LibQB.query.isPackageLoaded('poa') == false or LibQB.query.isPackageLoaded('nt') == false or LibQB.query.isPackageLoaded('classic') == false then
+			data.postponedAdds[key] = details
+		else
+			if InspectSystemWatchdog() < 0.1 then
+				data.postponedAdds[key] = details
+			else
+				if internalFunc.IsKnownMinimapQuest (details.id) == false then
+					if nkCartSetup.showUnknown == true then
+						local retValue = internalFunc.CheckUnknownForQuest(details)
+						if not retValue then uiElements.mapUI:AddElement(details) end
+					end
+				else
+					uiElements.mapUI:AddElement(data.minimapIdToQuest[details.id])
+				end
+			end
+		end
+	end
+
+end
+
+local function mapChange (key, details, debugSource)
+
+	if uiElements.mapUI:ChangeElement(details) == false then
+		if nkDebug then
+			nkDebug.logEntry (addonInfo.identifier, "internalFunc.UpdateMap change", "failed " .. debugSource, details)
+			internalFunc.UpdateMap ({[key] = details}, "add", debugSource)
+		end
+	end
+
+end
+
+local function mapCoord (key, details, debugSource)
+
+	if uiElements.mapUI:ChangeElement(details) == false then
+		internalFunc.UpdateMap ({[key] = details}, "add", debugSource)
+		if nkDebug then 
+			nkDebug.logEntry (addonInfo.identifier, "internalFunc.UpdateMap coord", "failed " .. debugSource, details)
+		end
+	end
+
+end
+
+local function mapWaypointAdd (key, details)
+
+	local unitDetails = InspectUnitDetail(key)
+	uiElements.mapUI:AddElement({ id = "wp-" .. key, type = "WAYPOINT", descList = { unitDetails.name }, coordX = details.coordX, coordZ = details.coordZ })
+	data.waypoints[key] = { coordX = details.coordX, coordZ = details.coordZ }
+	if key == LibEKL.Unit.GetPlayerID() then data.waypoints[key].player = true end
+	internalFunc.UpdateWaypointArrows ()  
+
+end
+
+local function mapWaypointRemove (key)
+
+	uiElements.mapUI:RemoveElement( "wp-" .. key)
+	if data.waypoints[key] ~= nil and data.waypoints[key].gfx ~= nil then 
+		data.waypoints[key].gfx:destroy()
+	end
+	data.waypoints[key] = nil
+	internalFunc.UpdateWaypointArrows ()
+
+end
+
+local function mapWaypointChange(key, details, debugSource)
+
+	if uiElements.mapUI:ChangeElement({ id =  "wp-" .. key, coordX = details.coordX, coordZ = details.coordZ }) == false then
+		if nkDebug then
+			nkDebug.logEntry (addonInfo.identifier, "internalFunc.UpdateMap waypoint-change", "failed " .. debugSource, { id =  "wp-" .. key, coordX = details.coordX, coordZ = details.coordZ })
+		end
+	end
+	data.waypoints[key].coordX = details.coordX
+	data.waypoints[key].coordZ = details.coordZ
+	internalFunc.UpdateWaypointArrows ()
+
+end
+
 function internalFunc.UpdateMap (mapInfo, action, debugSource, checkForMinimapQuest)
 
 	if uiElements.mapUI == nil then 
@@ -300,92 +284,117 @@ function internalFunc.UpdateMap (mapInfo, action, debugSource, checkForMinimapQu
 	local debugId
 	if nkDebug then debugId = nkDebug.traceStart (addonInfo.identifier, "internalFunc.UpdateMap") end
 	
-	if nkDebug then nkDebug.logEntry (addonInfo.identifier, "internalFunc.UpdateMap", stringFormat("%s - %s", action, debugSource), mapInfo) end
-	
-	local RESOURCE_TYPE_MAP = {
-        ["RESOURCE.MINE"] = "MINE",
-        ["RESOURCE.HERB"] = "HERB",
-        ["RESOURCE.WOOD"] = "WOOD",
-        ["RESOURCE.FISH"] = "FISH",
-        ["RESOURCE.ARTIFACT"] = "ARTIFACT",
-        ["RESOURCE.ARTIFACT.FAEYULE"] = "FAEYULE",
-    }
+	if nkDebug then nkDebug.logEntry (addonInfo.identifier, "internalFunc.UpdateMap", stringFormat("%s - %s", action, debugSource), mapInfo) end	
 
 	for key, details in pairs (mapInfo) do
 		if action == "remove" then
-			if checkForMinimapQuest == true or checkForMinimapQuest == nil then
-				if internalFunc.IsKnownMinimapQuest (key) == false then uiElements.mapUI:RemoveElement(key) end
-			else
-				uiElements.mapUI:RemoveElement(key)
-			end
+			mapRemove (key, checkForMinimapQuest)
 		elseif action == "add" then
-			if details["type"] == nil then
-				if nkDebug then
-					nkDebug.logEntry (addonInfo.identifier, "internalFunc.UpdateMap add", "details.type == nil", details)
-				end
-			elseif details.type ~= "UNKNOWN" and details.type ~= "PORTAL" then
-				uiElements.mapUI:AddElement(details)
-				local thisType = RESOURCE_TYPE_MAP[details.type] or stringMatch(details.type, "RESOURCE%.(.+)")
-				if thisType and nkCartSetup.trackGathering == true then _trackGathering(details, thisType) end
-			elseif details.type == "UNKNOWN" then
-				if data.postponedAdds == nil then data.postponedAdds = {} end
-				if LibQB.query.isInit() == false or LibQB.query.isPackageLoaded('poa') == false or LibQB.query.isPackageLoaded('nt') == false or LibQB.query.isPackageLoaded('classic') == false then
-					data.postponedAdds[key] = details
-				else
-					if InspectSystemWatchdog() < 0.1 then
-						data.postponedAdds[key] = details
-					else
-						if internalFunc.IsKnownMinimapQuest (details.id) == false then
-							if nkCartSetup.showUnknown == true then
-								local retValue = internalFunc.CheckUnknownForQuest(details)
-								if not retValue then uiElements.mapUI:AddElement(details) end
-							end
-						else
-							uiElements.mapUI:AddElement(data.minimapIdToQuest[details.id])
-						end
-					end
-				end
-			end
+			mapAdd (key, details)
 		elseif action == "change" then
-			if uiElements.mapUI:ChangeElement(details) == false then
-				if nkDebug then
-					nkDebug.logEntry (addonInfo.identifier, "internalFunc.UpdateMap change", "failed " .. debugSource, details)
-					internalFunc.UpdateMap ({[key] = mapInfo}, "add", debugSource)
-				end
-			end
+			mapChange (key, details, debugSource)
 		elseif action == "coord" then
-			if uiElements.mapUI:ChangeElement(details) == false then
-				internalFunc.UpdateMap ({[key] = mapInfo}, "add", debugSource)
-				if nkDebug then 
-					nkDebug.logEntry (addonInfo.identifier, "internalFunc.UpdateMap coord", "failed " .. debugSource, details)
-				end
-			end
+			mapCoord (key, details, debugSource)
 		elseif action == "waypoint-add" then
-			local unitDetails = InspectUnitDetail(key)
-			uiElements.mapUI:AddElement({ id = "wp-" .. key, type = "WAYPOINT", descList = { unitDetails.name }, coordX = details.coordX, coordZ = details.coordZ })
-			data.waypoints[key] = { coordX = details.coordX, coordZ = details.coordZ }
-			if key == data.playerUID then data.waypoints[key].player = true end      
-			internalFunc.UpdateWaypointArrows ()      
+			mapWaypointAdd (key, details)
 		elseif action == "waypoint-remove" then
-			uiElements.mapUI:RemoveElement( "wp-" .. key)
-			if data.waypoints[key] ~= nil and data.waypoints[key].gfx ~= nil then 
-				data.waypoints[key].gfx:destroy()
-			end
-			data.waypoints[key] = nil
-			internalFunc.UpdateWaypointArrows ()
+			mapWaypointRemove (key)
 		elseif action == "waypoint-change" then
-			if uiElements.mapUI:ChangeElement({ id =  "wp-" .. key, coordX = details.coordX, coordZ = details.coordZ }) == false then
-				if nkDebug then
-					nkDebug.logEntry (addonInfo.identifier, "internalFunc.UpdateMap waypoint-change", "failed " .. debugSource, { id =  "wp-" .. key, coordX = details.coordX, coordZ = details.coordZ })
-				end
-			end
-			data.waypoints[key].coordX = details.coordX
-			data.waypoints[key].coordZ = details.coordZ
-			internalFunc.UpdateWaypointArrows ()
+			mapWaypointChange(key, details, debugSource)
 		end
 	end
 
 	if nkDebug then debugId = nkDebug.traceEnd (addonInfo.identifier, "internalFunc.UpdateMap", debugId) end
+
+end
+
+local function unitAdd (key, details)
+
+	if details.type == "player" then
+		local unitDetails = InspectUnitDetail("player")
+		details.type = "UNIT.PLAYER"
+		details.title = unitDetails.name
+		details.angle = 0         
+		data.centerElement = key
+		uiElements.mapUI:AddElement(details)
+
+	elseif details.type == "player.pet" then
+		local unitDetails = InspectUnitDetail("player.pet")
+		details.type = "UNIT.PLAYERPET"
+		details.title = unitDetails.name         
+		uiElements.mapUI:AddElement(details)
+
+	elseif stringFind(details.type, "group") ~= nil and stringFind(details.type, "group..%.") == nil then					
+		local unitDetails = InspectUnitDetail(details.type)
+		details.type = "UNIT.GROUPMEMBER"        
+		details.title = unitDetails.name
+		details.smoothCoords = true
+		uiElements.mapUI:AddElement(details)
+		
+		if nkDebug and details.type == "UNIT.GROUPMEMBER" then 
+			nkDebug.logEntry (addonInfo.identifier, "internalFunc.UpdateUnit", action .. ": " .. (details.type or '?'), details)
+		end
+	end
+
+end
+
+local function unitChange(key, details)
+
+	if key == LibEKL.Unit.GetPlayerID() then			
+		local coordX, coordZ = uiElements.mapUI:GetCoords()         
+		local deltaZ = details.coordZ - coordZ
+		local deltaX = details.coordX - coordX
+
+		local angle = mathDeg(mathAtan2(deltaZ, deltaX))								
+		details.angle = -angle
+	end
+
+	if key == data.playerTargetUID then
+		details.id = "npc" .. key
+		if uiElements.mapUI:ChangeElement(details) == false then
+			if nkDebug then
+				nkDebug.logEntry (addonInfo.identifier, "internalFunc.UpdateUnit", "could not change element", details)
+			end
+		end
+
+		details.id = "t" .. key
+		if uiElements.mapUI:ChangeElement(details) == false then
+			if nkDebug then
+				nkDebug.logEntry (addonInfo.identifier, "internalFunc.UpdateUnit", "could not change element", details)
+			end
+		end
+
+	elseif stringFind(details.type, "mouseover") == nil and stringFind(details.type, ".pet") == nil and stringFind(details.type, "player.target.target.target") == nil then
+		
+		if uiElements.mapUI:ChangeElement(details) == false then
+			if details.type == 'player.target' then
+				internalFunc.UpdateUnit ({[key] = details}, "add")
+			else
+				if nkDebug then
+					nkDebug.logEntry (addonInfo.identifier, "internalFunc.UpdateUnit", "could not change element", details)
+				end
+			end
+		end
+	end
+
+	if key == LibEKL.Unit.GetPlayerID() then
+		uiElements.mapUI:SetCoord(details.coordX, details.coordZ)
+		uiElements.mapUI:SetCoordsLabel(details.coordX, details.coordZ)	
+		internalFunc.UpdateWaypointArrows ()
+	end
+
+	if key == data.playerHostileTargetUID then
+		details.id = "e" .. key
+		local bData = {change = {["e" .. key] = details}}
+		events.broadcastTarget(bData)
+	end
+
+end
+
+local function unitRemove (key)
+
+	uiElements.mapUI:RemoveElement(key)
+	if key == data.centerElement then data.centerElement = nil end
 
 end
 
@@ -401,87 +410,11 @@ function internalFunc.UpdateUnit (mapInfo, action)
 	for key, details in pairs (mapInfo) do
 	
 		if action == "add" then
-
-			if details.type == "player" then
-				local unitDetails = InspectUnitDetail("player")
-				details.type = "UNIT.PLAYER"
-				details.title = unitDetails.name
-				details.angle = 0         
-				data.centerElement = key
-				uiElements.mapUI:AddElement(details)
-			elseif details.type == "player.pet" then
-				local unitDetails = InspectUnitDetail("player.pet")
-				details.type = "UNIT.PLAYERPET"
-				details.title = unitDetails.name         
-				uiElements.mapUI:AddElement(details)
-			elseif stringFind(details.type, "group") ~= nil and stringFind(details.type, "group..%.") == nil then				
-			
-				local unitDetails = InspectUnitDetail(details.type)
-				details.type = "UNIT.GROUPMEMBER"        
-				details.title = unitDetails.name
-				details.smoothCoords = true
-				uiElements.mapUI:AddElement(details)
-				
-				if nkDebug and details.type == "UNIT.GROUPMEMBER" then 
-					nkDebug.logEntry (addonInfo.identifier, "internalFunc.UpdateUnit", action .. ": " .. (details.type or '?'), details)
-				end
-			end
-
+			unitAdd (key, details)			
 		elseif action == "change" then
-
-			if key == data.playerUID then
-			
-				local coordX, coordZ = uiElements.mapUI:GetCoords()         
-				local deltaZ = details.coordZ - coordZ
-				local deltaX = details.coordX - coordX
-
-				local angle = mathDeg(mathAtan2(deltaZ, deltaX))								
-				details.angle = -angle
-			end
-
-			if key == data.playerTargetUID then
-				details.id = "npc" .. key
-				if uiElements.mapUI:ChangeElement(details) == false then
-					if nkDebug then
-						nkDebug.logEntry (addonInfo.identifier, "internalFunc.UpdateUnit", "could not change element", details)
-					end
-				end
-
-				details.id = "t" .. key
-				if uiElements.mapUI:ChangeElement(details) == false then
-					if nkDebug then
-						nkDebug.logEntry (addonInfo.identifier, "internalFunc.UpdateUnit", "could not change element", details)
-					end
-				end
-
-			elseif stringFind(details.type, "mouseover") == nil and stringFind(details.type, ".pet") == nil and stringFind(details.type, "player.target.target.target") == nil then
-				
-				if uiElements.mapUI:ChangeElement(details) == false then
-					if details.type == 'player.target' then
-						internalFunc.UpdateUnit ({[key] = details}, "add")
-					else
-						if nkDebug then
-							nkDebug.logEntry (addonInfo.identifier, "internalFunc.UpdateUnit", "could not change element", details)
-						end
-					end
-				end
-			end
-
-			if key == data.playerUID then
-				uiElements.mapUI:SetCoord(details.coordX, details.coordZ)
-				uiElements.mapUI:SetCoordsLabel(details.coordX, details.coordZ)	
-				internalFunc.UpdateWaypointArrows ()
-			end
-
-			if key == data.playerHostileTargetUID then
-				details.id = "e" .. key
-				local bData = {change = {["e" .. key] = details}}
-				events.broadcastTarget(bData)
-			end
-
+			unitChange(key, details)			
 		elseif action == "remove" then
-			uiElements.mapUI:RemoveElement(key)
-			if key == data.centerElement then data.centerElement = nil end
+			unitRemove (key)
 		end
 	end
 

@@ -192,7 +192,7 @@ end
 function events.ZoneChange (_, info) 
 
 	for unit, zoneId in pairs (info) do
-		if unit == data.playerUID then
+		if unit == LibEKL.Unit.GetPlayerID() then
 			if uiElements.mapUI == nil then 
 				internalFunc.initMap ()
 			else
@@ -235,9 +235,9 @@ function events.playerAvailable (_, info)
 	local debugId
 	--if nkDebug then debugId = nkDebug.traceStart (addonInfo.identifier, "events.playerAvailable") end
 
-	data.playerUID = info.id
+	--data.playerUID = info.id
 	internalFunc.initMap()
-	local details = InspectUnitDetail('player.target')
+	local details = LibEKL.Unit.GetUnitDetail('player.target')
   if details ~= nil then _processPlayerTarget(details.id, details) end    
 	
 	internalFunc.UpdateWaypointArrows()
@@ -261,7 +261,7 @@ function events.UnitCoordChange (_, x, y, z)
 	local hasUpdates, hasAdds = false, false
 
 	for unit, _ in pairs (x) do
-		if unit == data.playerUID then
+		if unit == LibEKL.Unit.GetPlayerID() then
 			updates[unit] = {id = unit, center = true, coordX = x[unit], coordY = y[unit], coordZ = z[unit]}
 			hasUpdates = true
 		elseif _units[unit] == nil then
@@ -283,8 +283,8 @@ end
 
 function events.UnitCastBar (_, info)
   
-  if info[data.playerUID] then
-    local details = InspectUnitCastbar(data.playerUID)
+  if info[LibEKL.Unit.GetPlayerID()] then
+    local details = InspectUnitCastbar(LibEKL.Unit.GetPlayerID())
     if details and details.abilityNew == "A0000002B72E024A4" then
       data.collectStart = InspectTimeReal()
     end
@@ -435,11 +435,13 @@ end
 
 function events.UpdateLocation (_, info)
 
-  if data.playerUID == nil then return end
+  local playerID = LibEKL.Unit.GetPlayerID()
+
+  if playerID == nil then return end
     
-  if info[data.playerUID] == nil or info[data.playerUID] == false then return end   
+  if info[playerID] == nil or info[playerID] == false then return end   
     
-  data.locationName = info[data.playerUID]
+  data.locationName = info[playerID]
   uiElements.mapUI:SetZoneTitle(nkCartSetup.showZoneTitle)
     
 end

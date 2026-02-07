@@ -116,13 +116,14 @@ function internalFunc.ShowPOI(flag)
 end
 
 function internalFunc.ShowRareMobs(flag)
+
     if flag == true then
         if Inspect.Addon.Detail('RareDar') ~= nil then
             _getRareDarData()
         elseif Inspect.Addon.Detail('RareTracker') ~= nil then
             _getRareTrackerData()
         end
-    else
+    elseif data._rareData then
         internalFunc.UpdateMap(data._rareData, "remove")
     end
 end
@@ -158,13 +159,15 @@ function internalFunc.ShowArtifacts(flag)
 end
 
 function internalFunc.UpdateWaypointArrows()
+
     if uiElements.mapUI == nil or data.centerElement == nil then return end
+
     local map = uiElements.mapUI:GetMap()
     local mapInfo = uiElements.mapUI:GetMapInfo()
     local coordX, coordZ = uiElements.mapUI:GetElement(data.centerElement):GetCoord()
     local mask = uiElements.mapUI:GetMask()
     local mapWidth, mapHeight = map:GetWidth(), map:GetHeight()
-    
+
     for key, details in pairs(data.waypoints) do
         if details.coordX >= mapInfo.x1 and details.coordX <= mapInfo.x2 and details.coordZ >= mapInfo.y1 and details.coordZ <= mapInfo.y2 then
             if details.gfx == nil then

@@ -26,7 +26,6 @@ local _oInspectTimeReal = Inspect.Time.Real
 
 ---------- init variables ---------
 
-data.playerUID            = nil -- id of the current player
 data.playerTargetUID      = nil -- id of the player's target
 data.lastZone             = nil -- id of the current zone e.g. the last zone entered
 data.currentWorld         = nil -- id of the current map world
